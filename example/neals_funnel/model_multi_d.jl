@@ -1,6 +1,5 @@
 using Distributions, ForwardDiff, LinearAlgebra, Random, Plots, ProgressMeter
 using Base.Threads:@threads
-include("../../inference/ErgFlow/ergodic_flow.jl")
 include("../../inference/SVI/svi.jl")
 
 # d = 5 # dimension (>=2) σ² = 9 # variance of first dimension

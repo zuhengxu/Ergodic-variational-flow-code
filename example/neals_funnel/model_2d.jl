@@ -14,8 +14,6 @@ logp(x) = -log(Z) -σ²/32 - 0.5 * x[1]^2/σ² -0.5*exp(-0.5*x[1])*x[2]^2.0
 ∇logp(x) = vcat(-x[1]/σ² + x[2]^2.0 * 0.25 * exp(-x[1]/2), -x[2]*exp(-x[1]/2))
 logq(x, μ, D) =  -0.5*d*log(2π) - sum(log, abs.(D)) - 0.5*sum(abs2, (x.-μ)./D)
 
-# # define handcoded grad for Zygote
-# @adjoint logp(z) = logp(z), Δ -> (∇logp(z), )
 
 #### contour of MF gaussian fit
 # create the figure folder
