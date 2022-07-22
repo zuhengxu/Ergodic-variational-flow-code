@@ -8,6 +8,6 @@ Examples run and generate output using Julia v1.7.1.
 
 
 ## How to run the code
-Each experiment should be run in its own folder (e.g., `examples/1d_cauchy`, `examples/banana/`, and etc.), see each detailed instructions in each folder. Generally, 
+Each experiment should be run in its own folder (e.g., `example/1d_cauchy`, `example/banana/`, and etc.), see each detailed instructions in each folder. Generally, 
 - first run `julia main.jl` or `julia --threads $(number of threads) main.jl`  to perform the experiment
 - then run `julia plotting.jl` to generate plots
