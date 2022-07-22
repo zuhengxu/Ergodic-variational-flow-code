@@ -4,6 +4,11 @@ include("../../inference/util/metric.jl")
 include("../common/plotting.jl")
 include("../common/result.jl")
 
+
+folder = "figure"
+if ! isdir(folder)
+    mkdir(folder)
+end 
 # ELBO
 ELBO = JLD.load("result/el5.jld")
 eps = ELBO["eps"]
