@@ -12,8 +12,8 @@ o = ErgFlow.HamFlow(d, n_lfrg, logp, ∇logp, randn, logq,
         ErgFlow.stream, ErgFlow.mixer, ErgFlow.inv_mixer) 
 
 Random.seed!(1)
-# ELBO_plot(o, o1; μ=μ, D=D, eps = [0.001, 0.0023, 0.006], Ns = [100, 200, 500, 1000, 1500, 2000], nBs = [0,0,0,0,0,0,0], elbo_size = 1000, 
-#         fig_name = "2d_warp_elbo.png",title = "Warped Gaussian", xtickfont=font(18), ytickfont=font(18), guidefont=font(18), legendfont=font(18), titlefontsize = 18, xrotation = 20)
+ELBO_plot(o, o1; μ=μ, D=D, eps = [0.001, 0.0023, 0.006], Ns = [100, 200, 500, 1000, 1500, 2000], nBs = [0,0,0,0,0,0,0], elbo_size = 1000, 
+        fig_name = "2d_warp_elbo.png",title = "Warped Gaussian", xtickfont=font(18), ytickfont=font(18), guidefont=font(18), legendfont=font(18), titlefontsize = 18, xrotation = 20)
 Random.seed!(1)
 els = eps_tunning([0.001:0.0005:0.005 ;],o; μ = μ, D = D, n_mcmc = 1000, elbo_size=1000, fig_name = "warp_tune.png", title = "Warped Gaussian",
                  xtickfont=font(18), ytickfont=font(18), guidefont=font(18), legendfont=font(18), titlefontsize = 18, xrotation = 20)
@@ -32,25 +32,16 @@ scatter(o, x, y; contour_plot = true, μ=μ, D=D, ϵ = 0.005*ones(d), n_sample =
 #####################
 # lpdf_est
 ####################
-n_lfrg = 30
+n_lfrg = 80
 o = ErgFlow.HamFlow(d, n_lfrg, logp, ∇logp, randn, logq, 
         ErgFlow.randl, ErgFlow.lpdf_laplace_std, ErgFlow.∇lpdf_laplace_std, ErgFlow.cdf_laplace_std, ErgFlow.invcdf_laplace_std,ErgFlow.pdf_laplace_std, 
         ErgFlow.stream, ErgFlow.mixer, ErgFlow.inv_mixer) 
-a = ErgFlow.HF_params(0.04*ones(d), μ, D)
+a = ErgFlow.HF_params(0.003*ones(d), μ, D)
 
 X = [-2.01:.1:2 ;]
 Y = [-5.01:.1:5 ;]
 # # lpdf_est, lpdf, Error
 DS, Dd, E = lpdf_est_save(o, a, X, Y; n_mcmc = 1000, nB = 50)
-
-# layout = pjs.Layout(
-#     title="Log Density estimate (#Ref = 1000, nB = 50)", autosize=false,
-#     width=500, height=500,
-#     # scene = pjs.attr(
-#     # zaxis = pjs.attr(range = [-5000, 0])
-#     # ),
-#     margin=pjs.attr(l=65, r=50, b=65, t=90)
-# )
 
 layout = PlotlyJS.Layout(
     width=500, height=500,
@@ -68,7 +59,4 @@ pjs.savefig(p_target, joinpath("figure/","lpdf.png"))
 
 p_est = pjs.plot(pjs.surface(z=DS, x=X, y=Y, showscale=false), layout)
 pjs.savefig(p_est, joinpath("figure/","lpdf_est.png"))
-
-# # Ds, E = ErgFlow.log_density_slice_2d(X, Y, ErgFlow.randl(2), rand(), o, 0.01*ones(d), μ, D, ErgFlow.inv_refresh_coord, 1000; nBurn = 50, error_check = false)
-# # Dd = [logp([x, y]) for x in X , y in Y]
 

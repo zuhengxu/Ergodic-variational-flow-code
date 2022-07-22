@@ -1,4 +1,3 @@
-
 include("model_2d.jl")
 include("../../inference/MCMC/NUTS.jl")
 include("../../inference/util/metric.jl")
@@ -21,6 +20,6 @@ o_norm = ErgFlow.HamFlow(d, n_lfrg, logp, ∇logp, randn, logq,
 a = ErgFlow.HF_params(0.003*ones(d), μ, D)
 
 
-statbility_plot(o_lap, a, [10, 50, 100, 200, 500, 1000, 1500, 2000, 3000, 4000, 5000]; nsample = 100, res_name = "stab_lap.jld")
-statbility_plot(o_norm, a, [10, 50, 100, 200, 500, 1000, 1500, 2000, 3000, 4000, 5000]; nsample = 100, res_name = "stab_norm.jld")
+stability_plot(o_lap, a, [10, 50, 100, 200, 500, 1000, 1500, 2000, 3000, 4000, 5000]; nsample = 100, res_name = "stab_lap.jld")
+stability_plot(o_norm, a, [10, 50, 100, 200, 500, 1000, 1500, 2000, 3000, 4000, 5000]; nsample = 100, res_name = "stab_norm.jld")
 
