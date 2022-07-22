@@ -40,3 +40,8 @@ gsvi = (x, y) -> exp(logq([x, y], μ, D))
 # pp = plot(p1, p2, p3, layout = 3)
 # savefig(pp, joinpath(fig_dir,"contour.png"))
 
+
+folder = "figure"
+if ! isdir(folder)
+    mkdir(folder)
+end 

@@ -1,5 +1,4 @@
 using Plots, Distributions
-include("../../inference/util.jl")
 #beta mixture
 d = MixtureModel([Beta(2.0, 6.0), Beta(6.0, 1.0)], [0.6, 0.4])
 f = x-> pdf(d, x)
@@ -11,7 +10,7 @@ shift3(x) = 0.25
 shift4(x) = π/200 + 0.25
 shift5(n) = rand()
 
-function density_plots(X, T_bar, T_color;labels = ["" "" "" "" "" "" ""], folder::String = "example/uniform/figure/", name::String = "Ergodic.png", kwargs...)
+function density_plots(X, T_bar, T_color;labels = ["" "" "" "" "" "" ""], folder::String = "figure/", name::String = "Ergodic.png", kwargs...)
     # create the figure folder
     if ! isdir(folder)
         mkdir(folder)
@@ -49,7 +48,7 @@ function shifting_trace(x,N)
 end
 
 
-function sticking_plot(x0, X, N, T_color;labels = ["" "" ""], folder::String = "example/uniform/figure/", name::String = "Ergodic.png", kwargs...)
+function sticking_plot(x0, X, N, T_color;labels = ["" "" ""], folder::String = "figure/", name::String = "Ergodic.png", kwargs...)
     # create the figure folder
     if ! isdir(folder)
         mkdir(folder)

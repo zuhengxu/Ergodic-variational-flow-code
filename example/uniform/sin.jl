@@ -36,7 +36,7 @@ function averaged_density_rand(X, shift, N)
     return T
 end
 
-function density_plots(X, T_bar, T_color;labels = ["" "" "" "" ""], folder::String = "example/uniform/figure/", name::String = "Ergodic.png", kwargs...)
+function density_plots(X, T_bar, T_color;labels = ["" "" "" "" ""], folder::String = "figure/", name::String = "Ergodic.png", kwargs...)
     # create the figure folder
     if ! isdir(folder)
         mkdir(folder)

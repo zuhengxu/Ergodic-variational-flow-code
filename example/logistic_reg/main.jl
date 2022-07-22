@@ -6,10 +6,10 @@ include("../../inference/MCMC/NUTS.jl")
 include("../../inference/util/metric.jl")
 include("../common/plotting.jl")
 
-### fit MF Gaussian
-Random.seed!(1)
-o1 = SVI.MFGauss(d, logp, randn, logq)
-el_svi = SVI.ELBO(o1, zeros(d), 0.01*ones(d); elbo_size = 10000)
+# ### fit MF Gaussian
+# Random.seed!(1)
+# o1 = SVI.MFGauss(d, logp, randn, logq)
+# el_svi = SVI.ELBO(o1, zeros(d), 0.01*ones(d); elbo_size = 10000)
 
 ###########
 ## EF

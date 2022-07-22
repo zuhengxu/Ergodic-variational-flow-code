@@ -33,3 +33,10 @@ ps1, el1,_ = SVI.vi(o1, a1, 50000; elbo_size = 1, logging_ps = false)
 # Plots.plot(el1, ylims = (-50, 10))
 μ,D = ps1[1][1], ps1[1][2]
 el_svi = SVI.ELBO(o1, μ, D; elbo_size = 10000)
+
+
+
+folder = "figure"
+if ! isdir(folder)
+    mkdir(folder)
+end 

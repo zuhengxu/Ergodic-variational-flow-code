@@ -78,6 +78,10 @@ logq(x, μ, D) =  -0.5*d*log(2π) - sum(log, abs.(D)) - 0.5*sum(abs2, (x.-μ)./(
 
 
 
+folder = "figure"
+if ! isdir(folder)
+    mkdir(folder)
+end 
 
 
 
