@@ -4,6 +4,10 @@ include("../../inference/util/metric.jl")
 include("../common/plotting.jl")
 include("../common/result.jl")
 
+############3
+## 2d plots
+############3
+
 # tuning
 tune = JLD.load("result/eps.jld")
 eps = tune["eps"]
