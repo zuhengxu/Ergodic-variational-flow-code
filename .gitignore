@@ -47,7 +47,7 @@ __pycache__/
 *.png 
 *.jld
 *.gif
-
+*.csv
 ## Build tool auxiliary files:
 *.synctex
 *.synctex(busy)
