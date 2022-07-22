@@ -4,13 +4,6 @@ using Zygote:@adjoint
 using JLD
 include("../../inference/SVI/svi.jl")
 
-n_lfrg = 50
-elbo_size = 100
-n_sample = 100
-n_mcmc = 100
-nB = 10
-bins = 20
-
 d = 2
 
 function logp(z)
@@ -24,8 +17,6 @@ end
 ∇logp(x) = ForwardDiff.gradient(logp, x)
 logq(x, μ, D) =  -0.5*d*log(2π) - sum(log, abs.(D)) - 0.5*sum(abs2, (x.-μ)./(D .+ 1e-8))
 
-# # define handcoded grad for Zygote
-# @adjoint logp(z) = logp(z), Δ -> (∇logp(z), )
 
 #### contour of MF gaussian fit
 # create the figure folder
