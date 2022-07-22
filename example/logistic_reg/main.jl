@@ -1,6 +1,6 @@
 using Flux, Zygote, JLD, Plots
+using Revise, ErgFlow
 include("model.jl")
-include("../../inference/ErgFlow/ergodic_flow.jl")
 include("../../inference/HVI/HVI.jl")
 include("../../inference/MCMC/NUTS.jl")
 include("../../inference/util/metric.jl")

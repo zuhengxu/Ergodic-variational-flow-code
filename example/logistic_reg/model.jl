@@ -1,9 +1,8 @@
-using Distributions, ForwardDiff, LinearAlgebra, Random, Plots, Tullio, CSV, DataFrames
+using Distributions, ForwardDiff, LinearAlgebra, Random, Plots, CSV, DataFrames
 using Base.Threads
 using Base.Threads:@threads
 using JLD, Tullio, ProgressMeter
 using Zygote:Buffer, ignore, gradient, @adjoint, @ignore
-include("../../inference/ErgFlow/ergodic_flow.jl")
 include("../../inference/SVI/svi.jl")
 #########################################################################################
 # Example of Bayesian Logistic Regression (the same setting as Gershman et al. 2012):
@@ -68,12 +67,9 @@ function ∇logp(z)
     return grad
 end
 
-# z = randn(4)
-# @btime ∇logp(z)
-
 
 # ∇logp(z) - ForwardDiff.gradient(logp, z)
-@adjoint logp(z) = logp(z), Δ -> (∇logp(z), )
+# @adjoint logp(z) = logp(z), Δ -> (∇logp(z), )
 
 logq(x, μ, D) =  -0.5*d*log(2π) - sum(log, abs.(D)) - 0.5*sum(abs2, (x.-μ)./(D .+ 1e-8))
 ∇logq(x, μ, D) = (μ .- x)./(D .+ 1e-8)

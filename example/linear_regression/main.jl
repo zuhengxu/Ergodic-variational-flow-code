@@ -1,4 +1,5 @@
 using Flux, Zygote, JLD, Plots, ProgressMeter
+using Revise, ErgFlow
 include("model.jl")
 include("../../inference/HVI/HVI.jl")
 include("../../inference/MCMC/NUTS.jl")
