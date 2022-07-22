@@ -22,3 +22,35 @@ docs/site/
 # committed for packages, but should be committed for applications that require a static
 # environment.
 Manifest.toml
+
+
+# some aux files
+*.bbl
+*.blg
+*.log
+*.out
+*.aux
+*.pdf
+*.synctex.gz
+*.swp
+*.swo
+.RData
+.Rhistory
+
+__pycache__/
+.vscode/
+.workspace
+
+# results and figures
+/figure/*
+/result/*
+*.png 
+*.jld
+*.gif
+
+## Build tool auxiliary files:
+*.synctex
+*.synctex(busy)
+*.synctex.gz
+*.synctex.gz(busy)
+*.pdfsync
