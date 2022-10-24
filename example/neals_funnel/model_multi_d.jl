@@ -1,4 +1,5 @@
 using Distributions, ForwardDiff, LinearAlgebra, Random, Plots, ProgressMeter
+using ErgFlow
 using Base.Threads:@threads
 include("../../inference/SVI/svi.jl")
 

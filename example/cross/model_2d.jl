@@ -2,6 +2,7 @@ using Distributions, ForwardDiff, LinearAlgebra, Random, Plots, ProgressMeter
 using Base.Threads:@threads
 using Zygote:@adjoint
 using JLD
+using Revise, ErgFlow
 include("../../inference/SVI/svi.jl")
 
 d = 2

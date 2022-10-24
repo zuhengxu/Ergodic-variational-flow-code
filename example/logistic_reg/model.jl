@@ -1,7 +1,8 @@
 using Distributions, ForwardDiff, LinearAlgebra, Random, Plots, CSV, DataFrames
-using Base.Threads
+using Base.Threads, ErgFlow
 using Base.Threads:@threads
 using JLD, Tullio, ProgressMeter
+using Zygote
 using Zygote:Buffer, ignore, gradient, @adjoint, @ignore
 include("../../inference/SVI/svi.jl")
 #########################################################################################
@@ -40,9 +41,11 @@ function log_sigmoid(x)
         return -log1p(exp(-x))
     end
 end
+
 function neg_sigmoid(x)
     return -1.0/(1.0 + exp(-x))
 end
+
 # z = (τ, w1, ..., wd)
 function logp(θ)
     τ = θ[1]
@@ -68,12 +71,12 @@ function ∇logp(z)
 end
 
 
-# ∇logp(z) - ForwardDiff.gradient(logp, z)
-# @adjoint logp(z) = logp(z), Δ -> (∇logp(z), )
+# customize gradient for logp
+Zygote.refresh()
+@adjoint logp(z) = logp(z), Δ -> (Δ * ∇logp(z), )
 
 logq(x, μ, D) =  -0.5*d*log(2π) - sum(log, abs.(D)) - 0.5*sum(abs2, (x.-μ)./(D .+ 1e-8))
 ∇logq(x, μ, D) = (μ .- x)./(D .+ 1e-8)
-
 
 
 

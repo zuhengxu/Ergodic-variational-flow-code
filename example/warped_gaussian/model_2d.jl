@@ -1,6 +1,8 @@
 using Distributions, ForwardDiff, LinearAlgebra, Random, Plots, ProgressMeter
 using Base.Threads:@threads
+using Zygote:@ignore
 using JLD
+using Revise, ErgFlow
 # using Zygote: @ignore
 include("../../inference/SVI/svi.jl")
 

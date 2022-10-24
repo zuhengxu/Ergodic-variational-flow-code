@@ -1,8 +1,5 @@
-using Revise
-using ErgFlow
-# include("../common/plotting.jl")
-using Distributions, ForwardDiff
-
+using Distributions, ForwardDiff, ErgFlow
+include("../../inference/SVI/svi.jl")
 
 # 1d-cauchy target
 logp(x) = -log(π)-log(1 + x^2.0)
@@ -20,6 +17,6 @@ N = 10000
 
 
 folder = "figure"
-if ! isdir(folder)
-    mkdir(folder)
-end 
+# if ! isdir(folder)
+#     mkdir(folder)
+# end 

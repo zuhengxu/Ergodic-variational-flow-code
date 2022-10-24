@@ -1,6 +1,6 @@
- include("model_2d.jl")
+include("model_2d.jl")
 include("../../inference/MCMC/NUTS.jl")
-include("../../inference/util/metric.jl")
+# include("../../inference/util/metric.jl")
 include("../common/plotting.jl")
 include("../common/result.jl")
 import PlotlyJS as pjs
@@ -21,6 +21,7 @@ els = eps_tunning([0.001:0.002:0.025 ;],o; μ = μ, D = D, n_mcmc = 1000, elbo_s
 
 Random.seed!(1)
 ksd_plot(o; μ = μ, D = D, ϵ = 0.012*ones(2), Ns = [100, 200, 500, 1000, 1500, 2000], nBs = [0], nsample  =2000, title  = "Neal's Funnel")
+
 # Burn_plot(o; μ=μ, D=D,ϵ= 0.01*ones(2), n_mcmc = 500, nBs = [0, 10, 20, 30, 40, 50], elbo_size = 2000)
 
 # D_nuts = nuts(μ, 0.7, logp, ∇logp, 5000, 10000)
@@ -30,9 +31,9 @@ ksd_plot(o; μ = μ, D = D, ϵ = 0.012*ones(2), Ns = [100, 200, 500, 1000, 1500,
 # T_init =  μ'.+ D' .* randn(2000, d) 
 # ksd(T_init, ∇logp)
 # Plots.scatter(T_init[:, 1], T_init[:, 2])
-# ################3
-# ## contour and scatter
-# ################
+################3
+## contour and scatter
+################
 Random.seed!(1)
 x = -20:0.1:30
 y = -30:0.1:30
@@ -40,7 +41,7 @@ n_lfrg = 80
 o = ErgFlow.HamFlow(d, n_lfrg, logp, ∇logp, randn, logq, 
         ErgFlow.randl, ErgFlow.lpdf_laplace_std, ErgFlow.∇lpdf_laplace_std, ErgFlow.cdf_laplace_std, ErgFlow.invcdf_laplace_std, ErgFlow.pdf_laplace_std,  
         ErgFlow.stream, ErgFlow.mixer, ErgFlow.inv_mixer) 
-scatter(o, x, y; contour_plot = true, μ=μ, D=D, ϵ = 0.012*ones(d), n_sample = 1000, n_mcmc = 500, nB = 0, bins = 500, name= "2d_funnel_sample.png")
+scatter_plot(o, x, y; contour_plot = true, μ=μ, D=D, ϵ = 0.012*ones(d), n_sample = 1000, n_mcmc = 500, nB = 0, bins = 500, name= "2d_funnel_sample.png")
 
 #####################
 # lpdf_est
@@ -56,9 +57,9 @@ Y = [-30.001:0.5:30 ;]
 # lpdf_est, lpdf, Error
 DS, Dd, E = lpdf_est_save(o, a, X, Y; n_mcmc = 1000, nB = 50)
 
-# #####################
-# # lpdf_est
-# ####################
+# # #####################
+# # # lpdf_est
+# # ####################
 n_lfrg = 50
 o = ErgFlow.HamFlow(d, n_lfrg, logp, ∇logp, randn, logq, 
         ErgFlow.randl, ErgFlow.lpdf_laplace_std, ErgFlow.∇lpdf_laplace_std, ErgFlow.cdf_laplace_std, ErgFlow.invcdf_laplace_std,ErgFlow.pdf_laplace_std, 
@@ -97,7 +98,5 @@ end
 p_target = pjs.plot(pjs.surface(z=Dd, x=X, y=Y, cauto = false, cmax = 0, cmin = -5000, showscale=false), layout)
 pjs.savefig(p_target, joinpath("figure/","lpdf.png"))
 
-p_est = pjs.plot(pjs.surface(z=DS, x=X, y=Y, cauto = false, cmax = 0, cmin = -5000, showscale=false), layout)
-pjs.savefig(p_est, joinpath("figure/","lpdf_est.png"))
-
-
+# p_est = pjs.plot(pjs.surface(z=DS, x=X, y=Y, cauto = false, cmax = 0, cmin = -5000, showscale=false), layout)
+# pjs.savefig(p_est, joinpath("figure/","lpdf_est.png"))

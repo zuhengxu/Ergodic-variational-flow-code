@@ -1,7 +1,7 @@
 using JLD
 
 
-function lpdf_est_save(o::Union{ErgFlow.HamFlowRot, ErgFlow.HamFlow}, a::ErgFlow.HF_params, X, Y; 
+function lpdf_est_save(o::HamFlow, a::HF_params, X, Y; 
                         n_mcmc, nB, error_checking = false, res_dir = "result/",res_name = "lpdf_est.jld")
 
     Ds, E = ErgFlow.log_density_slice_2d(X, Y, o.ρ_sampler(2), rand(), o, a.leapfrog_stepsize, a.μ, a.D, ErgFlow.inv_refresh, n_mcmc; nBurn = nB, error_check = error_checking)
@@ -27,3 +27,17 @@ function log_density_slice_2d(X, Y, ρ, u, o::ErgodicFlow, ϵ, μ, D, inv_ref::F
     end
     return T, E 
 end
+
+
+function running_mean(T; dims=1) 
+    n = size(T, dims)
+    return cumsum(T, dims = dims)./[1:n ;]
+end
+
+function running_var(T; dims=1) 
+    X2 = T.^2
+    M = running_mean(T; dims = dims)
+    Ex2 = running_mean(X2; dims = dims)
+    return Ex2 .- M.^2
+end
+

@@ -1,5 +1,9 @@
-using Plots, Suppressor, JLD, LinearAlgebra, StatsBase
-include("../../inference/util/metric.jl")
+using Plots, Suppressor, JLD, LinearAlgebra, StatsBase, KernelDensity, StatsPlots
+using Base:Threads
+using ProgressMeter
+# using ErgFlowFixed
+# include("../../inference/util/metric.jl")
+include("../../inference/util/ksd.jl")
 
 function vis_hist(X, logp, samples; bins = 200, kwargs...)
     curve = exp.([logp(x) for x in X])
@@ -59,7 +63,7 @@ function Burn_plot(o::ErgFlow.HamFlow; μ = μ, D = D, ϵ, n_mcmc, nBs, elbo_siz
 end
 
 
-function scatter(o::ErgodicFlow,x,y;refresh = ErgFlow.pseudo_refresh, contour_plot=false, μ=μ, D= D, ϵ = ϵ, n_sample = 1000, n_mcmc = 500, nB = 250, bins = 500, fig_dir = "figure/", name = "sample.png") 
+function scatter_plot(o::ErgodicFlow,x,y;refresh = ErgFlow.pseudo_refresh, contour_plot=false, μ=μ, D= D, ϵ = ϵ, n_sample = 1000, n_mcmc = 500, nB = 250, bins = 500, fig_dir = "figure/", name = "sample.png", show_legend=false) 
     
     if ! isdir(fig_dir)
         mkdir(fig_dir)
@@ -91,12 +95,76 @@ function scatter(o::ErgodicFlow,x,y;refresh = ErgFlow.pseudo_refresh, contour_pl
     savefig(pp, joinpath(fig_dir, name))
     
     if contour_plot 
-        p2 = contour(x, y, gsvi, colorbar = false, title = "MF Gaussian fit (q₀)",xlim = (x[1], x[end]), ylim = (y[1], y[end]))
-        pp = plot(p2, p_scatter, layout = (1,2))
-        plot!(size = (600, 200))
+        if show_legend
+            pp = plot(p_scatter, legendfontsize=25, xtickfontsize=25, ytickfontsize=25, titlefontsize=25, guidefontsize=25, margin=5Plots.mm, legend=(0.4,0.8))
+        else
+            pp = plot(p_scatter, legendfontsize=25, xtickfontsize=25, ytickfontsize=25, titlefontsize=25, guidefontsize=25, margin=5Plots.mm, legend=false)
+        end
         savefig(pp, joinpath(fig_dir,"contour.png"))
     end    
 end
+
+
+function flow_trace_plot(o::ErgodicFlow,a::HF_params, x,y, xm, ym, z0, ρ0, u0; refresh = pseudo_refresh, inv_ref = inv_refresh, n_mcmc = 500, fig_dir = "figure/", name = "flow_trace.png") 
+    
+    if ! isdir(fig_dir)
+        mkdir(fig_dir)
+    end 
+    f = (x, y) -> exp(o.logp([x,y]))        
+    g = (xm, ym) -> exp(o.lpdf_mom(xm)+ o.lpdf_mom(ym))
+    T_fwd, M_fwd, U_fwd, T_bwd, M_bwd, U_bwd = ErgFlow.flow_trace(o, a, refresh, inv_ref, z0, ρ0, u0, n_mcmc)
+
+    EE = sum(abs2, T_fwd .- T_bwd[end:-1:1, :]; dims = 2) .+ sum(abs2, M_fwd .- M_bwd[end:-1:1, :]; dims = 2) .+ (U_fwd .- U_bwd[end:-1:1]).^2
+
+    p1 = contour(x, y, f, colorbar = false, xlim = (x[1], x[end]), ylim = (y[1], y[end]), legend=:top)
+    plot!(T_fwd[:,1], T_fwd[:,2], marker = (:circle, 2.3), alpha = 0.5, label = "fwd", color = :yellow)
+    plot!(T_bwd[:,1], T_bwd[:,2], marker = (:circle, 2.3), alpha = 0.5, label = "fwd", color= :green, markerstrokewidth=0.6)
+    scatter!([T_fwd[1,1]], [T_fwd[1,2]], markershape = :star5, label = "z init", color = :red, markersize = 5)
+    scatter!([T_bwd[end,1]], [T_bwd[end,2]], markershape = :star5, label = "z return", color = :orange, markersize = 5)
+    p2 = contour(xm, ym, g, colorbar = false, xlim = (xm[1], xm[end]), ylim = (ym[1], ym[end]))
+    plot!(M_fwd[:,1], M_fwd[:,2], marker = (:circle, 2.3), alpha = 0.5, label = "fwd", color = :yellow)
+    plot!(M_bwd[:,1], M_bwd[:,2], marker = (:circle, 2.3), alpha = 0.5, label = "fwd", color = :green, markerstrokewidth= 0.6)
+    scatter!([M_fwd[1,1]], [M_fwd[1,2]], markershape = :star5, label = "ρ init", color = :red, markersize = 5)
+    scatter!([M_bwd[end,1]], [M_bwd[end,2]], markershape = :star5, label = "ρ return", color = :orange, markersize = 5)
+    p3 = plot(0.5:0.5:n_mcmc-0.5, sqrt.(EE[end:-1:1]), label = "err", legend = :top, lw = 2)
+    scatter!(sqrt.(EE[end:-1:1])[2:2:end], label = "refresh", markersize = 2, alpha = 0.3)
+    pp = plot(p1, p2, p3, layout = (1,3) ,plot_title = "ϵ = $(a.leapfrog_stepsize), #lfrg = $(o.n_lfrg) , #Ref = $n_mcmc")
+    plot!(size = (1500, 450))
+    savefig(pp, joinpath(fig_dir, name))
+    return T_fwd, M_fwd, U_fwd, T_bwd, M_bwd, U_bwd
+end
+
+# function flow_trace_plot_rd(o::Union{HF_rd, HF_slice},a::HFrd_params, x,y, xm, ym, z0, ρ0, u0; refresh = ErgFlowFixed.refresh, inv_ref = ErgFlowFixed.inv_refresh, n_mcmc = 500, fig_dir = "figure/", name = "flow_trace.png") 
+    
+#     if ! isdir(fig_dir)
+#         mkdir(fig_dir)
+#     end 
+#     f = (x, y) -> exp(o.logp([x,y]))        
+#     g = (xm, ym) -> exp(o.lpdf_mom(xm)+ o.lpdf_mom(ym))
+
+#     @info "start sampling"
+#     T_fwd, M_fwd, U_fwd, T_bwd, M_bwd, U_bwd = ErgFlowFixed.flow_trace(o, a, refresh, inv_ref, z0, ρ0, u0, n_mcmc)
+
+#     EE = sum(abs2, T_fwd .- T_bwd[end:-1:1, :]; dims = 2) .+ sum(abs2, M_fwd .- M_bwd[end:-1:1, :]; dims = 2) .+ sum(abs2, U_fwd .- U_bwd[end:-1:1, :]; dims  =2)
+
+#     p1 = contour(x, y, f, colorbar = false, xlim = (x[1], x[end]), ylim = (y[1], y[end]), legend=:top)
+#     plot!(T_fwd[:,1], T_fwd[:,2], marker = (:circle, 2.3), alpha = 0.5, label = "fwd", color = :yellow)
+#     plot!(T_bwd[:,1], T_bwd[:,2], marker = (:circle, 2.3), alpha = 0.5, label = "bwd", color= :green, markerstrokewidth=0.6)
+#     scatter!([T_fwd[1,1]], [T_fwd[1,2]], markershape = :star5, label = "z init", color = :red, markersize = 5)
+#     scatter!([T_bwd[end,1]], [T_bwd[end,2]], markershape = :star5, label = "z return", color = :orange, markersize = 5)
+#     p2 = contour(xm, ym, g, colorbar = false, xlim = (xm[1], xm[end]), ylim = (ym[1], ym[end]))
+#     plot!(M_fwd[:,1], M_fwd[:,2], marker = (:circle, 2.3), alpha = 0.5, label = "fwd", color = :yellow)
+#     plot!(M_bwd[:,1], M_bwd[:,2], marker = (:circle, 2.3), alpha = 0.5, label = "bwd", color = :green, markerstrokewidth= 0.6)
+#     scatter!([M_fwd[1,1]], [M_fwd[1,2]], markershape = :star5, label = "ρ init", color = :red, markersize = 5)
+#     scatter!([M_bwd[end,1]], [M_bwd[end,2]], markershape = :star5, label = "ρ return", color = :orange, markersize = 5)
+#     p3 = plot(0.5:0.5:n_mcmc-0.5, sqrt.(EE[end:-1:1]), label = "err", legend = :top, lw = 2)
+#     scatter!(sqrt.(EE[end:-1:1])[2:2:end], label = "refresh", markersize = 2, alpha = 0.3)
+#     pp = plot(p1, p2, p3, layout = (1,3) ,plot_title = "ϵ = $(a.leapfrog_stepsize), #lfrg = $(o.n_lfrg) , #Ref = $n_mcmc")
+#     plot!(size = (1500, 450))
+#     savefig(pp, joinpath(fig_dir, name))
+#     return T_fwd, M_fwd, U_fwd, T_bwd, M_bwd, U_bwd
+# end
+
 
 
 function ef_eps(X, Y, o;μ, D, n_mcmc, elbo_size=1000) 
@@ -124,6 +192,7 @@ function eps_tunning(eps,o; μ, D, n_mcmc, elbo_size=1000, nB  =0,
         println("$i/$n")
         Els[i] = ErgFlow.ELBO(o, eps[i]*ones(d), μ, D, ErgFlow.pseudo_refresh_coord,ErgFlow.inv_refresh_coord, n_mcmc; 
                         nBurn = nB, elbo_size = elbo_size, print = true)
+        println("elbo = $(Els[i])")
     end
     p = plot(eps, Els, lw = 3, label = "", xlabel = "ϵ", ylabel = "ELBO"; kwargs...) 
     plot!(size = (800, 450))
@@ -142,7 +211,7 @@ function ksd_plot(o::ErgFlow.HamFlow; μ::Vector{Float64}, D::Vector{Float64}, �
         mkdir(fig_dir)
     end 
     D_nuts = nuts(μ, 0.7, logp, ∇logp, 5000, 10000)
-    R = zeros(nsample, nsample)
+    # R = zeros(nsample, nsample)
     ksd_nuts = ksd(D_nuts, ∇logp) 
     println("KSD_nuts = $ksd_nuts")
 
@@ -158,8 +227,9 @@ function ksd_plot(o::ErgFlow.HamFlow; μ::Vector{Float64}, D::Vector{Float64}, �
             a = ErgFlow.HF_params(ϵ, μ, D) 
             # taking samples for fixed setting
             ErgFlow.Sampler!(T_init, o, a, ref, n_mcmc, nsample; nBurn = nB)
-            Ks[i, j+1] = ksd!(R, T_init, o.∇logp)
-            println("n_mcmc = $(Ns[j]) done")
+            Ks[i, j+1] = ksd(T_init, o.∇logp)
+            # println("n_mcmc = $(Ns[j]) done")
+            println("KSD = $(Ks[i, j+1])")
         end
     end 
     Labels = Matrix{String}(undef, 1, size(nBs, 1))
@@ -177,14 +247,16 @@ end
 function get_percentiles(dat; p1=25, p2=75)
     dat = Matrix(dat')
     n = size(dat,2)
-    median_dat = vec(median(dat, dims=1))
+    # median_dat = vec(median(dat, dims=1))
 
     plow = zeros(n)
     phigh = zeros(n)
 
     for i in 1:n
-        plow[i] = median_dat[i] - percentile(vec(dat[:,i]), p1)
-        phigh[i] = percentile(vec(dat[:,i]), p2) - median_dat[i]
+        dat_remove_nan = (dat[:,i])[iszero.(isnan.(dat[:,i]))]
+        median_remove_nan = median(dat_remove_nan)
+        plow[i] = median_remove_nan - percentile(vec(dat_remove_nan), p1)
+        phigh[i] = percentile(vec(dat_remove_nan), p2) - median_remove_nan
     end
 
     return plow, phigh
@@ -239,3 +311,123 @@ function scatter_gif(o::ErgodicFlow, a::HF_params, x,y;
     gif(anim, joinpath(fig_dir,name), fps = 20)
 end
 
+
+function pairplots(D_nuts, T1, T2; bins = 500, c2 = :orange, c1 = :green)
+    n = size(D_nuts, 2)
+    @assert n ≤ 10
+    colnames = ["d"*"$i" for i in 1:n]
+    plotter = Matrix{Any}(undef, n,n)
+    prog_bar = ProgressMeter.Progress(Int(n*n), dt=0.5, barglyphs=ProgressMeter.BarGlyphs("[=> ]"), barlen=50, color=:yellow)
+
+    # Diagonal with labels
+    plotter[1, 1] = histogram(D_nuts[:, 1], ylabel = colnames[1], title = colnames[1], bins = bins, norm = true)
+                    density!(D_nuts[:, 1], linewidth = 3)
+    ProgressMeter.next!(prog_bar)
+    for i in 2 : n
+        p_diag = histogram(D_nuts[:, i], bins = bins, norm = true)
+        density!(D_nuts[:, i], linewidth = 3)
+        plotter[i, i] = p_diag
+        ProgressMeter.next!(prog_bar)
+    end
+    
+    # lower diag---bivariate ksd + scatters
+    for j in 2 : n
+        Xi = T1[:, 1]
+        Xj = T1[:, j]
+        Yi = T2[:, 1]
+        Yj = T2[:, j]
+        ylabel = colnames[j]
+        k = KernelDensity.kde(D_nuts[:, [1, j]])
+        p_scatter = contour(k.x, k.y, k.density', colorbar = false)
+        scatter!(Xi, Xj, marker = (:circle, 2.3), alpha = 0.4, color = c1, markerstrokewidth = 0.2)
+        scatter!(Yi, Yj, marker = (:circle, 2.3), alpha = 0.3, color = c2, markerstrokewidth= 0.2)
+        # scatter!(Xi, Xj, alpha = 0.3, ylabel = ylabel, markercolor =c1, markersize = 1)
+        # scatter!(Yi, Yj, alpha = 0.3, markercolor = c2, markersize = 2)
+
+        plotter[1, j] = p_scatter
+        plotter[j, 1] = plot(title = colnames[j])
+        ProgressMeter.next!(prog_bar)
+
+        # upper diag
+        plotter[j, 1]  = contour(k.x, k.y, k.density', colorbar = false)
+        ProgressMeter.next!(prog_bar)
+    end
+            
+    for i in 2 : n
+        for j in (i + 1) : n
+            Xi = T1[:, i]
+            Xj = T1[:, j]
+            Yi = T2[:, i]
+            Yj = T2[:, j]
+            k = KernelDensity.kde(D_nuts[:, [i, j]])
+            p_scatter = contour(k.x, k.y, k.density', colorbar = false)
+            scatter!(Xi, Xj, marker = (:circle, 2.3), alpha = 0.4, color = c1, markerstrokewidth= 0.2)
+            scatter!(Yi, Yj, marker = (:circle, 2.3), alpha = 0.3, color = c2, markerstrokewidth= 0.2)
+            # scatter!(Xi, Xj, alpha = 0.3, markercolor = c1, markersize = 1)
+            # scatter!(Yi, Yj, alpha = 0.3, markercolor = c2, markersize = 1)
+            plotter[i, j] = p_scatter
+            ProgressMeter.next!(prog_bar)
+            # upper diag
+            plotter[j, i]  = contour(k.x, k.y, k.density', colorbar = false)
+            ProgressMeter.next!(prog_bar)
+        end
+    end
+
+    p = plot(plotter..., layout=grid(n,n), legend = false)
+    plot!(size = (300n, 300n))
+    return p
+ end
+
+
+function pairkde(D_nuts; bins = 500)
+    n = size(D_nuts, 2)
+    colnames = ["d"*"$i" for i in 1:n]
+    plotter = Matrix{Any}(undef, n,n)
+    prog_bar = ProgressMeter.Progress(Int(n*(n+1)/2), dt=0.5, barglyphs=ProgressMeter.BarGlyphs("[=> ]"), barlen=50, color=:yellow)
+
+    # Diagonal with labels
+    plotter[1, 1] = histogram(D_nuts[:, 1], ylabel = colnames[1], title = colnames[1], bins = bins, norm = true)
+                    density!(D_nuts[:, 1], linewidth = 3)
+    ProgressMeter.next!(prog_bar)
+    for i in 2 : n
+        p_diag = histogram(D_nuts[:, i], bins = bins, norm = true)
+        density!(D_nuts[:, i], linewidth = 3)
+        plotter[i, i] = p_diag
+        ProgressMeter.next!(prog_bar)
+    end
+    
+    # lower diag---bivariate ksd + scatters
+    for j in 2 : n
+        ylabel = colnames[j]
+        k = KernelDensity.kde(D_nuts[:, [1, j]])
+        p_scatter = contour(k.x, k.y, k.density', colorbar = false)
+
+        plotter[1, j] = p_scatter
+        plotter[j, 1] = plot(title = colnames[j])
+        ProgressMeter.next!(prog_bar)
+    end
+            
+    for i in 2 : n
+        for j in (i + 1) : n
+            k = KernelDensity.kde(D_nuts[:, [i, j]])
+            p_scatter = contour(k.x, k.y, k.density', colorbar = false)
+            plotter[i, j] = p_scatter
+            ProgressMeter.next!(prog_bar)
+        end
+    end
+
+   # upper diagonal---empty
+    for i in 1 : n
+        for j in 2 : (i - 1)
+            # Xi = T1[:, i]
+            # Xj = T1[:, j]
+            plotter[i, j] = plot()
+            ProgressMeter.next!(prog_bar)
+        end
+    end
+
+
+    p = plot(plotter..., layout=grid(n,n), legend = false)
+    plot!(size = (300n, 300n))
+    return p
+ end

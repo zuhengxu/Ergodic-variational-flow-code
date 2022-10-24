@@ -60,6 +60,7 @@ function vi_train!(niters::Int, loss, ps::Params, optimizer;
             loss()
         end
         grads = back(1.0)
+        # println(grads)
         # update parameters
         Flux.update!(optimizer, ps, grads)
 

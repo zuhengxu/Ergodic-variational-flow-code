@@ -1,4 +1,5 @@
 include("model_2d.jl")
+include("../../inference/MCMC/NUTS.jl")
 include("../common/plotting.jl")
 include("../common/result.jl")
 import PlotlyJS as pjs
@@ -20,15 +21,14 @@ els = eps_tunning([0.002:0.0005:0.01 ;],o; μ = μ, D = D, n_mcmc = 1000, elbo_s
 
 Random.seed!(1)
 ksd_plot(o; μ = μ, D = D, ϵ = 0.0035*ones(2), Ns = [100, 200, 500, 1000, 1500, 2000], nBs = [0], nsample  =2000, title  = "Cross")
+
 ####################
 #### sctter plot u
 ####################
 Random.seed!(1)
 x = -5:0.1:5
 y = -5:0.1:5
-scatter(o, x, y; contour_plot = true, μ=μ, D=D, ϵ = 0.005*ones(d), n_sample = 1000, n_mcmc = 500, nB = 0, bins = 500, name= "2d_cross_sample.png")
-
-
+scatter_plot(o, x, y; contour_plot = true, μ=μ, D=D, ϵ = 0.005*ones(d), n_sample = 1000, n_mcmc = 500, nB = 0, bins = 500, name= "2d_cross_sample.png", show_legend=false)
 
 # # ################
 # # # lpdf estimation 

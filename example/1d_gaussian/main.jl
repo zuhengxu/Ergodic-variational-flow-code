@@ -1,8 +1,4 @@
-using Revise
-using ErgFlow
-# include("../common/plotting.jl")
-using Distributions, ForwardDiff
-
+using Distributions, ForwardDiff, ErgFlow
 
 # 1d-gaussian target
 logp(x) = logpdf(Normal(2, 2), x)
@@ -19,7 +15,7 @@ n_mcmc = 100
 N = 10000
 
 
-folder = "example/1d_gaussian/figure"
+folder = "figure"
 if ! isdir(folder)
     mkdir(folder)
 end 

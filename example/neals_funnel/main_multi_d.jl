@@ -1,6 +1,7 @@
 include("model_multi_d.jl")
 include("../../inference/MCMC/NUTS.jl")
-include("../../inference/util/metric.jl")
+# include("../../inference/util/metric.jl")
+include("../../inference/util/ksd.jl")
 include("../common/plotting.jl")
 include("../common/result.jl")
 

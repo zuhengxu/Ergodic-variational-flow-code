@@ -1,7 +1,4 @@
-using Revise
-using ErgFlow
-# include("../common/plotting.jl")
-using Distributions, ForwardDiff
+using Distributions, ForwardDiff, ErgFlow
 
 function logmix(x, w, logps)
     a = maximum(logps(x))
@@ -25,7 +22,7 @@ n_mcmc = 100
 N = 10000
 
 
-folder = "example/1d_mixture/figure"
+folder = "figure"
 if ! isdir(folder)
     mkdir(folder)
 end 
