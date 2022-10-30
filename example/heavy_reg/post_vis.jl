@@ -10,42 +10,18 @@ include("../common/nf_train.jl")
 ######################
 # ### fit MF Gaussian
 ######################
-Random.seed!(1)
-o1 = SVI.MFGauss(d, logp, randn, logq)
-a1 = SVI.mf_params(zeros(d), ones(d)) 
-ps1, el1,_ = SVI.vi(o1, a1, 100000; elbo_size = 1, logging_ps = false, optimizer = Flux.ADAM(1e-3))
-# Plots.plot(el1, ylims = (-50, 10))
+# Random.seed!(1)
+# o1 = SVI.MFGauss(d, logp, randn, logq)
+# a1 = SVI.mf_params(zeros(d), ones(d)) 
+# ps1, el1,_ = SVI.vi(o1, a1, 100000; elbo_size = 1, logging_ps = false, optimizer = Flux.ADAM(1e-3))
+# # Plots.plot(el1, ylims = (-50, 10))
 
-μ,D = ps1[1][1], ps1[1][2]
-el_svi = SVI.ELBO(o1, μ,D; elbo_size = 10000) # -409
-JLD.save(joinpath("result/", "mfvi.jld"), "μ", μ, "D", D, "elbo", el_svi)
+# μ,D = ps1[1][1], ps1[1][2]
+# el_svi = SVI.ELBO(o1, μ,D; elbo_size = 10000) # -409
+# JLD.save(joinpath("result/", "mfvi.jld"), "μ", μ, "D", D, "elbo", el_svi)
 
-
-###########
-##  NF
-###########
 MF = JLD.load("result/mfvi.jld")
 μ, D = MF["μ"], MF["D"]
-
-n_lfrg = 80
-o = ErgFlow.HamFlow(d, n_lfrg, logp, ∇logp, randn, logq, 
-        ErgFlow.randl, ErgFlow.lpdf_laplace_std, ErgFlow.∇lpdf_laplace_std, ErgFlow.cdf_laplace_std, ErgFlow.invcdf_laplace_std, ErgFlow.pdf_laplace_std,  
-        ErgFlow.stream, ErgFlow.mixer, ErgFlow.inv_mixer)
-
-# joint target and joint init
-logp_nf(x) = o.logp(x[1:d]) + o.lpdf_mom(x[d+1:end])
-μ_joint = vcat(μ, zeros(d))
-D_joint = vcat(D, ones(d))
-logq_nf(x) =  -0.5*2d*log(2π) - sum(log, abs.(D_joint)) - 0.5*sum(abs2, (x.-μ_joint)./(D_joint .+ 1e-8))
-
-@info "running single nf"
-single_nf(logp_nf, logq_nf, μ, D, d; niter = 200000, nlayers = 5, elbo_size = 10, nelbo_est = 10000, flow_type = "RealNVP", seed = 1)
-el_nf = JLD.load("result/RealNVP5.jld")["elbo"] #194
-println(el_nf)
-
-# single_nf(logp_nf, logq_nf, μ, D, d; niter = 100000, flow_type = "Sylvester", elbo_size = 1, nlayers = 3, hdims = 2, file_name = "Syl.jld")
-# el_nf_syl = JLD.load("result/Syl.jld")["elbo"]
-# println(el_nf_syl)
 
 ############
 # NUTS
@@ -58,8 +34,12 @@ JLD.save(joinpath("result/","nuts_big.jld"), "sample", D_nuts, "ksd", ksd_nuts)
 ##################
 # ergflow
 ####################
-a_p = HF_params(8e-4*ones(d), μ, D) 
-D_ef, _, _ = ErgFlow.Sampler(o, a_p, ErgFlow.pseudo_refresh_coord, 1000, 2000)
+n_lfrg = 80
+o = ErgFlow.HamFlow(d, n_lfrg, logp, ∇logp, randn, logq, 
+        ErgFlow.randl, ErgFlow.lpdf_laplace_std, ErgFlow.∇lpdf_laplace_std, ErgFlow.cdf_laplace_std, ErgFlow.invcdf_laplace_std, ErgFlow.pdf_laplace_std,  
+        ErgFlow.stream, ErgFlow.mixer, ErgFlow.inv_mixer)
+a_p = HF_params(3e-4*ones(d), μ, D) 
+D_ef, _, _ = ErgFlow.Sampler(o, a_p, ErgFlow.pseudo_refresh_coord, 1000, 1000)
 JLD.save("result/EF_sample.jld", "sample", D_ef)
 
 ###################

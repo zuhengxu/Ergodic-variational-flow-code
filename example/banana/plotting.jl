@@ -36,8 +36,6 @@ p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 5, ylim = (0, Inf),labels = Label
 hline!( [ksd_nuts], linestyle=:dash, lw = 5, label = "NUTS", legend=false)
 savefig(p_ksd, "figure/banana_ksd.png")
 
-# lap = JLD.load("/home/zuheng/Research/MCMC-with-density/code/example/banana/result/stab_lap.jld")
-# gauss = JLD.load("/home/zuheng/Research/MCMC-with-density/code/example/banana/result/stab_norm.jld")
 lap = JLD.load("result/stab_lap.jld")
 gauss = JLD.load("result/stab_norm.jld")
 logis =  JLD.load("result/stab_log.jld")

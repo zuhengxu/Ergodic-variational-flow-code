@@ -42,7 +42,9 @@ gsvi = (x, y) -> exp(logq([x, y], μ, D))
 # savefig(pp, joinpath(fig_dir,"contour.png"))
 
 
-folder = "figure"
-if ! isdir(folder)
-    mkdir(folder)
+if ! isdir("figure")
+    mkdir("figure")
+end 
+if ! isdir("result")
+    mkdir("result")
 end 
