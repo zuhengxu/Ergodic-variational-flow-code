@@ -1,3 +1,6 @@
+##############3
+# NUTS interface---the algorithm is implemented by AdvancedHMC.jl
+##############
 using AdvancedHMC
 
 function nuts(θ0, δ, L, ∇L, M, Madapt; verbose = true)

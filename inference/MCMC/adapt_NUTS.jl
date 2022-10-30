@@ -3,7 +3,8 @@ include("init_stepsize.jl")
 using LinearAlgebra, ProgressMeter, Random
 
 ################
-# NUTS with dual averaging for stepsize tuning (Alg 6) :: TODO not working
+# NUTS with dual averaging for stepsize tuning (Alg 6 of https://arxiv.org/abs/1111.4246) 
+# code adapted from https://github.com/ericagol/nutsinjulia
 ################
 
 function build_tree(θ, r, logu, v, j, ϵ, θ0, r0, L, ∇L)

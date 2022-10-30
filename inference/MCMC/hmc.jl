@@ -3,7 +3,7 @@ include("init_stepsize.jl")
 
 
 ##################3
-# slight modificaiton to alg 5 of NUTS paper 
+# slight modificaiton to alg 5 of NUTS paper (https://arxiv.org/abs/1111.4246)
 ################3
 
 function hmc(θ0, ϵ,  δ, n_lfrg, L, ∇L, M, Madapt; verbose = true)

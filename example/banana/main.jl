@@ -1,6 +1,5 @@
 include("model_2d.jl")
 include("../../inference/MCMC/NUTS.jl")
-# include("../../inference/util/metric.jl")
 include("../common/plotting.jl")
 include("../common/result.jl")
 import PlotlyJS as pjs
@@ -24,8 +23,6 @@ els = eps_tunning([0.008:0.002:0.03 ;],o; μ = μ, D = D, n_mcmc = 1000, elbo_si
 Random.seed!(1)
 ksd_plot(o; μ = μ, D = D, ϵ = 0.016*ones(2), Ns = [100, 200, 500, 1000, 1500, 2000], nBs = [0], nsample  =2000, title  = "Banana")
 
-# ErgFlow.ELBO(o, 0.01*ones(o.d), μ, D, ErgFlow.pseudo_refresh_coord,ErgFlow.inv_refresh_coord, 1000; nBurn = 0, elbo_size = 1000, print = true)
-# ErgFlow.ELBO_long(o, 0.01*ones(o.d), μ, D, ErgFlow.pseudo_refresh_coord,ErgFlow.inv_refresh_coord, 1000; nBurn = 0, elbo_size = 1000, print = true)
 
 ####################
 #### sctter plot 

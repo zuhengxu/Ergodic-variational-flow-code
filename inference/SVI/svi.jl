@@ -6,9 +6,8 @@ module SVI
     abstract type StochasticVI end
     abstract type params end
 
-
     ##################################3
-    # mean field Gaussian
+    # mean field Gaussian variational inference
     ####################################
      include("MFvi.jl")
 

@@ -1,4 +1,7 @@
-using LinearAlgebra, Distributions, Random, Plots, StatsBase, SpecialFunctions, Parameters
+#=
+NFs are coded using Bijectors.jl interface
+=#
+using LinearAlgebra, Distributions, Random, StatsBase, SpecialFunctions, Parameters
 using ProgressMeter, Flux, Bijectors, TickTock
 include("../util/train.jl")
 
@@ -29,7 +32,6 @@ function nf(flow::Bijectors.MultivariateTransformed, logp, logq, niters::Int; el
     end
 
     elbo_log, ps_log = vi_train!(niters, loss, ps, optimizer; kwargs...)
-    # time = peektimer()
     
     return [[copy(p) for p in ps]], -elbo_log, ps_log
 end
