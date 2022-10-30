@@ -21,7 +21,7 @@ Examples run and generate output using Julia v1.8.2.
 Each experiment should be run in its own folder (e.g., `example/1d_cauchy`, `example/banana/`, and etc.). Specifically, 
 * To generate Figure 1 (effect of irrational shift), execute the following in bash:
 ```bash
-cd 'example/uniform/'
+cd example/uniform/
 julia beta_mixture.jl
 ```
 * To generate plots for all synthetic examples, check the `README.md` files in each of the `1d_cauchy`, `1d_gaussian`, `1d_mixture`, `banana`, `cross`, `neals_funnel`, and `warped_gaussian` folders. 
