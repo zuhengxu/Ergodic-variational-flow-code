@@ -25,5 +25,9 @@ cd example/uniform/
 julia beta_mixture.jl
 ```
 * To generate plots for all synthetic examples, check the `README.md` files in each of the `1d_cauchy`, `1d_gaussian`, `1d_mixture`, `banana`, `cross`, `neals_funnel`, and `warped_gaussian` folders. 
-* To generate plots for all real data examples: `cd` into each of the `heavy_reg`, `linear_regression`, `lin_reg_heavy`, `logistic_reg`, `poiss`,`sparse_regression`, and `sp_reg_big` folders, and then execute `./run.sh`. Note that users should modify the number of execution threads in `run.sh` based on their own computation resources (currently set to be 18).
+* To generate plots for all real data examples: `cd` into each of the `heavy_reg`, `linear_regression`, `lin_reg_heavy`, `logistic_reg`, `poiss`,`sparse_regression`, and `sp_reg_big` folders, and then execute
+```bash
+./run.sh
+```  
+Note that users should modify the number of execution threads in `run.sh` based on their own computation resources (currently set to be 18).
 
