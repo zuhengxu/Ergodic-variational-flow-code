@@ -183,10 +183,10 @@ savefig(filepath)
 # pairwise plot
 ###################
 NUTS = JLD.load("result/nuts.jld")
-NF_planar = JLD.load("result/realNVP3.jld")
+NF_nvp = JLD.load("result/realNVP3.jld")
 
 D_nuts = NUTS["sample"]
-D_nf = NF_planar["Samples"][:, 1:d]
+D_nf = NF_nvp["Samples"][:, 1:d]
 D_ef = JLD.load("result/EF_sample.jld")["sample"]
 
 

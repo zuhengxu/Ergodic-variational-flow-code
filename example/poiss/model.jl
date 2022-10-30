@@ -20,8 +20,6 @@ load and process .npz data
     return Z, Float64.(Y), N, p
 end
 
-# Z, Y, N, d = data_load("data/airportdelays.npz")
-
 
 ### helper functions#####
 function log_sigmoid_neg(x)

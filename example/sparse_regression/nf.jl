@@ -12,7 +12,7 @@ include("../common/nf_train.jl")
 ##  NF setup
 ###########
 Random.seed!(1)
-o1 = SVI.MFGauss(d, logp, randn, logq)
+# o1 = SVI.MFGauss(d, logp, randn, logq)
 # a1 = SVI.mf_params(zeros(d), ones(d)) 
 # ps1, el1,_ = SVI.vi(o1, a1, 100000; elbo_size = 1, logging_ps = false, optimizer = Flux.ADAM(1e-3))
 # # Plots.plot(el1, ylims = (-50, 10))
@@ -37,14 +37,14 @@ logq_nf(x) =  -0.5*2d*log(2π) - sum(log, abs.(D_joint)) - 0.5*sum(abs2, (x.-μ_
 
 
 
-# run 3 runs for each layer
-# tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [8], flow_type="RealNVP", nrun = 3, file_name = "RealNVP8_run.jld")
-# tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [5], flow_type="RealNVP", nrun = 3, file_name = "RealNVP5_run.jld")
-# tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [5, 10, 20], flow_type="Planar", nrun = 3, file_name = "Planar_run.jld")
-# tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [5, 10, 20], flow_type="Radial", nrun = 3, file_name = "Radial_run.jld")
-# single_nf(logp_nf, logq_nf, μ, D, d; nlayers = 5, flow_type="RealNVP", seed = 1)
-# single_nf(logp_nf, logq_nf, μ, D, d; nlayers = 5, flow_type="Planar", seed = 1)
-# single_nf(logp_nf, logq_nf, μ, D, d; nlayers = 20, flow_type="Radial", seed = 1)
+# run 5 runs for each layer
+tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [8], flow_type="RealNVP", nrun = 3, file_name = "RealNVP8_run.jld")
+tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [5], flow_type="RealNVP", nrun = 3, file_name = "RealNVP5_run.jld")
+tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [5, 10, 20], flow_type="Planar", nrun = 3, file_name = "Planar_run.jld")
+tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [5, 10, 20], flow_type="Radial", nrun = 3, file_name = "Radial_run.jld")
+single_nf(logp_nf, logq_nf, μ, D, d; nlayers = 5, flow_type="RealNVP", seed = 1)
+single_nf(logp_nf, logq_nf, μ, D, d; nlayers = 5, flow_type="Planar", seed = 1)
+single_nf(logp_nf, logq_nf, μ, D, d; nlayers = 20, flow_type="Radial", seed = 1)
 
 ###################
 # compute ksd using NF samples

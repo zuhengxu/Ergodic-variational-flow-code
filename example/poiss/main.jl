@@ -25,7 +25,7 @@ JLD.save(joinpath("result/", "mfvi.jld"), "μ", μ, "D", D, "elbo", el_svi)
 
 
 ###########
-## EF
+## ELBO
 ###########
 n_lfrg = 50
 o = ErgFlow.HamFlow(d, n_lfrg, logp, ∇logp, randn, logq, 
@@ -37,14 +37,9 @@ ELBO_plot(o, o1; μ= μ, D = D, eps = [8e-5, 1e-4, 1.2e-4], Ns = [100, 200, 500,
 		res_name = "el.jld",fig_name = "poiss_elbo.png", title = "Poisson regression", 
 		xtickfont=font(18), ytickfont=font(18), guidefont=font(18), legendfont=font(18), titlefontsize = 18, xrotation = 20)
 
-# ELBO_plot(o, o1; μ= μ, D = D, eps = [5e-4, 1e-3], Ns = [100, 200, 500, 1000, 1500, 2000], nBs = [0,0,0,0,0,0,0,0], elbo_size = 1000, 
-# 		res_name = "el1.jld",fig_name = "poiss_elbo1.png", title = "Poisson regression", 
-# 		xtickfont=font(18), ytickfont=font(18), guidefont=font(18), legendfont=font(18), titlefontsize = 18, xrotation = 20)
 
-# Random.seed!(1)
-# els = eps_tunning([1.1e-4],o; μ = μ, D = D, n_mcmc = 2000, elbo_size= 1000, fig_name = "poiss_tune.png", title = "Poisson regression", 
-#                 kxtickfont=font(18), ytickfont=font(18), guidefont=font(18), legendfont=font(18), titlefontsize = 18)
-# println(els)
-
+###########
+# KSD
+###########
 Random.seed!(1)
 ksd_plot(o; μ = μ, D = D, ϵ = 1e-4*ones(d), Ns = [100, 200, 500, 1000, 1500, 2000], nBs = [0], nsample = 5000, title  = "Poisson regression", fig_name = "ksd.png", res_name = "ksd.jld")

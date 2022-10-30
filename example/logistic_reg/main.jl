@@ -20,7 +20,7 @@ el_svi = SVI.ELBO(o1, μ,D; elbo_size = 10000)
 
 
 ###########
-## EF
+## ELBO
 ###########
 n_lfrg = 50
 o = ErgFlow.HamFlow(d, n_lfrg, logp, ∇logp, randn, logq, 
@@ -28,31 +28,15 @@ o = ErgFlow.HamFlow(d, n_lfrg, logp, ∇logp, randn, logq,
         ErgFlow.stream, ErgFlow.mixer, ErgFlow.inv_mixer)
 
 
-# Random.seed!(1)
-# ELBO_plot(o, o1; μ= μ, D = D, eps = [1e-4, 2e-3, 4e-3], Ns = [100, 200, 500, 1000, 1500], nBs = [0,0,0,0,0,0], elbo_size = 1000, 
-#         res_name = "el.jld",fig_name = "lg_elbo.png", title = "Logistic regression", 
-#         xtickfont=font(18), ytickfont=font(18), guidefont=font(18), legendfont=font(18), titlefontsize = 18, xrotation = 20)
+Random.seed!(1)
+ELBO_plot(o, o1; μ= μ, D = D, eps = [1e-4, 2e-3, 4e-3], Ns = [100, 200, 500, 1000, 1500], nBs = [0,0,0,0,0,0], elbo_size = 1000, 
+        res_name = "el.jld",fig_name = "lg_elbo.png", title = "Logistic regression", 
+        xtickfont=font(18), ytickfont=font(18), guidefont=font(18), legendfont=font(18), titlefontsize = 18, xrotation = 20)
 
-# # Random.seed!(1)
-# # D_nuts = nuts(μ, 0.7, logp, ∇logp, 5000, 20000)
-# # ksd_nuts = ksd(D_nuts, ∇logp)
-# # 0.34
-
-
-# Random.seed!(1)
-# ksd_plot(o; μ = μ, D = D, ϵ = 2e-3*ones(d), Ns = [100, 200, 500, 1000, 1500], nBs = [0], nsample = 5000, title  = "Logistic regression")
 
 ###########
-##  NF
+## KSD
 ###########
-# joint target and joint init
-logp_nf(x) = o.logp(x[1:d]) + o.lpdf_mom(x[d+1:end])
-μ_joint = vcat(μ, zeros(d))
-D_joint = vcat(D, ones(d))
-logq_nf(x) =  -0.5*2d*log(2π) - sum(log, abs.(D_joint)) - 0.5*sum(abs2, (x.-μ_joint)./(D_joint .+ 1e-8))
-# logq_joint(x) =  -0.5*4*log(2π) - 0.5*sum(abs2, x)
 
-@info "running single nf"
-single_nf(logp_nf, logq_nf, μ, D, d; niter = 100000)
-el_nf = JLD.load("result/nf.jld")["elbo"]
-println(el_nf)
+Random.seed!(1)
+ksd_plot(o; μ = μ, D = D, ϵ = 2e-3*ones(d), Ns = [100, 200, 500, 1000, 1500], nBs = [0], nsample = 5000, title  = "Logistic regression")

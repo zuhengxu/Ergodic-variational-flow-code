@@ -38,7 +38,7 @@ logq_nf(x) =  -0.5*2d*log(2π) - sum(log, abs.(D_joint)) - 0.5*sum(abs2, (x.-μ_
 
 
 
-# run 3 runs for each layer
+# run 5 runs for each layer
 tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [10], flow_type="RealNVP", nrun = 5, file_name = "RealNVP10_run.jld")
 tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [5], flow_type="RealNVP", nrun = 5, file_name = "RealNVP5_run.jld")
 tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [5, 10, 20], flow_type="Planar", nrun = 5, file_name = "Planar_run.jld")

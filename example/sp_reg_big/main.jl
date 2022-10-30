@@ -12,12 +12,12 @@ include("../common/nf_train.jl")
 Random.seed!(1)
 o1 = SVI.MFGauss(d, logp, randn, logq)
 
-# a1 = SVI.mf_params(zeros(d), ones(d)) 
-# ps1, el1,_ = SVI.vi(o1, a1, 100000; elbo_size = 1, logging_ps = false)
-# # Plots.plot(el1, ylims = (-50, 10))
-# μ,D = ps1[1][1], ps1[1][2]
-# el_svi = SVI.ELBO(o1, μ, D; elbo_size = 10000)
-# JLD.save("result/mf_params.jld", "μ", μ, "D", D, "elbo", el_svi)
+a1 = SVI.mf_params(zeros(d), ones(d)) 
+ps1, el1,_ = SVI.vi(o1, a1, 100000; elbo_size = 1, logging_ps = false)
+# Plots.plot(el1, ylims = (-50, 10))
+μ,D = ps1[1][1], ps1[1][2]
+el_svi = SVI.ELBO(o1, μ, D; elbo_size = 10000)
+JLD.save("result/mf_params.jld", "μ", μ, "D", D, "elbo", el_svi)
 
 
 MF = JLD.load("result/mfvi.jld")
@@ -35,22 +35,9 @@ ELBO_plot(o, o1; μ=μ, D = D, eps = [8e-4, 1e-3, 1.2e-3], Ns = [100, 200, 500, 
         res_name = "el.jld",fig_name = "sp_elbo.png", title = "Sparse regression (high dim)", 
         xtickfont=font(18), ytickfont=font(18), guidefont=font(18), legendfont=font(18), titlefontsize = 18, xrotation = 20)
 
-# ELBO_plot(o, o1; μ=μ, D = D, eps = [8e-4, 1.2e-3], Ns = [200, 800, 1200, 2000], nBs = [0,0,0,0,0,0,0], elbo_size = 1000, 
-#         res_name = "el1.jld",fig_name = "sp_elbo1.png", title = "Sparse regression (high dim)", 
-#         xtickfont=font(18), ytickfont=font(18), guidefont=font(18), legendfont=font(18), titlefontsize = 18, xrotation = 20)
-
-
 
 # ###########33
 # # KSD
 # ###############
-# # Random.seed!(1)
-# # D_nuts = nuts(μ, 0.7, logp, ∇logp, 5000, 20000)
-# # ksd_nuts = ksd(D_nuts, ∇logp)
-# # JLD.save(joinpath("result/","nuts.jld"), "sample", D_nuts, "ksd", "ksd_nuts")
-
-
-# Random.seed!(1)
-ksd_plot(o; μ = μ, D = D, ϵ = 1e-3*ones(d), Ns = [100, 200, 500, 1000, 1500, 2000], nBs = [0], nsample = 5000, title  = "Linear regression", fig_name = "ksd1.png", res_name = "ksd1.jld")
+Random.seed!(1)
 ksd_plot(o; μ = μ, D = D, ϵ = 8e-4*ones(d), Ns = [100, 200, 500, 1000, 1500, 2000], nBs = [0], nsample = 5000, title  = "Sparse regression (high dim)", fig_name = "ksd.png", res_name = "ksd.jld")
-# ksd_plot(o; μ = μ, D = D, ϵ = 3e-5*ones(d), Ns = [100, 200, 500, 1000, 1500, 2000], nBs = [0], nsample = 5000, title  = "Linear regression", fig_name = "ksd1.png", res_name = "ksd1.jld")
