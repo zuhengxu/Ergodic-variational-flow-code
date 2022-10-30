@@ -1,4 +1,5 @@
 using Distributions, LinearAlgebra, Random, Plots
+using ErgFlow
 using Tullio, ForwardDiff
 using Base.Threads:@threads
 using JLD, DataFrames, CSV 
@@ -86,3 +87,10 @@ end
 ########################
 logq(x, μ, D) =  -0.5*d*log(2π) - sum(log, abs.(D)) - 0.5*sum(abs2, (x.-μ)./(D .+ 1e-8))
 ∇logq(x, μ, D) = (μ .- x)./(D .+ 1e-8)
+
+if ! isdir("figure")
+    mkdir("figure")
+end 
+if ! isdir("result")
+    mkdir("result")
+end 

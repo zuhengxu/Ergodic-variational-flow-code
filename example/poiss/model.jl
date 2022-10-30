@@ -1,5 +1,7 @@
 using NPZ, LinearAlgebra, Distributions, Random
+using ErgFlow
 using Tullio, LogExpFunctions
+using Zygote
 using Zygote:@adjoint, refresh
 
 function data_load(dnm)
@@ -85,7 +87,9 @@ logq(x, μ, D) =  -0.5*d*log(2π) - sum(log, abs.(D)) - 0.5*sum(abs2, (x.-μ)./(
 ∇logq(x, μ, D) = (μ .- x)./(D .+ 1e-8)
 
 
-folder = "figure"
-if ! isdir(folder)
-    mkdir(folder)
+if ! isdir("figure")
+    mkdir("figure")
+end 
+if ! isdir("result")
+    mkdir("result")
 end 

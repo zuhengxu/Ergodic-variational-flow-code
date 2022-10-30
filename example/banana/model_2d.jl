@@ -29,7 +29,9 @@ el_svi = SVI.ELBO(o1, μ, D; elbo_size = 1000)
 
 
 
-folder = "figure"
-if ! isdir(folder)
-    mkdir(folder)
+if ! isdir("figure")
+    mkdir("figure")
+end 
+if ! isdir("result")
+    mkdir("result")
 end 
