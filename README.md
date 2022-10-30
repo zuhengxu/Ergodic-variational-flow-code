@@ -12,7 +12,7 @@ Pkg.add("https://github.com/zuhengxu/ErgFlow.jl")
 ```
 
 ## Source code 
-Examples run and generate output using Julia v1.8.2.
+Examples run and generate output using Julia v1.8.1.
 - `inference/` provides implementation of our competitors (NUTS/standard HMC/three normalizing flow methods), as well as utility functions for performing inference (KSD estimation/mean-field Gaussian VI method/etc.)
 - `examples/` provides code to replicate examples and figures 
 
