@@ -17,6 +17,6 @@ N = 10000
 
 
 folder = "figure"
-# if ! isdir(folder)
-#     mkdir(folder)
-# end 
+if ! isdir(folder)
+    mkdir(folder)
+end 

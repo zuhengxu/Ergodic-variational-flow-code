@@ -1,5 +1,10 @@
 using Plots, Distributions, Random
 
+folder = "figure"
+if ! isdir(folder)
+    mkdir(folder)
+end 
+
 #beta mixture
 d = MixtureModel([Beta(2.0, 6.0), Beta(6.0, 1.0)], [0.6, 0.4])
 f = x-> pdf(d, x)
