@@ -29,5 +29,5 @@ julia beta_mixture.jl
 ```bash
 ./run.sh
 ```  
-Note that users should modify the number of execution threads in `run.sh` based on their own computation resources (currently set to be 18).
+Note that users should modify the number of execution threads in `run.sh` based on their own computational resources (currently set to be 18).
 
