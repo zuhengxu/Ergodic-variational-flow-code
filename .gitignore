@@ -46,6 +46,7 @@ __pycache__/
 /result/*
 *.png 
 *.jld
+*.jld2
 *.gif
 ## Build tool auxiliary files:
 *.synctex

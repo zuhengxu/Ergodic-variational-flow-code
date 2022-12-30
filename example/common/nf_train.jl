@@ -1,4 +1,4 @@
-using TickTock, JLD
+using TickTock, JLD2
 using Base:Threads
 using DataFrames
 include("../../inference/util/ksd.jl")
@@ -10,7 +10,7 @@ include("../common/timing.jl")
 function single_nf(logp_joint, logq_joint, μ, D, d;
                 nlayers = 5, hdims= d, flow_type = "Planar",
                 niter = 200000, elbo_size = 10, nelbo_est = 2000, nsamples::Int64 = 5000, n_run = 100, 
-                seed = 1, file_name = flow_type*"$(nlayers).jld" )
+                seed = 1, file_name = flow_type*"$(nlayers).jld2" )
         
         Random.seed!(seed)
         # base distribution for NF
@@ -47,7 +47,7 @@ function single_nf(logp_joint, logq_joint, μ, D, d;
         # saving result
         ##############
         file_path = joinpath("result/", file_name)
-        JLD.save(file_path, "train_time", nf_train_time, "sampling_time", sampling_time, 
+        JLD2.save(file_path, "train_time", nf_train_time, "sampling_time", sampling_time, 
                 "elbo", el_nf, "Samples", t_nf,  
                 "type", flow_type, "nlayer", nlayers, "hdims", hdims)
 
@@ -93,7 +93,7 @@ end
 function tune_nf(logp_joint, logq_joint, μ, D, d; 
                 nlayers = [5, 10, 20], hdims = d, flow_type = "Planar",
                 niter = 200000, elbo_size = 10, nelbo_est = 2000, nrun = 5, 
-                file_name = flow_type*"_tune.jld")
+                file_name = flow_type*"_tune.jld2")
     
         K = size(nlayers, 1)
         ELBO = zeros(nrun, K)
@@ -116,21 +116,21 @@ function tune_nf(logp_joint, logq_joint, μ, D, d;
         rename!(df_train, ["$(n)layers" for n in nlayers])
 
     file_path = joinpath("result/", file_name)
-    JLD.save(file_path, "n_layers", nlayers, "hdims", hdims, "type", flow_type, "train_time", df_train, "elbo", df_elbo)
+    JLD2.save(file_path, "n_layers", nlayers, "hdims", hdims, "type", flow_type, "train_time", df_train, "elbo", df_elbo)
 end
 
 ###################
 # compute ksd using NF samples
 ###################
-function nf_ksd(files, o; file_name = "NF_ksd.jld", kwargs...)
+function nf_ksd(files, o; file_name = "NF_ksd.jld2", kwargs...)
         T_ksd = zeros(size(files,1))
 
         for i in 1:size(files,1)
-                Dnf = JLD.load("result/"*files[i])["Samples"]
+                Dnf = JLD2.load("result/"*files[i])["Samples"]
                 ksd_est = ksd(Dnf, o.∇logp; kwargs...)
                 T_ksd[i] = ksd_est 
                 println("$(files[i]) ksd =  $(ksd_est)")
         end
         file_path = joinpath("result/", file_name)
-        JLD.save(file_path, "ksd", T_ksd, "settings", files)
+        JLD2.save(file_path, "ksd", T_ksd, "settings", files)
 end
