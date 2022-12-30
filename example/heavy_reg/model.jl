@@ -2,7 +2,7 @@ using Distributions, LinearAlgebra, Random, Plots, StatsBase
 using Tullio, ForwardDiff
 using ErgFlow
 using Base.Threads:@threads
-using JLD, DataFrames, CSV 
+using JLD, JLD2, DataFrames, CSV 
 using Zygote:Buffer, ignore, gradient, @ignore, @adjoint
 include("../../inference/SVI/svi.jl")
 
