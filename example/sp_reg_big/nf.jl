@@ -1,4 +1,4 @@
-using Flux, Zygote, JLD, Plots, ProgressMeter
+using Flux, Zygote, JLD, JLD2, Plots, ProgressMeter
 using ErgFlow
 include("model.jl")
 include("../../inference/SVI/svi.jl")

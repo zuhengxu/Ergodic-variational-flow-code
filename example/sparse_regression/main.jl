@@ -29,9 +29,9 @@ ELBO_plot(o, o1; μ=μ, D = D, eps = [1e-3, 1.1e-3, 2e-3], Ns = [100, 200, 300,4
         xtickfont=font(18), ytickfont=font(18), guidefont=font(18), legendfont=font(18), titlefontsize = 18, xrotation = 20)
 
 
-###########
-## KSD
-###########
-Random.seed!(1)
-ksd_plot(o; μ = μ, D = D, ϵ = 1.1e-3*ones(d), Ns = [100, 200, 400, 500, 600], nBs = [0], nsample = 5000, title  = "Sparse regression", res_name = "ksd1.jld", fig_name = "ksd1.png")
+# ###########
+# ## KSD
+# ###########
+# Random.seed!(1)
+# ksd_plot(o; μ = μ, D = D, ϵ = 1.1e-3*ones(d), Ns = [100, 200, 400, 500, 600], nBs = [0], nsample = 5000, title  = "Sparse regression", res_name = "ksd1.jld", fig_name = "ksd1.png")
 

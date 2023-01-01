@@ -35,8 +35,8 @@ ELBO_plot(o, o1; μ=μ, D = D, eps = [2.5e-5, 3e-5, 5e-5], Ns = [100, 200, 500, 
 
 
 
-# ###########33
-# # KSD
-# ###############
-Random.seed!(1)
-ksd_plot(o; μ = μ, D = D, ϵ = 3e-5*ones(d), Ns = [100, 200, 500, 1000, 1500, 2000], nBs = [0], nsample = 5000, title  = "Linear regression (heavy)", fig_name = "ksd1.png", res_name = "ksd1.jld")
+# # ###########33
+# # # KSD
+# # ###############
+# Random.seed!(1)
+# ksd_plot(o; μ = μ, D = D, ϵ = 3e-5*ones(d), Ns = [100, 200, 500, 1000, 1500, 2000], nBs = [0], nsample = 5000, title  = "Linear regression (heavy)", fig_name = "ksd1.png", res_name = "ksd1.jld")

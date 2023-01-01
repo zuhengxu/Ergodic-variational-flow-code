@@ -1,9 +1,7 @@
 using Flux, Zygote, JLD, Plots
 using ErgFlow
 include("model.jl")
-# include("../../inference/HVI/HVI.jl")
 include("../../inference/MCMC/NUTS.jl")
-# include("../../inference/util/metric.jl")
 include("../../inference/util/ksd.jl")
 include("../common/plotting.jl")
 include("../common/nf_train.jl")
@@ -34,9 +32,9 @@ ELBO_plot(o, o1; μ= μ, D = D, eps = [1e-4, 2e-3, 4e-3], Ns = [100, 200, 500, 1
         xtickfont=font(18), ytickfont=font(18), guidefont=font(18), legendfont=font(18), titlefontsize = 18, xrotation = 20)
 
 
-###########
-## KSD
-###########
+# ###########
+# ## KSD
+# ###########
 
-Random.seed!(1)
-ksd_plot(o; μ = μ, D = D, ϵ = 2e-3*ones(d), Ns = [100, 200, 500, 1000, 1500], nBs = [0], nsample = 5000, title  = "Logistic regression")
+# Random.seed!(1)
+# ksd_plot(o; μ = μ, D = D, ϵ = 2e-3*ones(d), Ns = [100, 200, 500, 1000, 1500], nBs = [0], nsample = 5000, title  = "Logistic regression")

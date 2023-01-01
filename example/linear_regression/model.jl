@@ -2,7 +2,7 @@ using Distributions, ForwardDiff, LinearAlgebra, Random, Plots
 using MLDatasets
 using Base.Threads:@threads
 using Base.Threads
-using JLD, Tullio
+using JLD, JLD2, Tullio
 using Zygote, ErgFlow
 using Zygote:Buffer, ignore, gradient, @ignore
 # using ChainRules

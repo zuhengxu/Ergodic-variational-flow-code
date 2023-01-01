@@ -14,10 +14,10 @@ colours = [palette(:Paired_12)[6], palette(:Paired_12)[4], palette(:Paired_12)[2
 
 # ELBO
 ELBO = JLD.load("result/el_mf.jld")
-NF_RealNVP5 = JLD.load("result/RealNVP5_run.jld")
-NF_RealNVP10 = JLD.load("result/RealNVP10_run.jld")
-Planar = JLD.load("result/Planar_run.jld")
-Radial = JLD.load("result/Radial_run.jld")
+NF_RealNVP5 = JLD2.load("result/RealNVP5_run.jld2")
+NF_RealNVP10 = JLD2.load("result/RealNVP10_run.jld2")
+Planar = JLD2.load("result/Planar_run.jld2")
+Radial = JLD2.load("result/Radial_run.jld2")
 
 # real nvp 5
 println(median(vec(Matrix(NF_RealNVP5["elbo"]))))
@@ -97,6 +97,21 @@ dat = Matrix(Radial["elbo"][!,"10layers"]')
 hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "Radial", ribbon = get_percentiles(dat), color = colours[6])
 savefig(p_elbo, "figure/linreg_elbo.png")
 
+
+# elbo full
+Els = ELBO["elbos"]
+p_elbo = plot(reduce(vcat, [[0], Ns]), Els',lw = 5, labels = Labels, legend = :outertopright, ylabel = "ELBO", xlabel = "#Refresh",
+                        xtickfontsize = 15, ytickfontsize = 15, guidefontsize = 15, legendfontsize = 15, titlefontsize = 15, xrotation = 20, bottom_margin=10Plots.mm, left_margin=5Plots.mm, lincolor = [colours[1] colours[2] colours[3]])
+dat = Matrix(NF_RealNVP5["elbo"])'
+hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "RealNVP", ribbon = get_percentiles(dat), color = colours[4])
+dat = Matrix(Planar["elbo"][!,"5layers"]')
+hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "Planar", ribbon = get_percentiles(dat), color = colours[5])
+dat = Matrix(Radial["elbo"][!,"10layers"]')
+hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "Radial", ribbon = get_percentiles(dat), color = colours[6])
+savefig(p_elbo, "figure/linreg_elbo_full.png")
+
+
+
 # KSD
 KSD = JLD.load("result/ksd.jld")
 ϵ = KSD["ϵ"]
@@ -105,7 +120,7 @@ Ks = KSD["KSD"]
 Ns = KSD["Ns"]
 nBs = KSD["nBurns"]
 
-NF_KSD = JLD.load("result/NF_ksd.jld")
+NF_KSD = JLD2.load("result/NF_ksd.jld2")
 ksd_nf = NF_KSD["ksd"]
 labels_nf = ["RealNVP" "Planar" "Radial"]
 
@@ -124,7 +139,7 @@ savefig(p_ksd, "figure/linreg_ksd.png")
 # hline!([ksd_nuts], linestyle=:dash, lw = 2, label = "NUTS")
 # savefig(p_ksd, "figure/linreg_ksd_log.png")
 
-NF = JLD.load("result/RealNVP5.jld") 
+NF = JLD2.load("result/RealNVP5.jld2") 
 time_trian = NF["train_time"]
 Time = JLD.load("result/timing_per_sample.jld")
 time_sample_erg_iid = Time["time_sample_erg_iid"]
@@ -158,7 +173,7 @@ filepath = string("figure/ess.png")
 savefig(filepath)
 
 NUTS = JLD.load("result/nuts.jld")
-NF_planar = JLD.load("result/RealNVP5.jld")
+NF_planar = JLD2.load("result/RealNVP5.jld2")
 
 D_nuts = NUTS["sample"]
 D_nf = NF_planar["Samples"][:, 1:d]

@@ -14,11 +14,11 @@ colours = [palette(:Paired_12)[6], palette(:Paired_12)[4], palette(:Paired_12)[2
 
 # ELBO
 ELBO = JLD.load("result/el.jld")
-NF_RealNVP5 = JLD.load("result/RealNVP5_run.jld")
-NF_RealNVP8 = JLD.load("result/RealNVP8_run.jld")
-NF_RealNVP10 = JLD.load("result/RealNVP10_run.jld")
-Planar = JLD.load("result/Planar_run.jld")
-Radial = JLD.load("result/Radial_run.jld")
+NF_RealNVP5 = JLD2.load("result/RealNVP5_run.jld2")
+NF_RealNVP8 = JLD2.load("result/RealNVP8_run.jld2")
+NF_RealNVP10 = JLD2.load("result/RealNVP10_run.jld2")
+Planar = JLD2.load("result/Planar_run.jld2")
+Radial = JLD2.load("result/Radial_run.jld2")
 
 # real nvp 5
 println(median(vec(Matrix(NF_RealNVP5["elbo"]))[iszero.(isnan.(vec(Matrix(NF_RealNVP5["elbo"]))))]))
@@ -87,8 +87,8 @@ println("-----")
 # radial 5 is best
 
 # el_nf = NF["elbo"]
-eps = ELBO["eps"][2:end]
-Els = Matrix(ELBO["elbos"][2:end,:][1,:]')
+eps = ELBO["eps"]
+Els = Matrix(ELBO["elbos"][3,:]')
 Ns = ELBO["Ns"]
 Labels = Matrix{String}(undef, 1, size(eps, 1))
 Labels[1, :].= ["ϵ=$e" for e in eps]
@@ -102,7 +102,7 @@ hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, 
 savefig(p_elbo, "figure/linreg_heavy_elbo.png")
 
 # elbo full
-Els = ELBO["elbos"][2:end,:]
+Els = ELBO["elbos"]
 p_elbo = plot(reduce(vcat, [[0], Ns]), Els',lw = 5, labels = Labels, legend = :outertopright, ylabel = "ELBO", xlabel = "#Refresh",
                         xtickfontsize = 15, ytickfontsize = 15, guidefontsize = 15, legendfontsize = 15, titlefontsize = 15, xrotation = 20, bottom_margin=10Plots.mm, left_margin=5Plots.mm, lincolor = [colours[1] colours[2] colours[3]])
 dat = Matrix(NF_RealNVP5["elbo"])'
@@ -137,7 +137,7 @@ Ks = KSD["KSD"]
 Ns = KSD["Ns"]
 nBs = KSD["nBurns"]
 
-NF_KSD = JLD.load("result/NF_ksd.jld")
+NF_KSD = JLD2.load("result/NF_ksd.jld2")
 ksd_nf = NF_KSD["ksd"]
 labels_nf = ["RealNVP" "Planar" "Radial"]
 
@@ -156,7 +156,7 @@ savefig(p_ksd, "figure/linreg_heavy_ksd.png")
 # hline!([ksd_nuts], linestyle=:dash, lw = 2, label = "NUTS")
 # savefig(p_ksd, "figure/linreg_ksd_log.png")
 
-NF = JLD.load("result/RealNVP5.jld") 
+NF = JLD2.load("result/RealNVP5.jld2") 
 time_trian = NF["train_time"]
 Time = JLD.load("result/timing_per_sample.jld")
 time_sample_erg_iid = Time["time_sample_erg_iid"]
@@ -193,7 +193,7 @@ savefig(filepath)
 # pairwise plot
 ###################
 Onuts = JLD.load("result/nuts_sample.jld")
-NF_planar = JLD.load("result/RealNVP5.jld")
+NF_planar = JLD2.load("result/RealNVP5.jld2")
 
 D_nuts = Onuts["sample"]
 D_nf = NF_planar["Samples"][:, 1:d]

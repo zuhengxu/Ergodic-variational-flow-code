@@ -1,4 +1,4 @@
-using Flux, Zygote, JLD, Plots
+using Flux, Zygote, JLD, JLD2, Plots
 using ErgFlow
 include("model.jl")
 include("../../inference/MCMC/NUTS.jl")
@@ -9,7 +9,7 @@ include("../common/nf_train.jl")
 ################
 ### fit MF Gaussian
 ##################
-# Random.seed!(1)
+Random.seed!(1)
 o1 = SVI.MFGauss(d, logp, randn, logq)
 a1 = SVI.mf_params(zeros(d), ones(d)) 
 ps1, el1,_ = SVI.vi(o1, a1, 100000; elbo_size = 1, logging_ps = false)

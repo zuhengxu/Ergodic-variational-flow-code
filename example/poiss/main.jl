@@ -38,8 +38,8 @@ ELBO_plot(o, o1; μ= μ, D = D, eps = [8e-5, 1e-4, 1.2e-4], Ns = [100, 200, 500,
 		xtickfont=font(18), ytickfont=font(18), guidefont=font(18), legendfont=font(18), titlefontsize = 18, xrotation = 20)
 
 
-###########
-# KSD
-###########
-Random.seed!(1)
-ksd_plot(o; μ = μ, D = D, ϵ = 1e-4*ones(d), Ns = [100, 200, 500, 1000, 1500, 2000], nBs = [0], nsample = 5000, title  = "Poisson regression", fig_name = "ksd.png", res_name = "ksd.jld")
+# ###########
+# # KSD
+# ###########
+# Random.seed!(1)
+# ksd_plot(o; μ = μ, D = D, ϵ = 1e-4*ones(d), Ns = [100, 200, 500, 1000, 1500, 2000], nBs = [0], nsample = 5000, title  = "Poisson regression", fig_name = "ksd.png", res_name = "ksd.jld")

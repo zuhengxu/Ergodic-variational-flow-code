@@ -28,15 +28,15 @@ logq_nf(x) =  -0.5*2d*log(2π) - sum(log, abs.(D_joint)) - 0.5*sum(abs2, (x.-μ_
 
 
 
-# run 5 runs for each layer
-tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [5], flow_type="RealNVP", nrun = 5, file_name = "RealNVP5_run.jld2")
-tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [8], flow_type="RealNVP", nrun = 5, file_name = "RealNVP8_run.jld2")
-tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [10], flow_type="RealNVP", nrun = 5, file_name = "RealNVP10_run.jld2")
-tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [5, 10, 20], flow_type="Planar", nrun = 5, file_name = "Planar_run.jld2")
-tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [5, 10, 20], flow_type="Radial", nrun = 5, file_name = "Radial_run.jld2")
-single_nf(logp_nf, logq_nf, μ, D, d; nlayers = 5, flow_type="RealNVP", seed = 3)
-single_nf(logp_nf, logq_nf, μ, D, d; nlayers = 10, flow_type="Planar", seed = 3)
-single_nf(logp_nf, logq_nf, μ, D, d; nlayers = 5, flow_type="Radial", seed = 3)
+# # run 5 runs for each layer
+# tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [5], flow_type="RealNVP", nrun = 5, file_name = "RealNVP5_run.jld2")
+# tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [8], flow_type="RealNVP", nrun = 5, file_name = "RealNVP8_run.jld2")
+# tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [10], flow_type="RealNVP", nrun = 5, file_name = "RealNVP10_run.jld2")
+# tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [5, 10, 20], flow_type="Planar", nrun = 5, file_name = "Planar_run.jld2")
+# tune_nf(logp_nf, logq_nf, μ, D, d; nlayers = [5, 10, 20], flow_type="Radial", nrun = 5, file_name = "Radial_run.jld2")
+# single_nf(logp_nf, logq_nf, μ, D, d; nlayers = 5, flow_type="RealNVP", seed = 3)
+# single_nf(logp_nf, logq_nf, μ, D, d; nlayers = 10, flow_type="Planar", seed = 3)
+# single_nf(logp_nf, logq_nf, μ, D, d; nlayers = 5, flow_type="Radial", seed = 3)
 
 ###################
 # compute ksd using NF samples
