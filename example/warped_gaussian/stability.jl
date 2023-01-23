@@ -1,6 +1,6 @@
 include("model_2d.jl")
 include("../../inference/MCMC/NUTS.jl")
-include("../../inference/util/metric.jl")
+# include("../../inference/util/metric.jl")
 include("../common/plotting.jl")
 include("../common/result.jl")
 import PlotlyJS as pjs

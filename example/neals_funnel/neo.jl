@@ -27,7 +27,7 @@ o_neo = NEO.NEOobj(d =2,
                 N_steps = 20,  
                 logp = logp, 
                 ∇logp = ∇logp, 
-                γ = 1.0, 
+                γ = 1., 
                 ϵ = 0.2, 
                 invMass = PDMat(I(d)), 
                 q0_sampler = q0_sampler,
@@ -37,20 +37,22 @@ o_neo = NEO.NEOobj(d =2,
 q0,p0 = q0_sampler(), randn(2)
 Zn, ISws, Ws_traj,logps,logqs,T, M= NEO.run_single_traj(o_neo, q0, p0)
 NEO.run_all_traj(o_neo, 10)
-T, M, o_new = NEO.neomcmc(o_neo, 10, 50000; Adapt = true)
+T, M, o_new = NEO.neomcmc(o_neo, 10, 50000; Adapt = false)
 
 MF = JLD.load("result/mfvi.jld")
 μ, D = MF["μ"], MF["D"]
 x = -5.:.1:5
 y = -5:.1:5
 f = (x,y) -> exp(logp([x, y]))
-p1 = contour(x, y, f, colorbar = false, title = "cross")
+p1 = contour(x, y, f, colorbar = false, title = "funnel")
 scatter!(T[:, 1], T[:,2])
+savefig(p1, "figure/neo_scatter.png")
 
 scatter(T[:, 1], T[:,2])
-Zn, ISws, Ws_traj,logps,logqs,T, M= NEO.run_single_traj(o_ad, q0, p0)
 # ess time
 o_ad = NEO.NEOadaptation(o_neo; n_adapts=50000)
+q0,p0 = q0_sampler(), randn(2)
+Zn, ISws, Ws_traj,logps,logqs,T, M= NEO.run_single_traj(o_ad, q0, p0)
 ϵ, invMass = NEO.HMC_get_adapt(q0, 0.65, o.logp, o.∇logp, 50000; nleapfrog = o_neo.N_steps)
 
 

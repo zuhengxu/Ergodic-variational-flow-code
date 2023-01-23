@@ -35,9 +35,9 @@ o_neo = NEO.NEOobj(d =2,
 
 # time persample 
 q0,p0 = q0_sampler(), randn(2)
-Zn, ISws, Ws_traj,logps,logqs,T, M= NEO.run_single_traj(o_neo, q0, p0)
-NEO.run_all_traj(o_neo, 10)
-T, M, o_new = NEO.neomcmc(o_neo, 10, 50000; Adapt = true)
+# Zn, ISws, Ws_traj,logps,logqs,T, M= NEO.run_single_traj(o_neo, q0, p0)
+# NEO.run_all_traj(o_neo, 10)
+T, M, o_new = NEO.neomcmc(o_neo, 10, 50000; Adapt = false)
 
 MF = JLD.load("result/mfvi.jld")
 μ, D = MF["μ"], MF["D"]
@@ -46,6 +46,9 @@ y = -5:.1:5
 f = (x,y) -> exp(logp([x, y]))
 p1 = contour(x, y, f, colorbar = false, title = "cross")
 scatter!(T[:, 1], T[:,2])
+# savefig(p1, "figure/neo_scatter.png")
+savefig(p1, "figure/neo_scatter_noadp.png")
+
 
 scatter(T[:, 1], T[:,2])
 Zn, ISws, Ws_traj,logps,logqs,T, M= NEO.run_single_traj(o_ad, q0, p0)

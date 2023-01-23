@@ -43,7 +43,7 @@ MF = JLD.load("result/mfvi.jld")
 x = -2.:.1:2
 y = -5:.1:5
 f = (x,y) -> exp(logp([x, y]))
-p1 = contour(x, y, f, colorbar = false, title = "cross")
+p1 = contour(x, y, f, colorbar = false, title = "warped Gaussian")
 scatter!(T[:, 1], T[:,2])
 
 scatter(T[:, 1], T[:,2])

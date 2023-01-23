@@ -1,4 +1,4 @@
-using Distributions, ForwardDiff, Random, Plots, ProgressMeter, LinearAlgebra
+using Distributions, ForwardDiff, Random, Plots, ProgressMeter, LinearAlgebra, Random
 using Base.Threads:@threads
 using JLD
 using ErgFlow
