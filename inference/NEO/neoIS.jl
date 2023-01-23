@@ -1,7 +1,6 @@
 using PDMats
-using Threads: @threads
 
-@with_kw mutable struct NEOobj
+@with_kw struct NEOobj
     d::Int64
     N_steps::Int64
     # target
@@ -11,13 +10,10 @@ using Threads: @threads
     γ::Real = 1.0
     # stepsize and inverse_massmatrix
     ϵ::Real = 0.2 
-    invMass::PDMats.AbstractPDMat
+    invMass::PDMats.AbstractPDMat = PDMat(I(d))
     # reference distribution
     q0_sampler::Function
     logq0::Function # this need to be lpdf of MF gaussian
-    # mean-field param
-    μ::Vector{Float64}
-    D::Vector{Float64}
 end
 
 # damped Hamiltonian transformation
@@ -43,10 +39,10 @@ function logq_joint(o::NEOobj, q, p)
     lpdf_mom = logpdf(MvNormalCanon(zeros(o.d), zeros(o.d), o.invMass), p)
     return o.logq0(q) .+ lpdf_mom
 end
-function logp_joint(o, q, p)
+function logp_joint(o::NEOobj, q, p)
     lpdf_mom = logpdf(MvNormalCanon(zeros(o.d), zeros(o.d), o.invMass), p)
     return o.logp(q) .+ lpdf_mom
-return 
+end
 
 
 # importance weights, forward samples, ...
