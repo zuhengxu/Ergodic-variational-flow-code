@@ -74,7 +74,7 @@ function HMC_get_adapt(θ0, δ, L, ∇L, Madapt; nleapfrog= 10, verbose = true)
 
     # combined adapatation scheme 
     proposal = AdvancedHMC.StaticTrajectory(integrator, nleapfrog)
-    adaptor = StanHMCAdaptor(MassMatrixAdaptor(metric), StepSizeAdaptor(δ, integrator)) # combined adaptaiton scheme using stan window adaptaiton
+    adaptor = NaiveHMCAdaptor(MassMatrixAdaptor(metric), StepSizeAdaptor(δ, integrator)) # combined adaptaiton scheme using stan window adaptaiton
     ϵ0, invM0 = AdvancedHMC.getϵ(adaptor), AdvancedHMC.getM⁻¹(adaptor)
     @info "[AdvancedHMC] initialization" ϵ0 invM0
 

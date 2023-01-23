@@ -21,7 +21,7 @@ end
 function forward_onestep(o::NEOobj, q, p)
     d, γ, ϵ, invM, ∇logp = o.d, o.γ, o.ϵ, o.invMass, o.∇logp  
     # symplectic Euler
-    pn = exp(-ϵ*γ) .* p .- ϵ.*∇logp(q)
+    pn = exp(-ϵ*γ) .* p .+ ϵ.*∇logp(q)
     qn = q .+ ϵ.* invM * pn
     return qn, pn
 end
@@ -30,7 +30,7 @@ function reverse_onestep(o::NEOobj, q, p)
     d, γ, ϵ, invM, ∇logp = o.d, o.γ, o.ϵ, o.invMass, o.∇logp  
     # symplectic Euler
     qn = q .- ϵ .* invM * p
-    pn = exp(ϵ*γ) .* (p .+ ϵ.*∇logp(qn))
+    pn = exp(ϵ*γ) .* (p .- ϵ.*∇logp(qn))
     return qn, pn
 end
 
@@ -47,7 +47,7 @@ end
 
 # importance weights, forward samples, ...
 function run_single_traj(o::NEOobj, q0, p0)
-    d, K, γ, ϵ, logp= o.d, o.N_steps, o.γ, o.ϵ, o.logp  
+    d, K, γ, ϵ = o.d, o.N_steps, o.γ, o.ϵ  
     q, p = copy(q0), copy(p0)
     # instantiate array to store
     T = zeros(2K-1, d)

@@ -8,7 +8,7 @@ using .SVI
 ### fit MF Gaussian
 o1 = SVI.MFGauss(d, logp, randn, logq)
 a1 = SVI.mf_params(zeros(d), ones(d)) 
-ps1, el1,_ = SVI.vi(o1, a1, 50000; elbo_size = 10, logging_ps = false)
+ps1, el1,_ = SVI.vi(o1, a1, 100000; elbo_size = 10, logging_ps = false)
 # Plots.plot(el1, ylims = (-50, 10))
 μ,D = ps1[1][1], ps1[1][2]
 el_svi = SVI.ELBO(o1, μ, D; elbo_size = 1000)
