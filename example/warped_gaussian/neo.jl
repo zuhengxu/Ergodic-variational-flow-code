@@ -23,11 +23,11 @@ q0_sampler() = randn(d).*D .+ μ
 # q0_sampler() = vec(q0_sampler(1))
 
 o_neo = NEO.NEOobj(d =2, 
-                N_steps = 20,  
+                N_steps = 10,  
                 logp = logp, 
                 ∇logp = ∇logp, 
-                γ = 0.5, 
-                ϵ = 0.2, 
+                γ = 0.2, 
+                ϵ = 0.05, 
                 invMass = PDMat(I(d)), 
                 q0_sampler = q0_sampler,
                 logq0 =logq0)        
@@ -45,11 +45,10 @@ y = -5:.1:5
 f = (x,y) -> exp(logp([x, y]))
 p1 = contour(x, y, f, colorbar = false, title = "warped Gaussian")
 scatter!(T[:, 1], T[:,2])
+savefig(p1, "figure/neo_scatter.png")
 
-scatter(T[:, 1], T[:,2])
-Zn, ISws, Ws_traj,logps,logqs,T, M= NEO.run_single_traj(o_ad, q0, p0)
 # ess time
-o_ad = NEO.NEOadaptation(o_neo; n_adapts=50000)
+o_ad = NEO.NEOadaptation(o_neo; n_adapts=100000)
+Zn, ISws, Ws_traj,logps,logqs,T, M= NEO.run_single_traj(o_ad, q0, p0)
+scatter(T[:, 1], T[:,2])
 ϵ, invMass = NEO.HMC_get_adapt(q0, 0.65, o.logp, o.∇logp, 100000; nleapfrog = o_neo.N_steps)
-
-
