@@ -15,11 +15,11 @@ JLD.save("result/mfvi.jld", "μ", μ, "D", D, "elbo", el_svi)
 
 # MF = JLD.load("result/mfvi.jld")
 # μ, D = MF["μ"], MF["D"]
-# x = -5.:.1:5
+# x = -2.:.1:2
 # y = -5:.1:5
 # f = (x,y) -> exp(logp([x, y]))
 # gsvi = (x, y) -> exp(logq([x, y], μ, D))
-# p1 = contour(x, y, f, colorbar = false, title = "Gaussian mixture")
+# p1 = contour(x, y, f, colorbar = false, title = "Warped Gaussian")
 # p2 = contour(x, y, gsvi, colorbar = false, title = "MF Gaussian fit")
 # pp = plot(p1, p2, layout = 2)
 # savefig(pp, joinpath("figure/","contour.png"))

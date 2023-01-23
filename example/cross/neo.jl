@@ -41,16 +41,16 @@ T, M, o_new = NEO.neomcmc(o_neo, 10, 50000; Adapt = true)
 
 MF = JLD.load("result/mfvi.jld")
 μ, D = MF["μ"], MF["D"]
-x = -20.:.1:20
-y = -15:.1:30
+x = -5.:.1:5
+y = -5:.1:5
 f = (x,y) -> exp(logp([x, y]))
-p1 = contour(x, y, f, colorbar = false, title = "Banana")
+p1 = contour(x, y, f, colorbar = false, title = "cross")
 scatter!(T[:, 1], T[:,2])
 
 scatter(T[:, 1], T[:,2])
+Zn, ISws, Ws_traj,logps,logqs,T, M= NEO.run_single_traj(o_ad, q0, p0)
 # ess time
 o_ad = NEO.NEOadaptation(o_neo; n_adapts=100000)
-Zn, ISws, Ws_traj,logps,logqs,T, M= NEO.run_single_traj(o_ad, q0, p0)
-ϵ, invMass = NEO.HMC_get_adapt(q0, 0.65, o.logp, o.∇logp, 50000; nleapfrog = o_neo.N_steps)
+ϵ, invMass = NEO.HMC_get_adapt(q0, 0.65, o.logp, o.∇logp, 100000; nleapfrog = o_neo.N_steps)
 
 

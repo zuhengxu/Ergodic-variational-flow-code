@@ -13,13 +13,13 @@ ps1, el1,_ = SVI.vi(o1, a1, 50000; elbo_size = 10, logging_ps = false)
 el_svi = SVI.ELBO(o1, μ, D; elbo_size = 1000)
 JLD.save("result/mfvi.jld", "μ", μ, "D", D, "elbo", el_svi)
 
-# MF = JLD.load("result/mfvi.jld")
-# μ, D = MF["μ"], MF["D"]
-# x = -5.:.1:5
-# y = -5:.1:5
-# f = (x,y) -> exp(logp([x, y]))
-# gsvi = (x, y) -> exp(logq([x, y], μ, D))
-# p1 = contour(x, y, f, colorbar = false, title = "Gaussian mixture")
-# p2 = contour(x, y, gsvi, colorbar = false, title = "MF Gaussian fit")
-# pp = plot(p1, p2, layout = 2)
-# savefig(pp, joinpath("figure/","contour.png"))
+MF = JLD.load("result/mfvi.jld")
+μ, D = MF["μ"], MF["D"]
+x = -30.:.1:30
+y = -30:.1:30
+f = (x,y) -> exp(logp([x, y]))
+gsvi = (x, y) -> exp(logq([x, y], μ, D))
+p1 = contour(x, y, f, colorbar = false, title = "Funnel")
+p2 = contour(x, y, gsvi, colorbar = false, title = "MF Gaussian fit")
+pp = plot(p1, p2, layout = 2)
+savefig(pp, joinpath("figure/","contour.png"))
