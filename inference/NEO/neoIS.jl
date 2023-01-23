@@ -53,7 +53,7 @@ function run_single_traj(o::NEOobj, q0, p0)
     T = zeros(2K-1, d)
     M = zeros(2K-1, d)
     logq0s = zeros(2K-1)
-    logps = zeros(K-1)
+    logps = zeros(K)
     T[K, :] .= q0 
     M[K, :] .= p0
     logps[1] = logp_joint(o, q0, p0)
@@ -103,7 +103,7 @@ function run_all_traj(o::NEOobj, N_trajs::Int64)
     Ws_traj = zeros(N_trajs, o.N_steps)
 
     @threads for i in  1:N_trajs
-        q0, p0 = q0_sampler(), rand(rv)
+        q0, p0 = o.q0_sampler(), rand(rv)
         Z, _, ws, _, _, T, M = run_single_traj(o, q0, p0) 
         Zs[i] = Z
         idx = wsample(ws)

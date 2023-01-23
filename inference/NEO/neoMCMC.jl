@@ -32,7 +32,7 @@ function neomcmc_update!(o::NEOobj, N_trajs::Int64, q0, p0, rv, Zs, T0s, M0s, Ts
         Z, _, ws, _, _, T, M = run_single_traj(o, q0, p0) 
         Zs[i] = Z
         idx = wsample(ws)
-        Ws_traj[i, :] .= ws
+        # Ws_traj[i, :] .= ws
         Ts[i, :] .= T[idx, :]
         Ms[i, :] .= M[idx, :]
     end
@@ -51,8 +51,8 @@ function neomcmc(o::NEOobj, N_trajs::Int64, n_samples::Int64;
     T0s = zeros(N_trajs, o.d) 
     M0s = zeros(N_trajs, o.d)
     
-    T_Samples = zeros(n_samples, o.d)
-    M_Samples = zeros(n_samples, o.d)
+    T_samples = zeros(n_samples, o.d)
+    M_samples = zeros(n_samples, o.d)
 
     rv = MvNormalCanon(zeros(o.d), zeros(o.d), o.invMass)
     q0, p0 = o.q0_sampler(), rand(rv)
@@ -64,5 +64,5 @@ function neomcmc(o::NEOobj, N_trajs::Int64, n_samples::Int64;
         M_samples[i, :] .= p
         ProgressMeter.next!(pm)
     end
-    return T_sampels, M_samples, o
+    return T_samples, M_samples, o
 end

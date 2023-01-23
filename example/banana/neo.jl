@@ -21,23 +21,21 @@ o = ErgFlow.HamFlow(d, n_lfrg, logp, ∇logp, randn, logq,
 
 logq0(x) = logq(x, μ, D)
 q0_sampler(n::Int64) = randn(d,n).*D .+ μ
-q0_sampler() = q0_sampler(1)
+q0_sampler() = vec(q0_sampler(1))
 
 o_neo = NEO.NEOobj(d =2, 
-                N_steps = 10, 
+                N_steps = 20, 
                 logp = logp, 
                 ∇logp = ∇logp, 
-                γ = 1.0, 
+                γ = .2, 
                 ϵ = 0.2, 
                 invMass = PDMat(I(d)), 
                 q0_sampler = q0_sampler,
                 logq0 =logq0)        
 
-
-
 # time persample 
-
-
+NEO.run_all_traj(o_neo, 10)
+T, M, o_new = NEO.neomcmc(o_neo, 10, 100000)
 
 
 # ess time
