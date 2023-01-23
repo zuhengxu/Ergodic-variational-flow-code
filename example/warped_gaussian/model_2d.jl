@@ -2,7 +2,7 @@ using Distributions, ForwardDiff, LinearAlgebra, Random, Plots, ProgressMeter
 using Base.Threads:@threads
 using Zygote:@ignore
 using JLD
-using Revise, ErgFlow
+using ErgFlow
 # using Zygote: @ignore
 include("../../inference/SVI/svi.jl")
 
@@ -26,21 +26,8 @@ logq(x, μ, D) =  -0.5*d*log(2π) - sum(log, abs.(D)) - 0.5*sum(abs2, (x.-μ)./D
 ∇logq(x, μ, D) = (μ .- x)./(D .+ 1e-8)
 d = 2
 
-################# 
-#fit MF Gaussian
-################## 
-o1 = SVI.MFGauss(d, logp, randn, logq)
-a1 = SVI.mf_params(zeros(d), ones(d)) 
-ps1, el1,_ = SVI.vi(o1, a1, 50000; elbo_size = 1, logging_ps = false)
-# Plots.plot(el1, ylims = (-50, 10))
-μ,D = ps1[1][1], ps1[1][2]
-el_svi = SVI.ELBO(o1, μ, D; elbo_size = 10000)
 
-
-
-if ! isdir("figure")
-    mkdir("figure")
-end 
-if ! isdir("result")
-    mkdir("result")
+folder = "figure"
+if ! isdir(folder)
+    mkdir(folder)
 end 

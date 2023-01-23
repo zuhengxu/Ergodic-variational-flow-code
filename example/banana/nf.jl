@@ -72,11 +72,14 @@ end
 ##########################3
 # runnig 
 #############################
-n_lfrg = 50
+n_lfrg = 200
 o = ErgFlow.HamFlow(d, n_lfrg, logp, ∇logp, randn, logq, 
         ErgFlow.randl, ErgFlow.lpdf_laplace_std, ErgFlow.∇lpdf_laplace_std, ErgFlow.cdf_laplace_std, ErgFlow.invcdf_laplace_std, ErgFlow.pdf_laplace_std,  
         ErgFlow.stream, ErgFlow.mixer, ErgFlow.inv_mixer)
 niter = 100000
+
+MF = JLD.load("result/mfvi.jld")
+μ, D = MF["μ"], MF["D"]
 
 # joint target and joint init
 logp_joint(x) = o.logp(x[1:2]) + o.lpdf_mom(x[3:4])

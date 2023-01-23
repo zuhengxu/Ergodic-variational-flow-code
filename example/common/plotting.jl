@@ -1,7 +1,6 @@
 using Plots, Suppressor, JLD, LinearAlgebra, StatsBase, KernelDensity, StatsPlots
 using Base:Threads
 using ProgressMeter
-# using ErgFlowFixed
 # include("../../inference/util/metric.jl")
 include("../../inference/util/ksd.jl")
 
@@ -88,13 +87,11 @@ function ELBO_plot(o::ErgFlow.HamFlow, o1::SVI.MFGauss; μ = μ, D = D, eps, Ns,
         mkdir(fig_dir)
     end 
     Els = zeros(size(eps, 1), size(Ns, 1)+1)
-    # when N = 0, the joint ELBO will be the ELBO of SVI approximation 
     Els[:, 1] .= SVI.ELBO(o1, μ, D; elbo_size = elbo_size)*ones(size(eps, 1))
-    # estimate ELBOs of given stepsize for various Ns
     for i in 1:size(eps, 1)
         nB = nBs[1]
         Els[i, 2:end] .= ErgFlow.ELBO_sweep(o,eps[i]*ones(o.d), μ, D, ErgFlow.pseudo_refresh_coord,ErgFlow.inv_refresh_coord,Ns; 
-                                nBurn = nB, elbo_size = elbo_size, print = true)
+                                nBurn = nB, elbo_size = elbo_size)
         # println("ELBO sweep done")
         println("ϵ = $(eps[i]), n_mcmc = $(Ns) done")
     end
@@ -103,6 +100,7 @@ function ELBO_plot(o::ErgFlow.HamFlow, o1::SVI.MFGauss; μ = μ, D = D, eps, Ns,
     Labels[1, :] .= ["ϵ=$e" for e in eps] 
     p = plot(reduce(vcat, [[0], Ns]), Els',lw = 3, labels = Labels, legend = :outertopright, ylabel = "ELBO", xlabel = "#Refreshment"; kwargs...)
     savefig(p, joinpath(fig_dir, fig_name))
+
 end
 
 

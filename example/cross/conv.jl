@@ -70,6 +70,8 @@ n_lfrg = 60
 o = ErgFlow.HamFlow(d, n_lfrg, logp, ∇logp, randn, logq, 
         ErgFlow.randl, ErgFlow.lpdf_laplace_std, ErgFlow.∇lpdf_laplace_std, ErgFlow.cdf_laplace_std, ErgFlow.invcdf_laplace_std, ErgFlow.pdf_laplace_std, 
         ErgFlow.stream, ErgFlow.mixer, ErgFlow.inv_mixer) 
+MF = JLD.load("result/mfvi.jld")
+μ, D = MF["μ"], MF["D"]
 a = ErgFlow.HF_params(0.0035*ones(d), μ, D)
 
 running_convergence(o,a)

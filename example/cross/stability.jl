@@ -17,6 +17,8 @@ o_norm = ErgFlow.HamFlow(d, n_lfrg, logp, ∇logp, randn, logq,
         randn, ErgFlow.lpdf_normal, ErgFlow.∇lpdf_normal, ErgFlow.cdf_normal, ErgFlow.invcdf_normal, ErgFlow.pdf_normal,  
         ErgFlow.stream, ErgFlow.mixer, ErgFlow.inv_mixer)
 
+MF = JLD.load("result/mfvi.jld")
+μ, D = MF["μ"], MF["D"]
 a = ErgFlow.HF_params(0.0035*ones(d), μ, D)
 
 stability_plot(o_lap, a, [10, 50, 100, 200, 500, 1000, 1500, 2000, 3000, 4000, 5000]; nsample = 100, res_name = "stab_lap.jld")
