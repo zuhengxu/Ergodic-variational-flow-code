@@ -40,4 +40,4 @@ end
 # D = 10
 # L(θ) = logpdf(MvNormal(zeros(D), I), θ)
 # ∇L(θ) = ForwardDiff.gradient(L, θ)
-# MM = advancedHMC(100*ones(D), 0.7, L, ∇L, 10000, 1000)
+# MM = nuts(100*ones(D), 0.7, L, ∇L, 10000, 1000)
