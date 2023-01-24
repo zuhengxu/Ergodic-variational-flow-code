@@ -9,15 +9,9 @@ include("../../inference/SVI/svi.jl")
 ###########
 MF = JLD.load("result/mfvi.jld")
 μ, D = MF["μ"], MF["D"]
-# n_lfrg = 200
-# o = ErgFlow.HamFlow(d, n_lfrg, logp, ∇logp, randn, logq, 
-#         randn, ErgFlow.lpdf_normal, ErgFlow.∇lpdf_normal, ErgFlow.cdf_normal, ErgFlow.invcdf_normal, ErgFlow.pdf_normal,  
-#         ErgFlow.stream, ErgFlow.mixer, ErgFlow.inv_mixer)
-
 
 logq0(x) = logq(x, μ, D)
 q0_sampler() = randn(d).*D .+ μ
-# q0_sampler() = vec(q0_sampler(1))
 
 o_neo = NEO.NEOobj(d =2, 
                 N_steps = 20,  
@@ -29,6 +23,9 @@ o_neo = NEO.NEOobj(d =2,
                 q0_sampler = q0_sampler,
                 logq0 =logq0)        
 
+
+
+                
 # time persample 
 q0,p0 = q0_sampler(), randn(2)
 Zn, ISws, Ws_traj,logps,logqs,T, M= NEO.run_single_traj(o_neo, q0, p0)
