@@ -35,7 +35,7 @@ function neo_fixed_run(d, logp, ∇logp, q0_sampler, logq0;
             T, M, o_new = NEO.neomcmc(o, c, mcmciters; Adapt = false)
             time = tok()
             # compute ksd for the last 5000 samples as criterion
-            ksd_est = ksd(T[mcmciters-5000:end , :], ∇logp)            
+            ksd_est = ksd(T[mcmciters-4999:end , :], ∇logp)            
             push!(df, (id = i, gamma = γ, Nsteps = K, stepsize = e, Nchians = c, KSD = ksd_est, run_time = time))
             @info "id = $i, gamma = $γ, Nsteps = $K, stepsize = $e, Nchians = $c, KSD = $ksd_est, run_time = $time" 
         end
@@ -43,7 +43,7 @@ function neo_fixed_run(d, logp, ∇logp, q0_sampler, logq0;
     path = joinpath(res_dir, csv_name) 
     CSV.write(path, df; delim = "\t")
     path = joinpath(res_dir, jld_name) 
-    JLD2.save(path; "df", df)
+    JLD2.save(path, "df", df)
 end
 
 
@@ -83,7 +83,7 @@ function neo_adaptation_run( d, logp, ∇logp, q0_sampler, logq0;
     path = joinpath(res_dir, csv_name) 
     CSV.write(path, df; delim = "\t")
     path = joinpath(res_dir, jld_name) 
-    JLD2.save(path; "df", df)
+    JLD2.save(path, "df", df)
 end
 
 
