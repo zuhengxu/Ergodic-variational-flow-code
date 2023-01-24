@@ -14,11 +14,11 @@ logq0(x) = logq(x, μ, D)
 q0_sampler() = randn(d).*D .+ μ
 
 o_neo = NEO.NEOobj(d =2, 
-                N_steps = 20,  
+                N_steps = 100,  
                 logp = logp, 
                 ∇logp = ∇logp, 
                 γ = 0.5, 
-                ϵ = 0.2, 
+                ϵ = 1.0, 
                 invMass = PDMat(I(d)), 
                 q0_sampler = q0_sampler,
                 logq0 =logq0)        
@@ -26,13 +26,13 @@ o_neo = NEO.NEOobj(d =2,
 
 
 
-                
+
 
 
 # # time persample 
-# q0,p0 = q0_sampler(), randn(2)
-# Zn, ISws, Ws_traj,logps,logqs,T, M= NEO.run_single_traj(o_neo, q0, p0)
-# # NEO.run_all_traj(o_neo, 10)
+q0,p0 = q0_sampler(), randn(2)
+Zn, ISws, Ws_traj,logps,logqs,T, M= NEO.run_single_traj(o_neo, q0, p0)
+Za, _,Ta,Ma = NEO.run_all_traj(o_neo, 10)
 # T, M, o_new = NEO.neomcmc(o_neo, 10, 50000; Adapt = true)
 
 

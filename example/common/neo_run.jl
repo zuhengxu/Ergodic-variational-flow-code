@@ -8,7 +8,7 @@ include("../common/timing.jl")
 
 
 function neo_fixed_run(d, logp, ∇logp, q0_sampler, logq0; 
-                        γs, Ks, ϵs, mcmciters = 50000, nchains = [15], ntrials=3, 
+                        γs, Ks, ϵs, mcmciters = 50000, nchains = [15], ntrials=3, ntests = 20, 
                         res_dir = "result/", csv_name = "neo_fix.csv", jld_name = "neo_fix.jld2")
     # invMass is just gonna be I
     # need to store the optimal setting in a table
@@ -34,10 +34,12 @@ function neo_fixed_run(d, logp, ∇logp, q0_sampler, logq0;
             tick()
             T, M, o_new = NEO.neomcmc(o, c, mcmciters; Adapt = false)
             time = tok()
+            Ztest, _,_,_ = NEO.run_all_traj(o_new, ntests)
+            NaNratio = sum(isnan.(Ztest))/ntests 
             # compute ksd for the last 5000 samples as criterion
             ksd_est = ksd(T[mcmciters-4999:end , :], ∇logp)            
-            push!(df, (id = i, gamma = γ, Nsteps = K, stepsize = e, Nchians = c, KSD = ksd_est, run_time = time))
-            @info "id = $i, gamma = $γ, Nsteps = $K, stepsize = $e, Nchians = $c, KSD = $ksd_est, run_time = $time" 
+            push!(df, (id = i, gamma = γ, Nsteps = K, stepsize = e, Nchians = c, KSD = ksd_est, run_time = time, NaNratio = NaNratio))
+            @info "id = $i, gamma = $γ, Nsteps = $K, stepsize = $e, Nchians = $c, KSD = $ksd_est, run_time = $time, NaNratio = $NaNratio" 
         end
     end
     path = joinpath(res_dir, csv_name) 
@@ -48,7 +50,7 @@ end
 
 
 function neo_adaptation_run( d, logp, ∇logp, q0_sampler, logq0; 
-                            γs, Ks, nchains = [15], mcmciters = 50000, nadapt = 50000, ntrials = 3,
+                            γs, Ks, nchains = [15], mcmciters = 50000, nadapt = 50000, ntrials = 3, ntests = 20,
                             res_dir = "result/", csv_name = "neo_adp.csv", jld_name = "neo_adp.jld2")
     # invMass and ϵ will be adapted
     # need to store the optimal setting in a table
@@ -73,11 +75,13 @@ function neo_adaptation_run( d, logp, ∇logp, q0_sampler, logq0;
             tick()
             T, M, o_new = NEO.neomcmc(o, c, mcmciters; Adapt = true, n_adapts = nadapt)
             time = tok()
+            Ztest, _,_,_ = NEO.run_all_traj(o_new, ntests)
+            NaNratio = sum(isnan.(Ztest))/ntests 
             e = o_new.ϵ
             # compute ksd for the last 5000 samples as criterion
             ksd_est = ksd(T[mcmciters-4999:end , :], ∇logp)            
-            push!(df, (id = i, gamma = γ, Nsteps = K, stepsize = e, Nchians = c, KSD = ksd_est, run_time = time))
-            @info "id = $i, gamma = $γ, Nsteps = $K, stepsize = $e, Nchians = $c, KSD = $ksd_est, run_time = $time" 
+            push!(df, (id = i, gamma = γ, Nsteps = K, stepsize = e, Nchians = c, KSD = ksd_est, run_time = time, NaNratio = NaNratio))
+            @info "id = $i, gamma = $γ, Nsteps = $K, stepsize = $e, Nchians = $c, KSD = $ksd_est, run_time = $time, NaNratio = $NaNratio" 
         end
     end
     path = joinpath(res_dir, csv_name) 
