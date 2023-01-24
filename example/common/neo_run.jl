@@ -63,7 +63,7 @@ function neo_adaptation_run( d, logp, ∇logp, q0_sampler, logq0;
                 logp = logp, 
                 ∇logp = ∇logp, 
                 γ = γ, 
-                ϵ = e, 
+                ϵ = 0.1, 
                 invMass = PDMat(I(d)), 
                 q0_sampler = q0_sampler,
                 logq0 =logq0)
@@ -75,7 +75,7 @@ function neo_adaptation_run( d, logp, ∇logp, q0_sampler, logq0;
             time = tok()
             e = o_new.ϵ
             # compute ksd for the last 5000 samples as criterion
-            ksd_est = ksd(T[mcmciters-5000:end , :], ∇logp)            
+            ksd_est = ksd(T[mcmciters-4999:end , :], ∇logp)            
             push!(df, (id = i, gamma = γ, Nsteps = K, stepsize = e, Nchians = c, KSD = ksd_est, run_time = time))
             @info "id = $i, gamma = $γ, Nsteps = $K, stepsize = $e, Nchians = $c, KSD = $ksd_est, run_time = $time" 
         end
