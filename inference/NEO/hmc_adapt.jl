@@ -60,7 +60,7 @@ function HMC_adaptation(
 end
 
 
-function HMC_get_adapt(θ0, δ, L, ∇L, Madapt; nleapfrog= 10, verbose = true)
+function HMC_get_adapt(θ0, δ, L, ∇L, Madapt; find_ϵ0 = true, ϵ0 = 1.0, nleapfrog= 10, verbose = true)
 
     # choose Mass matrix
     d = size(θ0, 1)
@@ -70,7 +70,7 @@ function HMC_get_adapt(θ0, δ, L, ∇L, Madapt; nleapfrog= 10, verbose = true)
     ajoint = θ -> (L(θ), ∇L(θ))
     hamiltonian = Hamiltonian(metric, L, ajoint)
     # Define a leapfrog solver, with initial step size chosen heuristically
-    init_ϵ = find_good_stepsize(hamiltonian, θ0)
+    init_ϵ = find_ϵ0 ? find_good_stepsize(hamiltonian, θ0) : ϵ0
     integrator = Leapfrog(init_ϵ)
 
     # combined adapatation scheme 

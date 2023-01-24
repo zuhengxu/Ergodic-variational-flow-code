@@ -32,11 +32,16 @@ o_neo = NEO.NEOobj(d =2,
                 q0_sampler = q0_sampler,
                 logq0 =logq0)        
 
+# init_ϵ = NEO.neo_init_steps(o_neo)
+# using Accessors
+# o_neo = @set o_neo.ϵ = init_ϵ
+
+
 # time persample 
 q0,p0 = q0_sampler(), randn(2)
 Zn, ISws, Ws_traj,logps,logqs,T, M= NEO.run_single_traj(o_neo, q0, p0)
 NEO.run_all_traj(o_neo, 10)
-T, M, o_new = NEO.neomcmc(o_neo, 10, 50000; Adapt = true)
+T, M, o_new = NEO.neomcmc(o_neo, 10, 100000; Adapt = true, find_ϵ0 = true)
 
 MF = JLD.load("result/mfvi.jld")
 μ, D = MF["μ"], MF["D"]

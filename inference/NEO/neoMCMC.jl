@@ -1,10 +1,24 @@
 include("hmc_adapt.jl")
 using Accessors
 
-function NEOadaptation(o::NEOobj; n_adapts = 10000, target_acc = 0.7, verbose = true)
+function neo_init_steps(o::NEOobj)
+    q0 = o.q0_sampler()
+    # choose Mass matrix
+    d = size(q0, 1)
+    metric = DiagEuclideanMetric(d)
+    # define  hamiltonian system 
+    # ajoint is a user specified gradient system, returning a tuple (log_post, gradient) 
+    ajoint = θ -> (o.logp(θ), o.∇logp(θ))
+    hamiltonian = Hamiltonian(metric, o.logp, ajoint)
+    # Define a leapfrog solver, with initial step size chosen heuristically
+    init_ϵ = find_good_stepsize(hamiltonian, q0)    
+    return init_ϵ
+end
+
+function NEOadaptation(o::NEOobj; find_ϵ0 = true, n_adapts = 10000, target_acc = 0.7, verbose = true)
     # using adaptation from HMC
     q0 = o.q0_sampler()
-    stepsize, invM = HMC_get_adapt(q0, target_acc, o.logp, o.∇logp, n_adapts; nleapfrog = o.N_steps, verbose = verbose)
+    stepsize, invM = HMC_get_adapt(q0, target_acc, o.logp, o.∇logp, n_adapts; ϵ0 = o.ϵ, find_ϵ0 = find_ϵ0,  nleapfrog = o.N_steps, verbose = verbose)
 
     o = @set o.ϵ = stepsize
     o = @set o.invMass = PDMat(diagm(invM))
@@ -41,9 +55,10 @@ function neomcmc_update!(o::NEOobj, N_trajs::Int64, q0, p0, rv, Zs, T0s, M0s, Ts
 end
 
 function neomcmc(o::NEOobj, N_trajs::Int64, n_samples::Int64; 
-                Adapt::Bool = true, n_adapts::Int64 = n_samples, adp_acc = 0.7, adp_verbose=true)
+                Adapt::Bool = true, find_ϵ0 = true, 
+                n_adapts::Int64 = n_samples, adp_acc = 0.7, adp_verbose=true)
     if Adapt
-        o = NEOadaptation(o; n_adapts = n_adapts, target_acc=adp_acc, verbose = adp_verbose)
+        o = NEOadaptation(o; find_ϵ0 = find_ϵ0, n_adapts = n_adapts, target_acc=adp_acc, verbose = adp_verbose)
     end
     Zs = zeros(N_trajs)
     Ts = zeros(N_trajs, o.d) 

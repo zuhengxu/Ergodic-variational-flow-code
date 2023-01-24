@@ -45,6 +45,11 @@ function logp_joint(o::NEOobj, q, p)
 end
 
 
+# getting logpdf for the NEO proposal
+function neo_lpdf(o::NEOobj, q0, p0)
+
+end
+
 # importance weights, forward samples, ...
 function run_single_traj(o::NEOobj, q0, p0)
     d, K, γ, ϵ = o.d, o.N_steps, o.γ, o.ϵ  
