@@ -22,7 +22,11 @@ logq0(x) = logq(x, μ, D)
 q0_sampler() = randn(d).*D .+ μ
 # q0_sampler() = vec(q0_sampler(1))
 
+<<<<<<< Updated upstream
 o_neo = NEO.NEOobj(d =2, 
+=======
+o_neo = NEO.NEOobj(d = 2, 
+>>>>>>> Stashed changes
                 N_steps = 20,  
                 logp = logp, 
                 ∇logp = ∇logp, 
