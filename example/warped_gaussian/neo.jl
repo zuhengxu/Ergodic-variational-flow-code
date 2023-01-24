@@ -23,11 +23,11 @@ q0_sampler() = randn(d).*D .+ μ
 # q0_sampler() = vec(q0_sampler(1))
 
 o_neo = NEO.NEOobj(d =2, 
-                N_steps = 10,  
+                N_steps = 20,  
                 logp = logp, 
                 ∇logp = ∇logp, 
-                γ = 0.2, 
-                ϵ = 0.05, 
+                γ = 1.0, 
+                ϵ = 1.0, 
                 invMass = PDMat(I(d)), 
                 q0_sampler = q0_sampler,
                 logq0 =logq0)        
@@ -41,7 +41,9 @@ o_neo = NEO.NEOobj(d =2,
 q0,p0 = q0_sampler(), randn(2)
 Zn, ISws, Ws_traj,logps,logqs,T, M= NEO.run_single_traj(o_neo, q0, p0)
 NEO.run_all_traj(o_neo, 10)
-T, M, o_new = NEO.neomcmc(o_neo, 10, 100000; Adapt = true, find_ϵ0 = true)
+
+Random.seed!(1)
+T, M, o_new = NEO.neomcmc(o_neo, 10, 20000; n_adapts=20000, Adapt = false, find_ϵ0 = true)
 
 MF = JLD.load("result/mfvi.jld")
 μ, D = MF["μ"], MF["D"]
