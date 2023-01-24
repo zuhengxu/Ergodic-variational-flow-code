@@ -46,8 +46,20 @@ end
 
 
 # getting logpdf for the NEO proposal
-function neo_lpdf(o::NEOobj, q0, p0)
-
+function neo_lpdf(o::NEOobj, q, p)
+    d, K, γ, ϵ = o.d, o.N_steps, o.γ, o.ϵ  
+    logq0s = zeros(K)
+    logq0s[K] = logq_joint(o, q, p) 
+    # K-1 backward steps 
+    for j in 1:K-1
+        q, p = reverse_onestep(o, q, p)
+        lpdf = logq_joint(o, q, p)
+        T[K-j,:] .= q
+        M[K-j,:] .= p
+        logq0s[K-j] = lpdf
+    end
+    lpdfs = logq0s + γ*ϵ*d .* [K-1:-1:0 ;]
+    return LogExpFunctions.logsumexp(lpdfs)
 end
 
 # importance weights, forward samples, ...
