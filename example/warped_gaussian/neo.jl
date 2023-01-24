@@ -22,16 +22,12 @@ logq0(x) = logq(x, μ, D)
 q0_sampler() = randn(d).*D .+ μ
 # q0_sampler() = vec(q0_sampler(1))
 
-<<<<<<< Updated upstream
-o_neo = NEO.NEOobj(d =2, 
-=======
 o_neo = NEO.NEOobj(d = 2, 
->>>>>>> Stashed changes
-                N_steps = 20,  
+                N_steps = 15,  
                 logp = logp, 
                 ∇logp = ∇logp, 
-                γ = 1.0, 
-                ϵ = 1.0, 
+                γ = .5, 
+                ϵ = 0.1,
                 invMass = PDMat(I(d)), 
                 q0_sampler = q0_sampler,
                 logq0 =logq0)        
@@ -42,12 +38,16 @@ o_neo = NEO.NEOobj(d = 2,
 
 
 # time persample 
-q0,p0 = q0_sampler(), randn(2)
-Zn, ISws, Ws_traj,logps,logqs,T, M= NEO.run_single_traj(o_neo, q0, p0)
-NEO.run_all_traj(o_neo, 10)
+# q0,p0 = q0_sampler(), randn(2)
+# Zn, ISws, Ws_traj,logps,logqs,T, M= NEO.run_single_traj(o_neo, q0, p0)
+# NEO.run_all_traj(o_neo, 10)
 
-Random.seed!(1)
-T, M, o_new = NEO.neomcmc(o_neo, 10, 20000; n_adapts=20000, Adapt = false, find_ϵ0 = true)
+for i in 1:3
+    Random.seed!(i)
+    T, M, o_new = NEO.neomcmc(o_neo, 10, 20000; n_adapts=20000, Adapt = false, find_ϵ0 = true)
+    # T, M, o_new = NEO.neomcmc(o_neo, 10, 20000; n_adapts=20000, Adapt = true, find_ϵ0 = true)
+    println("$i /3")
+end
 
 MF = JLD.load("result/mfvi.jld")
 μ, D = MF["μ"], MF["D"]
