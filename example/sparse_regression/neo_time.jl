@@ -19,10 +19,10 @@ q0_sampler() = randn(d).*D .+ μ
 
 # optimal setting---adpt
 o_neo = NEO.NEOobj(d = d, 
-                N_steps = 20,  
+                N_steps = 10,  
                 logp = logp, 
                 ∇logp = ∇logp, 
-                γ = 0.2, 
+                γ = 1.0, 
                 ϵ = 0.5, 
                 invMass = PDMat(I(d)), 
                 q0_sampler = q0_sampler,
