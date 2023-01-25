@@ -177,7 +177,7 @@ ess_time_hmc = ESS["ess_time_hmc"]
 
 boxplot(["MixFlow iid"], ess_time_erg_iid,  label = "MixFlow iid",color = colours[3])
 boxplot!(["MixFlow single"], ess_time_erg_single, label = "MixFlow single ", color = :lightblue)
-boxplot!(["HMC"], ess_time_hmc,label = "HMC", color = colours[1], legend = false, guidefontsize=20, xtickfontsize=20, ytickfontsize=20, titlefontsize=20, xrotation = -20, formatter=:plain, margin=7Plots.mm)
+boxplot!(["HMC"], ess_time_hmc,label = "HMC", color = colours[1], legend = false, guidefontsize=20, xtickfontsize=20, ytickfontsize=20, titlefontsize=20, xrotation = -20, formatter=:plain, margin=7Plots.mm, yscale=:log10)
 boxplot!(["NEO"], NEOess, label = "NEO", color = colours[end])
 ylabel!("ESS unit time")
 
