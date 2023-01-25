@@ -49,7 +49,7 @@ function scatter_plot(o::ErgodicFlow,x,y;refresh = ErgFlow.pseudo_refresh, conto
     # T, M, U = ErgFlow.Sampler(o,a,ErgFlow.pseudo_refresh_coord,n_mcmc,n_sample; nBurn = nB)
     T, M, U = ErgFlow.Sampler(o,a, refresh, n_mcmc,n_sample; nBurn = nB)
     p_scatter = contour(x, y, f, colorbar = false, xlim = (x[1], x[end]), ylim = (y[1], y[end]))
-    scatter!(T[:,1], T[:,2], alpha = 0.3, label = "ErgFlow")
+    scatter!(T[:,1], T[:,2], alpha = 0.3, label = "MixFlow")
     # p2 = contour(-10:0.1:10, -10:0.1:10, f_m, lw = 3, colorbar =false, levels = 30)
     # p2 = plot(-8:0.1:8, o.pdf_mom, lw = 4, label = "Laplace")
     p2 = plot(-8:0.1:8, o.pdf_mom, lw = 4, label = "normal")

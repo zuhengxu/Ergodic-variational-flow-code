@@ -37,7 +37,7 @@ ksd_plot(o; μ = μ, D = D, ϵ = 0.02*ones(2), Ns = [10, 20, 50, 80, 100, 120, 1
 Random.seed!(1)
 x = -20:0.1:20
 y = -15:0.1:30
-scatter_plot(o, x, y; contour_plot = false, μ=μ, D=D, ϵ = 0.02*ones(d), n_sample = 1000, n_mcmc = 1000, nB = 0, bins = 300, name= "sample_lap.png", show_legend=false)
+scatter_plot(o, x, y; contour_plot = true, μ=μ, D=D, ϵ = 0.02*ones(d), n_sample = 1000, n_mcmc = 1000, nB = 0, bins = 300, name= "sample_lap.png", show_legend=true)
 
 
 ################
