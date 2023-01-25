@@ -1,3 +1,5 @@
+using TickTock, JLD, PDMats
+include("../common/neo_run.jl")
 include("model_2d.jl")
 include("../../inference/SVI/svi.jl")
 using JLD
@@ -63,4 +65,4 @@ p_target = pjs.plot(pjs.surface(z=Dd, x=X, y=Y, showscale=false), layout)
 pjs.savefig(p_target, joinpath("figure/","lpdf.png"))
 
 p_est = pjs.plot(pjs.surface(z=Ds, x=X, y=Y, showscale=false), layout)
-pjs.savefig(p_est, joinpath("figure/","lpdf_lap.png"))
+pjs.savefig(p_est, joinpath("figure\\","lpdf_lap.png"))
