@@ -130,7 +130,6 @@ ess_time_erg_single = ESS["ess_time_erg_single"]
 ess_time_nuts = ESS["ess_time_nuts"]
 ess_time_hmc = ESS["ess_time_hmc"]
 
-colours = [palette(:Paired_8)[5], palette(:Paired_8)[6], palette(:Paired_8)[2], palette(:Paired_8)[1], palette(:Paired_10)[10], palette(:Paired_10)[9], palette(:Paired_8)[4]]
 
 boxplot(["MixFlow iid"], ess_time_erg_iid,  label = "MixFlow iid",color = colours[1])
 boxplot!(["MixFlow single"], ess_time_erg_single, label = "MixFlow single ", color = colours[2])
