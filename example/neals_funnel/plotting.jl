@@ -2,7 +2,7 @@ include("model_2d.jl")
 include("../../inference/MCMC/NUTS.jl")
 include("../common/plotting.jl")
 include("../common/result.jl")
-
+using JLD2
 ############3
 ## 2d plots
 ############3
@@ -33,11 +33,17 @@ ksd_nuts = KSD["ksd_nuts"]
 Ks = KSD["KSD"]
 Ns = KSD["Ns"]
 nBs = KSD["nBurns"]
-
+### neo results---fixed
+#id	gamma	Nsteps	stepsize	Nchians	KSD	run_time	NaNratio
+# 1	0.2	10	0.5	10	0.055410260886541406	8.631509184	0.0
+# 2	0.2	10	0.5	10	0.03609094704972141	9.192355478	0.0
+# 3	0.2	10	0.5	10	0.03661090960311319	9.286685976	0.0c
+ksd_neo = mean([ 0.055410260886541406, 0.03609094704972141, 0.03661090960311319])
 Labels = Matrix{String}(undef, 1, size(nBs, 1))
-Labels[1, :].= ["ErgFlow"] 
+Labels[1, :].= ["MixFlow"] 
 p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 5, ylim = (0, 0.26),labels = false, ylabel = "Marginal KSD", xlabel = "#Refreshment", xtickfontsize=25, ytickfontsize=25, guidefontsize=25, legendfontsize=25, titlefontsize = 25, xrotation = 20, margin=5Plots.mm, legend=(0.5,0.5))
-hline!([ksd_nuts], linestyle=:dash, lw = 5, label = false)
+hline!([ksd_nuts], linestyle=:dash, lw = 5, label = "NUTS", legend = false)
+hline!( [ksd_neo], linestyle=:dot, lw = 5, label = "NEO", legend=false)
 savefig(p_ksd, "figure/funnel_ksd.png")
 
 
@@ -77,7 +83,7 @@ Ns = KSD["Ns"]
 nBs = KSD["nBurns"]
 
 Labels = Matrix{String}(undef, 1, size(nBs, 1))
-Labels[1, :].= ["ErgFlow"] 
+Labels[1, :].= ["MixFlow"] 
 p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 3, ylim = (0, Inf),labels = Labels, ylabel = "Marginal KSD", xlabel = "#Refreshment", title  = "5D Neal's Funnel", xtickfontsize=18, ytickfontsize=18, guidefontsize=18, legendfontsize=18, titlefontsize = 18, xrotation = 20, margin=5Plots.mm #=, legend=(0.5,0.5)=#)
 hline!([ksd_nuts], linestyle=:dash, lw = 2, label = "NUTS")
 savefig(p_ksd, "figure/5d_funnel_ksd.png")
@@ -102,7 +108,7 @@ Ns = KSD["Ns"]
 nBs = KSD["nBurns"]
 
 Labels = Matrix{String}(undef, 1, size(nBs, 1))
-Labels[1, :].= ["ErgFlow"] 
+Labels[1, :].= ["MixFlow"] 
 p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 3, ylim = (0, Inf),labels = Labels, ylabel = "Marginal KSD", xlabel = "#Refreshment", title  = "20D Neal's Funnel", xtickfontsize=18, ytickfontsize=18, guidefontsize=18, legendfontsize=18, titlefontsize = 18, xrotation = 20, margin=5Plots.mm , legend=(0.7,0.3))
 hline!([ksd_nuts], linestyle=:dash, lw = 2, label = "NUTS")
 savefig(p_ksd, "figure/20d_funnel_ksd.png")
@@ -157,13 +163,18 @@ time_sample_nf = Time["time_sample_nf"]
 time_sample_nuts = Time["time_sample_nuts"]
 time_sample_hmc = Time["time_sample_hmc"]
 
-colours = [palette(:Paired_8)[5], palette(:Paired_8)[6], palette(:Paired_8)[2], palette(:Paired_8)[1], palette(:Paired_10)[10], palette(:Paired_10)[9], palette(:Paired_8)[4]]
+NEOtime = JLD2.load("result/neo_time.jld2")["times"]
+NEOess = JLD2.load("result/neo_time.jld2")["times"]
 
-boxplot(["ErgFlow iid"], time_sample_erg_iid, label = "ErgFlow iid", color = colours[1])
-boxplot!(["ErgFlow single"], time_sample_erg_single, label = "ErgFlow single ", color = colours[2])
+
+colours = [palette(:Paired_8)[5], palette(:Paired_8)[6], palette(:Paired_8)[2], palette(:Paired_8)[1], palette(:Paired_10)[10], palette(:Paired_10)[9], palette(:Paired_8)[4], palette(:Set1_6)[6]]
+
+boxplot(["MixFlow iid"], time_sample_erg_iid, label = "MixFlow iid", color = colours[1])
+boxplot!(["MixFlow single"], time_sample_erg_single, label = "MixFlow single ", color = colours[2])
 boxplot!(["NF"],time_sample_nf, label = "NF", color = colours[3], yscale = :log10, legend = false, guidefontsize=20, tickfontsize=15, xrotation = -15, formatter=:plain)
 boxplot!(["NUTS"], time_sample_nuts, label = "NUTS", color = colours[4], title = "NF train time= $time_trian (s)")
 boxplot!(["HMC"], time_sample_hmc, label = "HMC", color = colours[5])
+boxplot!(["NEO"], NEOtime, label = "NEO", color = colours[end])
 ylabel!("time per sample(s)")
 
 filepath = string("figure/sampling_time.png")
@@ -176,12 +187,12 @@ ess_time_erg_single = ESS["ess_time_erg_single"]
 ess_time_nuts = ESS["ess_time_nuts"]
 ess_time_hmc = ESS["ess_time_hmc"]
 
-colours = [palette(:Paired_8)[5], palette(:Paired_8)[6], palette(:Paired_8)[2], palette(:Paired_8)[1], palette(:Paired_10)[10], palette(:Paired_10)[9], palette(:Paired_8)[4]]
 
-boxplot(["ErgFlow iid"], ess_time_erg_iid,  label = "ErgFlow iid",color = colours[1])
-boxplot!(["ErgFlow single"], ess_time_erg_single, label = "ErgFlow single ", color = colours[2])
+boxplot(["MixFlow iid"], ess_time_erg_iid,  label = "MixFlow iid",color = colours[1])
+boxplot!(["MixFlow single"], ess_time_erg_single, label = "MixFlow single ", color = colours[2])
 boxplot!(["NUTS"], ess_time_nuts, label = "NUTS", color = colours[4])
 boxplot!(["HMC"], ess_time_hmc,label = "HMC", color = colours[5], legend = false, guidefontsize=20, tickfontsize=15, xrotation = -15, formatter=:plain)
+boxplot!(["NEO"], NEOess, label = "NEO", color = colours[end])
 ylabel!("ESS unit time")
 filepath = string("figure/ess.png")
 savefig(filepath)
@@ -205,13 +216,13 @@ v_nf = sqrt.(nf_run["v_nf"])
 iters = [1:size(m_nuts, 1) ;]
 p1 = plot(iters, vec(median(m_nuts[:, 1, :]'; dims =1)), ribbon = get_percentiles(m_nuts[:, 1, :]), label = "NUTS", lw = 3)
     plot!(iters, vec(median(m_hmc[:, 1, :]'; dims =1)), ribbon = get_percentiles(m_hmc[:, 1, :]), label = "HMC",lw = 3,  legend = :bottomright)
-    plot!(iters, vec(median(m_erg[:, 1, :]'; dims =1)), ribbon = get_percentiles(m_erg[:, 1, :]), label = "ErgFlow", lw = 3, xrotation = 20)
+    plot!(iters, vec(median(m_erg[:, 1, :]'; dims =1)), ribbon = get_percentiles(m_erg[:, 1, :]), label = "MixFlow", lw = 3, xrotation = 20)
     plot!(iters, vec(median(m_nf[:, 1, :]'; dims =1)), ribbon = get_percentiles(m_nf[:, 1, :]), label = "NF", xrotation = 20,lw=3,legendfontsize = 16)
     hline!([0.0],  linestyle=:dash, lw = 2,color =:black,label = "Mean")
 
 p2 = plot(iters, vec(median(m_nuts[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_nuts[:, 2, :]), lw = 3,label = "NUTS")
     plot!(iters, vec(median(m_hmc[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_hmc[:, 2, :]), lw = 3, label = "HMC", legend = :none)
-    plot!(iters, vec(median(m_erg[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_erg[:, 2, :]), lw = 3,label = "ErgFlow", xrotation = 20)
+    plot!(iters, vec(median(m_erg[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_erg[:, 2, :]), lw = 3,label = "MixFlow", xrotation = 20)
     plot!(iters, vec(median(m_nf[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_nf[:, 2, :]), lw = 3,label = "NF", xrotation = 20)
     hline!([0.0],  linestyle=:dash, lw = 2,color = :black, label = "Mean")
 p = plot(p1, p2, layout = (1, 2), title = "Neal's Funnel")
@@ -220,13 +231,13 @@ savefig(p, "figure/funnel_mean_est.png")
 
 p1 = plot(iters, vec(median(v_nuts[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_nuts[:, 1, :]), lw = 3,label = "NUTS")
     plot!(iters, vec(median(v_hmc[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_hmc[:, 1, :]), lw = 3,label = "HMC", legend = :bottomright)
-    plot!(iters, vec(median(v_erg[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_erg[:, 1, :]), lw = 3, label = "ErgFlow", xrotation = 20)
+    plot!(iters, vec(median(v_erg[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_erg[:, 1, :]), lw = 3, label = "MixFlow", xrotation = 20)
     plot!(iters, vec(median(v_nf[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_nf[:, 1, :]), lw = 3, label = "NF", xrotation = 20, legendfontsize = 16)
     hline!([6],  linestyle=:dash, lw = 2,color = :black, label = "SD")
 
 p2 = plot(iters, vec(median(v_nuts[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_nuts[:, 2, :]), lw = 3,label = "NUTS")
     plot!(iters, vec(median(v_hmc[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_hmc[:, 2, :]), lw = 3,label = "HMC", legend = :none)
-    plot!(iters, vec(median(v_erg[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_erg[:, 2, :]), lw = 3,label = "ErgFlow", xrotation = 20)
+    plot!(iters, vec(median(v_erg[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_erg[:, 2, :]), lw = 3,label = "MixFlow", xrotation = 20)
     plot!(iters, vec(median(v_nf[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_nf[:, 2, :]), lw = 3,label = "NF", xrotation = 20)
     hline!([10.5],  linestyle=:dash, lw = 2,color = :black, label = "SD")
 p = plot(p1, p2, layout = (1, 2), title = "Neal's Funnel")
@@ -241,7 +252,7 @@ T_train = NF["T_train"]
 T_sample = NF["T_sample"]
 E = NF["elbo"]
 p1 = plot(L, E, xlabel = "# Layers", ylabel = "ELBO", lw = 3, label = "NF")
-hline!([-0.28], linestyle= :dash,  label= "ErgFlow", lw =3, legend = :right, legendfontsize = 15)
+hline!([-0.28], linestyle= :dash,  label= "MixFlow", lw =3, legend = :right, legendfontsize = 15)
 p2 = plot(L, T_train, xlabel = "# Layers", ylabel = "Training time(s)", lw = 3, legend=:none)
 p3 = boxplot(["5"], T_sample[:, 1], xlabel = "# Layers", ylabel = "Per sample time(s)", yscale=:log10, legend = :none)
 boxplot!(["10"], T_sample[:, 2], xlabel = "# Layers", ylabel = "Per sample time(s)", yscale=:log10, legend = :none)
