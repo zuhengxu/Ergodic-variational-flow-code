@@ -1,6 +1,6 @@
 using TickTock, JLD, PDMats
 import PlotlyJS as pjs
-include("model_2d.jl")
+include("model.jl")
 include("../common/neo_run.jl")
 include("../../inference/SVI/svi.jl")
 include("../common/result.jl")
@@ -19,42 +19,14 @@ q0_sampler() = randn(d).*D .+ μ
 
 # optimal setting---adapt
 o_neo = NEO.NEOobj(d = d, 
-                N_steps = 10,  
+                N_steps = 20,  
                 logp = logp, 
                 ∇logp = ∇logp, 
-                γ = 0.2, 
+                γ = 0.5, 
                 ϵ = 0.2, 
                 invMass = PDMat(I(d)), 
                 q0_sampler = q0_sampler,
                 logq0 =logq0)        
-
-
-# ##################
-# # density and scatter 
-# ####################
-# X = [-5.01:.1:5 ;]
-# Y = [-5.01:.1:5 ;]
-
-# layout = pjs.Layout(
-#     width=500, height=500,
-#     scene = pjs.attr(
-#     xaxis = pjs.attr(showticklabels=false, visible=false),
-#     yaxis = pjs.attr(showticklabels=false, visible=false),
-#     zaxis = pjs.attr(showticklabels=false, visible=false),
-#     ),
-#     margin=pjs.attr(l=0, r=0, b=0, t=0, pad=0),
-#     colorscale = "Vird"
-# )
-
-# Random.seed!(1)
-# o_new = NEO.NEOadaptation(o_neo; n_adapts=20000)
-# T = lpdf_neo_save(o_new, X, Y; res_dir = "result/", res_name = "lpdf_neo.jld")
-
-# p_est = pjs.plot(pjs.surface(z=T, x=X, y=Y, showscale=false), layout)
-# pjs.savefig(p_est, joinpath("figure/","lpdf_neo.png"))
-
-
-
 
 
 ##################

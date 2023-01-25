@@ -59,4 +59,4 @@ o_neo = NEO.NEOobj(d = d,
 # timing
 ####################
 neo_timing(o_neo; nchains = 10, mcmciters = 10, nrun = 100, res_dir = "result/", res_name = "neo_time.jld2")
-neo_ess_time(o_neo; nchains = 10, mcmciters = 5000, nadapt = 0, nrun = 10, Adapt = false, res_dir = "result/", res_name = "ess_neo.jld2")
+neo_ess_time(o_neo; nchains = 10, mcmciters = 5000, nadapt = 0, n_run = 10, Adapt = false, res_dir = "result/", res_name = "ess_neo.jld2")
