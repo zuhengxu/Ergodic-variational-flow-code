@@ -217,7 +217,7 @@ lpdf_joint = lpdf_joint .- maximum(lpdf_joint)
 ysmall = -2000
 
 plot1 = plot(xs, lpdf_nf, title="NF", lw = 2, ylim = (ysmall, 10), label=false, color = colours[4])
-plot2 = plot(xs, lpdf_ef, title="ErgFlow", ylim = (ysmall, 10), lw = 2, label=false, color = colours[3])
+plot2 = plot(xs, lpdf_ef, title="MixFlow", ylim = (ysmall, 10), lw = 2, label=false, color = colours[3])
 plot3 = plot(xs, lpdf_joint, title="Post", ylim = (ysmall, 10), lw = 2, label=false, color = "green")
 p = plot(plot1, plot2, plot3, layout = (1, 3), titlefontsize=20, xtickfontsize=20, ytickfontsize=18, xrotation=80)
 

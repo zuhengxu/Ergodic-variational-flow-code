@@ -127,7 +127,7 @@ ksd_nf = NF_KSD["ksd"]
 labels_nf = ["RealNVP" "Planar" "Radial"]
 
 Labels = Matrix{String}(undef, 1, size(nBs, 1))
-Labels[1, :].= ["ErgFlow"] 
+Labels[1, :].= ["MixFlow"] 
 p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 5, ylim = (0., Inf),labels = Labels, ylabel = "Marginal KSD", xlabel = "#Refreshment", legend=false, color = colours[3],
             xtickfontsize=25, ytickfontsize=25, guidefontsize=25, legendfontsize=25, titlefontsize = 25, xrotation = 20, bottom_margin=10Plots.mm, left_margin=5Plots.mm, top_margin=5Plots.mm)#, yaxis=:log)
 hline!([ksd_nuts], linestyle=:dash, lw = 5, label = "NUTS", color = colours[2])
@@ -192,7 +192,7 @@ lpdf_ef = lpdf_ef .- maximum(lpdf_ef)
 lpdf_joint = lpdf_joint .- maximum(lpdf_joint)
 
 plot1 = plot(xs, lpdf_nf, title="NF", color = colours[4], lw = 2, ylim = (-260, 10), label=false)
-plot2 = plot(xs, lpdf_ef, title="ErgFlow", color = colours[3], ylim = (-260, 10), lw = 2, label=false)
+plot2 = plot(xs, lpdf_ef, title="MixFlow", color = colours[3], ylim = (-260, 10), lw = 2, label=false)
 plot3 = plot(xs, lpdf_joint, title="Post", color = "green", ylim = (-260, 10), lw = 2, label=false)
 p = plot(plot1, plot2, plot3, layout = (1, 3), titlefontsize=20, xtickfontsize=20, ytickfontsize=20, xrotation=70)
 

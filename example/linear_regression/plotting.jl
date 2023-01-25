@@ -86,6 +86,7 @@ Els = ELBO["elbos"]
 Ns = ELBO["Ns"]
 Labels = Matrix{String}(undef, 1, size(eps, 1))
 Labels[1, :].= ["ϵ=$e" for e in eps] 
+# Labels[1, :] .= ["ϵ1", "ϵ2", "tuned ϵ"]
 
 p_elbo = plot(reduce(vcat, [[0], Ns]), Els',lw = 5, labels = Labels, legend = false, ylabel = "ELBO", xlabel = "#Refreshment",
                         xtickfontsize = 25, ytickfontsize = 25, guidefontsize = 25, legendfontsize = 25, titlefontsize = 25, xrotation = 20, bottom_margin=10Plots.mm, left_margin=5Plots.mm, linecolor = [colours[1] colours[3] colours[2]])
