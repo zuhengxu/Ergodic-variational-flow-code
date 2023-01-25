@@ -54,11 +54,9 @@ function neo_lpdf(o::NEOobj, q, p)
     for j in 1:K-1
         q, p = reverse_onestep(o, q, p)
         lpdf = logq_joint(o, q, p)
-        T[K-j,:] .= q
-        M[K-j,:] .= p
         logq0s[K-j] = lpdf
     end
-    lpdfs = logq0s + γ*ϵ*d .* [K-1:-1:0 ;]
+    lpdfs = logq0s .+ γ*ϵ*d .* [K-1:-1:0 ;]
     return LogExpFunctions.logsumexp(lpdfs)
 end
 

@@ -91,16 +91,16 @@ function neo_adaptation_run( d, logp, ∇logp, q0_sampler, logq0;
 end
 
 
-function neo_timing(o_neo; nchains = 15, mcmciters = 100, nrun = nrun)
+function neo_timing(o_neo; nchains = 15, mcmciters = 100, nrun = 100, res_dir = "result/", res_name = "neo_time.jld2")
     # we do not include adapation time
     @info "timing sample generation for neo"
     func(o::NEO.NEOobj) = NEO.neomcmc(o_neo, nchains, mcmciters; Adapt = false)
-    times = noob_timing(func, o_neo; n_run = n_run)./mcmciters 
+    times = noob_timing(func, o_neo; n_run = nrun)./mcmciters 
     path = joinpath(res_dir, res_name) 
     JLD2.save(path, "times", times, "nchains", nchains, "mcmciters",100, "stepsize",o_neo.ϵ, "K", o_neo.N_steps,"gamma", o_neo.γ)
 end
 
-function neo_ess_time(o_neo; nchains = 15, mcmciters = 5000, nrun = nrun, Adapt = true, nadapt = 5000, 
+function neo_ess_time(o_neo; nchains = 15, mcmciters = 5000, nrun = 10, Adapt = true, nadapt = 5000, 
                     res_dir = "result/", res_name = "ess_neo.jld2")
     t_neo, ess_neo, ess_time_neo= zeros(n_run), zeros(n_run), zeros(n_run)
     for i in 1:n_run
