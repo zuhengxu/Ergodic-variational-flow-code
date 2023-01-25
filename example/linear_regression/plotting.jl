@@ -10,7 +10,7 @@ if ! isdir(folder)
     mkdir(folder)
 end 
 
-colours = [palette(:Paired_12)[6], palette(:Paired_12)[4], palette(:Paired_12)[2], palette(:Paired_12)[10], palette(:Paired_12)[8], palette(:Paired_12)[12]]
+colours = [palette(:Paired_12)[6], palette(:Paired_12)[4], palette(:Paired_12)[2], palette(:Paired_12)[10], palette(:Paired_12)[8], palette(:Paired_12)[12], palette(:Set1_6)[6]]
 
 # ELBO
 ELBO = JLD.load("result/el_mf.jld")
