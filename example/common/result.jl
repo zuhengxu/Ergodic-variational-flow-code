@@ -4,14 +4,14 @@ using JLD
 function lpdf_est_save(o::HamFlow, a::HF_params, X, Y; 
                         n_mcmc, nB, error_checking = false, res_dir = "result/",res_name = "lpdf_est.jld")
 
-    Ds, E = ErgFlow.log_density_slice_2d(X, Y, o.ρ_sampler(2), rand(), o, a.leapfrog_stepsize, a.μ, a.D, ErgFlow.inv_refresh, n_mcmc; nBurn = nB, error_check = error_checking)
+    Ds, E = log_density_slice_2d(X, Y, o.ρ_sampler(2), rand(), o, a.leapfrog_stepsize, a.μ, a.D, ErgFlow.inv_refresh, n_mcmc; nBurn = nB)
     Dd = [logp([x, y]) for x in X , y in Y]
     JLD.save(joinpath(res_dir, res_name), "lpdf", Dd, "lpdf_est", Ds, "X", X, "Y", Y, 
             "ϵ", a.leapfrog_stepsize, "μ", a.μ, "D", a.D)
     return Ds, Dd, E
 end
 
-function log_density_slice_2d(X, Y, ρ, u, o::ErgodicFlow, ϵ, μ, D, inv_ref::Function, n_mcmc::Int; nBurn = 0, error_check = true) 
+function log_density_slice_2d(X, Y, ρ, u, o::ErgodicFlow, ϵ, μ, D, inv_ref::Function, n_mcmc::Int; nBurn = 0, error_check = false) 
         n1, n2 = size(X, 1), size(Y, 1)
         T = Matrix{Float64}(undef, n1, n2)
         E = Matrix{Float64}(undef, n1, n2)
@@ -20,7 +20,7 @@ function log_density_slice_2d(X, Y, ρ, u, o::ErgodicFlow, ϵ, μ, D, inv_ref::F
         # println("$i / $n1")
         for j=1:n2 
             # this step is bit hacky since we do not use u
-            T[i, j], E[i, j] = ErgFlow.log_density_est([X[i],Y[j]], ρ, u, o, ϵ, μ, D, inv_ref, n_mcmc; nBurn = nBurn, error_check = error_check)
+            T[i, j], E[i, j] = ErgFlow.log_density_est([X[i],Y[j]], ρ, u, o, ϵ, μ, D, inv_ref, n_mcmc; nBurn = nBurn)
             # T[i, j] = logmeanexp(@view(A[nBurn+1:end])) 
             ProgressMeter.next!(prog_bar)
         end
