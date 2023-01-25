@@ -32,7 +32,7 @@ neo_fixed_run(d, logp, ∇logp, q0_sampler, logq0;
             res_dir = "result/", csv_name = "neo_fix.csv", jld_name = "neo_fix.jld2")
 
 neo_adaptation_run(d, logp, ∇logp, q0_sampler, logq0; 
-                γs= [0.1, 0.2], Ks= [10, 15], nchains = [10], mcmciters = 20000, nadapt = 20000, ntrials = 3, 
+                γs= [0.2], Ks= [10, 15], nchains = [10], mcmciters = 20000, nadapt = 20000, ntrials = 3, 
                 ntests = 10, nKSD = 5000, 
                 res_dir = "result/", csv_name = "neo_adp.csv", jld_name = "neo_adp.jld2")         
 

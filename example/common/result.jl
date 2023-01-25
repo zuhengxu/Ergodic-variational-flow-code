@@ -1,5 +1,20 @@
 using JLD
 
+function lpdf_neo_save(o::NEO.NEOobj, X, Y; res_dir = "result/", res_name = "lpdf_neo.jld")
+    n1, n2 = size(X, 1), size(Y, 1)
+    T = Matrix{Float64}(undef, n1, n2)
+    prog_bar = ProgressMeter.Progress(n1*n2, dt=0.5, barglyphs=ProgressMeter.BarGlyphs("[=> ]"), barlen=50, color=:yellow)
+    rv = MvNormalCanon(zeros(o.d), zeros(o.d), o.invMass)
+    p = rand(rv)
+    @threads for i = 1:n1
+        for j=1:n2 
+            T[i, j] = NEO.neo_lpdf(o_neo, [X[i], Y[j]], p)
+            ProgressMeter.next!(prog_bar)
+        end
+    end
+    JLD.save(joinpath(res_dir, res_name), "lpdf", T, "X", X, "Y", Y)
+    return T 
+end
 
 function lpdf_est_save(o::HamFlow, a::HF_params, X, Y; 
                         n_mcmc, nB, error_checking = false, res_dir = "result/",res_name = "lpdf_est.jld")

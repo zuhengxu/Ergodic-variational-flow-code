@@ -1,6 +1,6 @@
 using StatsPlots, JLD
 include("model_2d.jl")
-include("../../inference/util/metric.jl")
+# include("../../inference/util/metric.jl")
 include("../common/plotting.jl")
 
 # tuning
