@@ -105,14 +105,9 @@ time_sample_nf = Time["time_sample_nf"]
 time_sample_nuts = Time["time_sample_nuts"]
 time_sample_hmc = Time["time_sample_hmc"]
 
-<<<<<<< HEAD
-NEOtime = JLD2.load("result/neo_time.jld2")["times"] .*10
-NEOess = JLD2.load("result/ess_neo.jld2")["ess_neo"] ./10
-=======
 NEOtime = JLD2.load("result/neo_time.jld2")["times"] .* 10.
 NEOess = JLD2.load("result/ess_neo.jld2")["ess_neo"] ./ 10.
 colours = [palette(:Paired_12)[6], palette(:Paired_12)[4], palette(:Paired_12)[2], palette(:Paired_12)[10], palette(:Paired_12)[8], palette(:Paired_12)[12], palette(:Greys_3)[2]]
->>>>>>> 6d6e6d494f4b7b03d36d2b4fed4fe12ee0462319
 
 boxplot(["MixFlow iid"], time_sample_erg_iid, label = "MixFlow iid", color = colours[3])
 boxplot!(["MixFlow single"], time_sample_erg_single, label = "MixFlow single ", color = :lightblue)
