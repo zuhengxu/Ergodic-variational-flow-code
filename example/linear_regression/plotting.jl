@@ -10,7 +10,7 @@ if ! isdir(folder)
     mkdir(folder)
 end 
 
-colours = [palette(:Paired_12)[6], palette(:Paired_12)[4], palette(:Paired_12)[2], palette(:Paired_12)[10], palette(:Paired_12)[8], palette(:Paired_12)[12], palette(:Set1_6)[6]]
+colours = [palette(:Paired_12)[6], palette(:Paired_12)[4], palette(:Paired_12)[2], palette(:Paired_12)[10], palette(:Paired_12)[8], palette(:Paired_12)[12], palette(:Greys_3)[2]]
 
 # ELBO
 ELBO = JLD.load("result/el_mf.jld")
@@ -111,7 +111,7 @@ dat = Matrix(Radial["elbo"][!,"10layers"]')
 hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "Radial", ribbon = get_percentiles(dat), color = colours[6])
 savefig(p_elbo, "figure/linreg_elbo_full.png")
 
-
+colours = [palette(:Paired_12)[6], palette(:Paired_12)[4], palette(:Paired_12)[2], palette(:Paired_12)[10], palette(:Paired_12)[8], palette(:Paired_12)[12], palette(:Greys_3)[2]]
 
 # KSD
 KSD = JLD.load("result/ksd.jld")
@@ -130,6 +130,7 @@ Labels[1, :].= ["ErgFlow"]
 p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 5, ylim = (1., 1000),labels = Labels, ylabel = "Marginal KSD", xlabel = "#Refreshment", legend=false, color = colours[3],
             xtickfontsize=25, ytickfontsize=25, guidefontsize=25, legendfontsize=25, titlefontsize = 25, xrotation = 20, bottom_margin=10Plots.mm, left_margin=5Plots.mm, top_margin=5Plots.mm, yaxis=:log)
 hline!([ksd_nuts], linestyle=:dash, lw = 5, label = "NUTS",color = colours[2])
+hline!([9.37], linestyle=:dash, lw = 5, label = "NEO", color = colours[end])
 hline!([ksd_nf[3]], linestyle=:dash, lw = 5, label = labels_nf[3],color = colours[6])
 hline!([ksd_nf[2]], linestyle=:dash, lw = 5, label = labels_nf[2],color = colours[5])
 hline!([ksd_nf[1]], linestyle=:dash, lw = 5, label = labels_nf[1],color = colours[4])
@@ -150,14 +151,15 @@ time_sample_hmc = Time["time_sample_hmc"]
 
 # colours = [palette(:Paired_8)[5], palette(:Paired_8)[6], palette(:Paired_8)[2], palette(:Paired_8)[1], palette(:Paired_10)[10], palette(:Paired_10)[9], palette(:Paired_8)[4]]
 
-NEOtime = JLD2.load("result/neo_time.jld2")["times"]
-NEOess = JLD2.load("result/neo_time.jld2")["times"]
+NEOtime = JLD2.load("result/neo_time.jld2")["times"] .* 10.
+NEOess = JLD2.load("result/ess_neo.jld2")["ess_neo"] ./ 10.
+colours = [palette(:Paired_12)[6], palette(:Paired_12)[4], palette(:Paired_12)[2], palette(:Paired_12)[10], palette(:Paired_12)[8], palette(:Paired_12)[12], palette(:Greys_3)[2]]
 
 boxplot(["MixFlow iid"], time_sample_erg_iid, label = "MixFlow iid", color = colours[3])
 boxplot!(["MixFlow single"], time_sample_erg_single, label = "MixFlow single ", color = :lightblue)
 boxplot!(["NF"],time_sample_nf, label = "NF", color = colours[4], yscale = :log10, legend = false, guidefontsize=20, tickfontsize=15, xrotation = -10, formatter=:plain, margin=5Plots.mm)
 boxplot!(["HMC"], time_sample_hmc, label = "HMC", color = colours[1], title = "NF train time= $time_trian (s)")
-boxplot!(["NEO"], NEOtime, label = "NEO", color = colours[end])
+# boxplot!(["NEO"], NEOtime, label = "NEO", color = colours[end])
 ylabel!("time per sample(s)")
 
 filepath = string("figure/sampling_time.png")
@@ -173,7 +175,7 @@ ess_time_hmc = ESS["ess_time_hmc"]
 boxplot(["MixFlow iid"], ess_time_erg_iid,  label = "MixFlow iid",color = colours[3])
 boxplot!(["MixFlow single"], ess_time_erg_single, label = "MixFlow single ", color = :lightblue)
 boxplot!(["HMC"], ess_time_hmc,label = "HMC", color = colours[1], legend = false, guidefontsize=20, tickfontsize=15, xrotation = -15, formatter=:plain, margin=5Plots.mm)
-boxplot!(["NEO"], NEOess, label = "NEO", color = colours[end])
+# boxplot!(["NEO"], NEOess, label = "NEO", color = colours[end])
 ylabel!("ESS unit time")
 filepath = string("figure/ess.png")
 savefig(filepath)
