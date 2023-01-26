@@ -37,9 +37,9 @@ nBs = KSD["nBurns"]
 ksd_neo = mean([ 0.06622467635571341, 0.060399061276145014, 0.05938190299030083])
 Labels = Matrix{String}(undef, 1, size(nBs, 1))
 Labels[1, :].= ["MixFlow"] 
-p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 5, ylim = (0, Inf),labels = Labels, ylabel = "Marginal KSD", xlabel = "#Refreshment", xtickfontsize=25, ytickfontsize=25, guidefontsize=25, legendfontsize=25, titlefontsize = 25, xrotation = 20, margin=5Plots.mm)
-hline!( [ksd_nuts], linestyle=:dash, lw = 5, label = "NUTS", legend=false)
-hline!( [ksd_neo], linestyle=:dot, lw = 5, label = "NEO", legend=false)
+p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 5, ylim = (0, Inf),labels = Labels, ylabel = "Marginal KSD", xlabel = "#Refreshment", xtickfontsize=25, ytickfontsize=25, guidefontsize=25, legendfontsize=25, titlefontsize = 25, xrotation = 20, margin=5Plots.mm, color=palette(:Paired_12)[2])
+hline!( [ksd_nuts], linestyle=:dash, lw = 5, label = "NUTS", legend=false, color = palette(:Paired_12)[4])
+hline!( [ksd_neo], linestyle=:dot, lw = 5, label = "NEO", legend=false, color = palette(:Greys_3)[2])
 savefig(p_ksd, "figure/banana_ksd.png")
 
 

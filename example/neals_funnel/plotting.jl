@@ -41,9 +41,9 @@ nBs = KSD["nBurns"]
 ksd_neo = mean([ 0.055410260886541406, 0.03609094704972141, 0.03661090960311319])
 Labels = Matrix{String}(undef, 1, size(nBs, 1))
 Labels[1, :].= ["MixFlow"] 
-p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 5, ylim = (0, 0.26),labels = false, ylabel = "Marginal KSD", xlabel = "#Refreshment", xtickfontsize=25, ytickfontsize=25, guidefontsize=25, legendfontsize=25, titlefontsize = 25, xrotation = 20, margin=5Plots.mm, legend=(0.5,0.5))
-hline!([ksd_nuts], linestyle=:dash, lw = 5, label = "NUTS", legend = false)
-hline!( [ksd_neo], linestyle=:dot, lw = 5, label = "NEO", legend=false)
+p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 5, ylim = (0, 0.26),labels = false, ylabel = "Marginal KSD", xlabel = "#Refreshment", xtickfontsize=25, ytickfontsize=25, guidefontsize=25, legendfontsize=25, titlefontsize = 25, xrotation = 20, margin=5Plots.mm, legend=(0.5,0.5), color=palette(:Paired_12)[2])
+hline!([ksd_nuts], linestyle=:dash, lw = 5, label = "NUTS", legend = false, color = palette(:Paired_12)[4])
+hline!( [ksd_neo], linestyle=:dot, lw = 5, label = "NEO", legend=false, color = palette(:Greys_3)[2])
 savefig(p_ksd, "figure/funnel_ksd.png")
 
 
@@ -84,7 +84,7 @@ nBs = KSD["nBurns"]
 
 Labels = Matrix{String}(undef, 1, size(nBs, 1))
 Labels[1, :].= ["MixFlow"] 
-p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 3, ylim = (0, Inf),labels = Labels, ylabel = "Marginal KSD", xlabel = "#Refreshment", title  = "5D Neal's Funnel", xtickfontsize=18, ytickfontsize=18, guidefontsize=18, legendfontsize=18, titlefontsize = 18, xrotation = 20, margin=5Plots.mm #=, legend=(0.5,0.5)=#)
+p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 3, ylim = (0, Inf),labels = Labels, ylabel = "Marginal KSD", xlabel = "#Refreshment", title  = "5D Neal's Funnel", xtickfontsize=18, ytickfontsize=18, guidefontsize=18, legendfontsize=18, titlefontsize = 18, xrotation = 20, margin=5Plots.mm #=, legend=(0.5,0.5)=#, color = palette(:Paired_12)[2])
 hline!([ksd_nuts], linestyle=:dash, lw = 2, label = "NUTS", color = palette(:Paired_12)[4])
 savefig(p_ksd, "figure/5d_funnel_ksd.png")
 
@@ -109,7 +109,7 @@ nBs = KSD["nBurns"]
 
 Labels = Matrix{String}(undef, 1, size(nBs, 1))
 Labels[1, :].= ["MixFlow"] 
-p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 3, ylim = (0, Inf),labels = Labels, ylabel = "Marginal KSD", xlabel = "#Refreshment", title  = "20D Neal's Funnel", xtickfontsize=18, ytickfontsize=18, guidefontsize=18, legendfontsize=18, titlefontsize = 18, xrotation = 20, margin=5Plots.mm , legend=(0.7,0.8))
+p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 3, ylim = (0, Inf),labels = Labels, ylabel = "Marginal KSD", xlabel = "#Refreshment", title  = "20D Neal's Funnel", xtickfontsize=18, ytickfontsize=18, guidefontsize=18, legendfontsize=18, titlefontsize = 18, xrotation = 20, margin=5Plots.mm , legend=(0.7,0.8), color = palette(:Paired_12)[2])
 hline!([ksd_nuts], linestyle=:dash, lw = 2, label = "NUTS", color = palette(:Paired_12)[4])
 savefig(p_ksd, "figure/20d_funnel_ksd.png")
 

@@ -42,9 +42,12 @@ ksd_neo = mean([0.49842748565146494, 0.35990597949010605, 0.5500121211920491])
 
 Labels = Matrix{String}(undef, 1, size(nBs, 1))
 Labels[1, :].= ["MixFlow"] 
-p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 5, ylim = (0, Inf),labels = Labels, ylabel = "Marginal KSD", xlabel = "#Refreshment", xtickfontsize=25, ytickfontsize=25, guidefontsize=25, legendfontsize=25, titlefontsize = 25, xrotation = 20, margin=5Plots.mm)
-hline!([ksd_nuts], linestyle=:dash, lw = 5, label = "NUTS")
-hline!( [ksd_neo], linestyle=:dot, lw = 5, label = "NEO")
+p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 5, ylim = (0, Inf),labels = false, ylabel = "Marginal KSD", xlabel = "#Refreshment", xtickfontsize=25, ytickfontsize=25, guidefontsize=25, legendfontsize=25, titlefontsize = 25, xrotation = 20, margin=5Plots.mm, color=palette(:Paired_12)[2])
+plot!(reduce(vcat, [[0], Ns]), -Ks', lw = 2, labels = Labels, color=palette(:Paired_12)[2])
+hline!([-ksd_nuts], linestyle=:dash, lw = 2, label = "NUTS", color = palette(:Paired_12)[4])
+hline!([ksd_nuts], linestyle=:dash, lw = 5, label = false, color = palette(:Paired_12)[4])
+hline!( [-ksd_neo], linestyle=:dot, lw = 2, label = "NEO", color = palette(:Greys_3)[2])
+hline!( [ksd_neo], linestyle=:dot, lw = 5, label = false, color = palette(:Greys_3)[2])
 savefig(p_ksd, "figure/warped_gaussian_ksd.png")
 
 
