@@ -1,6 +1,6 @@
 library(dplyr)
 
-agg_sum <- function() {
+agg_sum <- function(name) {
   df = read.table("neo_fix.csv", header = TRUE)
   # Create a new column "group" 
   df$group <- rep((1:(nrow(df)/3)),each =3)
@@ -15,71 +15,79 @@ agg_sum <- function() {
   df_final = df_final[,c(1,3,4,5,6,7,9)]
   df_final = round(df_final, 2)
   colnames(df_final) = c("group", "GAMMA", "#STEPS", "STEPSIZE", "#CHAINS", "AVG. KSD", "NAN RATIO")
-  write.csv(df_final, "neo_table.csv")
+  
+  df = data.frame(min(df_final$`AVG. KSD`), mean(df_final$`AVG. KSD`), 
+                  sd(df_final$`AVG. KSD`), sum(df_final$`NAN RATIO` > 0))
+  df = round(df, 2)
+  colnames(df) = c("MIN. KSD", "AVG. KSD", "SD. KSD", "#FAIL")
+  rownames(df) = c(name)
+  
+  return(df)
 }
 
 ##########
 # banana
 ##########
 setwd("C://projects//ErgFlow//Ergodic-variational-flow-code//example//banana//result")
-agg_sum()
+banana = agg_sum("banana")
 
 ##########
 # cross
 ##########
 setwd("C://projects//ErgFlow//Ergodic-variational-flow-code//example//cross//result")
-agg_sum()
+cross = agg_sum("cross")
 
 ##########
 # heavy_reg
 ##########
 setwd("C://projects//ErgFlow//Ergodic-variational-flow-code//example//heavy_reg//result")
-agg_sum()
+heavy_reg = agg_sum("t regression")
 
 ##########
 # lin_reg_heavy
 ##########
 setwd("C://projects//ErgFlow//Ergodic-variational-flow-code//example//lin_reg_heavy//result")
-agg_sum()
+lin_reg_heavy = agg_sum("linear regression (heavy tail)")
 
 ##########
 # linear_regression
 ##########
 setwd("C://projects//ErgFlow//Ergodic-variational-flow-code//example//linear_regression//result")
-agg_sum()
+linear_regression = agg_sum("linear regression")
 
 ##########
 # logistic_reg
 ##########
 setwd("C://projects//ErgFlow//Ergodic-variational-flow-code//example//logistic_reg//result")
-agg_sum()
+logistic_regression = agg_sum("logistic regression")
 
 ##########
 # neals_funnel
 ##########
 setwd("C://projects//ErgFlow//Ergodic-variational-flow-code//example//neals_funnel//result")
-agg_sum()
+neals_funnel = agg_sum("Neal's funnel")
 
 ##########
 # poiss
 ##########
 setwd("C://projects//ErgFlow//Ergodic-variational-flow-code//example//poiss//result")
-agg_sum()
-
-##########
-# sp_reg_big
-##########
-setwd("C://projects//ErgFlow//Ergodic-variational-flow-code//example//sp_reg_big//result")
-agg_sum()
+poiss = agg_sum("Poisson regression")
 
 ##########
 # sparse_regression
 ##########
 setwd("C://projects//ErgFlow//Ergodic-variational-flow-code//example//sparse_regression//result")
-agg_sum()
+sparse_regression = agg_sum("sparse regression")
 
 ##########
 # warped_gaussian
 ##########
 setwd("C://projects//ErgFlow//Ergodic-variational-flow-code//example//warped_gaussian//result")
-agg_sum()
+warped_gaussian = agg_sum("warped Gaussian")
+
+df_final = rbind(banana, cross, neals_funnel, warped_gaussian, 
+                 linear_regression, lin_reg_heavy, logistic_regression, poiss,
+                 heavy_reg, sparse_regression)
+
+setwd("C://projects//ErgFlow//Ergodic-variational-flow-code//example")
+write.csv(df_final, "aggregated.csv")
