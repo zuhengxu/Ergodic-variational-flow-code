@@ -109,7 +109,7 @@ boxplot!(["MixFlow single"], time_sample_erg_single, label = "MixFlow single ", 
 boxplot!(["NF"],time_sample_nf, label = "NF", color = colours[4], yscale = :log10, legend = false, guidefontsize=20, tickfontsize=15, xrotation = -15, formatter=:plain)
 boxplot!(["NUTS"], time_sample_nuts, label = "NUTS", color = colours[2], title = "NF train time= $time_trian (s)")
 boxplot!(["HMC"], time_sample_hmc, label = "HMC", color = colours[1])
-boxplot!(["NEO"], NEOtime, label = "NEO", color = colours[end])
+# boxplot!(["NEO"], NEOtime, label = "NEO", color = colours[end])
 ylabel!("time per sample(s)")
 
 filepath = string("figure/sampling_time.png")
@@ -127,7 +127,7 @@ boxplot(["MixFlow iid"], ess_time_erg_iid,  label = "MixFlow iid",color = colour
 boxplot!(["MixFlow single"], ess_time_erg_single, label = "MixFlow single ", color = :lightblue)
 boxplot!(["NUTS"], ess_time_nuts, label = "NUTS", color = colours[2])
 boxplot!(["HMC"], ess_time_hmc,label = "HMC", color = colours[1], legend = false, guidefontsize=20, tickfontsize=15, xrotation = -15, formatter=:plain, yscale=:log10)
-boxplot!(["NEO"], NEOess, label = "NEO", color = colours[end])
+# boxplot!(["NEO"], NEOess, label = "NEO", color = colours[end])
 ylabel!("ESS unit time")
 filepath = string("figure/ess.png")
 savefig(filepath)
