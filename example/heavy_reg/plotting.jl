@@ -112,6 +112,8 @@ dat = Matrix(Radial["elbo"][!,"5layers"]')
 hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "Radial", ribbon = get_percentiles(dat), color = colours[6])
 savefig(p_elbo, "figure/heavy_elbo_full.png")
 
+colours = [palette(:Paired_12)[6], palette(:Paired_12)[4], palette(:Paired_12)[2], palette(:Paired_12)[10], palette(:Paired_12)[8], palette(:Paired_12)[12], palette(:Greys_3)[2]]
+
 #####################
 # KSD
 #####################
@@ -131,6 +133,7 @@ Labels[1, :].= ["MixFlow"]
 p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 5, ylim = (0., Inf),labels = Labels, ylabel = "Marginal KSD", xlabel = "#Refreshment", legend=false, color = colours[3],
             xtickfontsize=25, ytickfontsize=25, guidefontsize=25, legendfontsize=25, titlefontsize = 25, xrotation = 20, bottom_margin=10Plots.mm, left_margin=5Plots.mm, top_margin=5Plots.mm)#, yaxis=:log)
 hline!([ksd_nuts], linestyle=:dash, lw = 5, label = "NUTS", color = colours[2])
+hline!([0.15], linestyle=:dash, lw = 5, label = "NEO", color = colours[end])
 hline!([ksd_nf[1]], linestyle=:dash, lw = 5, label = labels_nf[1],color = colours[4]) 
 hline!([ksd_nf[2]], linestyle=:dash, lw = 5, label = labels_nf[2],color = colours[5])
 hline!([ksd_nf[3]], linestyle=:dash, lw = 5, label = labels_nf[3],color = colours[6])
