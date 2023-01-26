@@ -1,4 +1,5 @@
 include("model.jl")
+include("../../inference/NEO/NEO.jl")
 include("../../inference/MCMC/NUTS.jl")
 include("../common/plotting.jl")
 include("../common/result.jl")
@@ -150,8 +151,8 @@ time_sample_erg_single = Time["time_sample_erg_single"]
 time_sample_nf = NF["sampling_time"]
 time_sample_hmc = Time["time_sample_hmc"]
 
-NEOtime = JLD2.load("result/neo_time.jld2")["times"]
-NEOess = JLD2.load("result/neo_time.jld2")["times"]
+# NEOtime = JLD2.load("result/neo_time.jld2")["times"]
+NEOess = JLD2.load("result/ess_neo.jld2")
 
 # colours = [palette(:Paired_8)[5], palette(:Paired_8)[6], palette(:Paired_8)[2], palette(:Paired_8)[1], palette(:Paired_10)[10], palette(:Paired_10)[9], palette(:Paired_8)[4]]
 colours = [palette(:Paired_12)[6], palette(:Paired_12)[4], palette(:Paired_12)[2], palette(:Paired_12)[10], palette(:Paired_12)[8], palette(:Paired_12)[12], palette(:Set1_6)[6]]

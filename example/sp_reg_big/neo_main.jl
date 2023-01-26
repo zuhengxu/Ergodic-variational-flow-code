@@ -25,6 +25,6 @@ q0_sampler() = randn(d).*D .+ μ
 
 neo_adaptation_run(d, logp, ∇logp, q0_sampler, logq0; 
                 γs= [0.2, 0.5, 1.0], Ks= [10, 20], nchains = [10], mcmciters = 20000, nadapt = 20000, ntrials = 3, 
-                ntests = 20, nKSD = 5000, 
+                ntests = 20, nKSD = 3000, 
                 res_dir = "result/", csv_name = "neo_adp.csv", jld_name = "neo_adp.jld2")         
 

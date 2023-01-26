@@ -60,9 +60,9 @@ DS, Dd, E = lpdf_est_save(o, a, X, Y; n_mcmc = 2000, nB = 5)
 layout = pjs.Layout(
     width=500, height=500,
     scene = pjs.attr(
-        xaxis = pjs.attr(showticklabels=true, visible=true),
-        yaxis = pjs.attr(showticklabels=true, visible=true),
-        zaxis = pjs.attr(showticklabels=true, visible=true, range = [-5000, 0]),
+        xaxis = pjs.attr(showticklabels=false, visible=false),
+        yaxis = pjs.attr(showticklabels=false, visible=false),
+        zaxis = pjs.attr(showticklabels=false, visible=false, range = [-5000, 0]),
     ),
     margin=pjs.attr(l=0, r=0, b=0, t=0, pad=0),
     colorscale = "Vird"

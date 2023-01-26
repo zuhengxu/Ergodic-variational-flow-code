@@ -53,14 +53,14 @@ a = ErgFlow.HF_params(0.003*ones(d), μ, D)
 X = [-2.01:.1:2 ;]
 Y = [-5.01:.1:5 ;]
 # # lpdf_est, lpdf, Error
-DS, Dd, E = lpdf_est_save(o, a, X, Y; n_mcmc = 1000, nB = 0)
+DS, Dd, E = lpdf_est_save(o, a, X, Y; n_mcmc = 1000, nB = 5)
 
 layout = pjs.Layout(
     width=500, height=500,
     scene = pjs.attr(
-    xaxis = pjs.attr(showticklabels=true, visible=true),
-    yaxis = pjs.attr(showticklabels=true, visible=true),
-    zaxis = pjs.attr(showticklabels=true, visible=true),
+    xaxis = pjs.attr(showticklabels=false, visible=false),
+    yaxis = pjs.attr(showticklabels=false, visible=false),
+    zaxis = pjs.attr(showticklabels=false, visible=false),
     ),
     margin=pjs.attr(l=0, r=0, b=0, t=0, pad=0),
     colorscale = "Vird"
