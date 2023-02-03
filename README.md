@@ -1,9 +1,12 @@
 # Ergodic-variational-flow-code
-Code that reproduces experiments in [Ergodic variational flows](https://arxiv.org/pdf/2205.07475.pdf)
+Code that reproduces experiments in [MixFlows: principled variational inference via mixed flows](https://arxiv.org/pdf/2205.07475.pdf)
 
 ## Package installation
 
-We implement a practical version of the Ergodic variational flows---Hamiltonian ergodic flow---as a julia package [ErgFlow.jl](https://github.com/zuhengxu/ErgFlow.jl), which can be installed by executing the following code:
+We implement a practical version of the Ergodic variational flows---Hamiltonian
+ergodic flow---as a julia package
+[ErgFlow.jl](https://github.com/zuhengxu/ErgFlow.jl), which can be installed by
+executing the following code:
 
 ```julia
 # in Julia REPL
