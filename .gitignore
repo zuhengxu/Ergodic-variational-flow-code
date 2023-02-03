@@ -42,11 +42,11 @@ __pycache__/
 .workspace
 
 # results and figures
-# /figure/*
-# /result/*
-# *.png 
-# *.jld
-# *.jld2
+/figure/*
+/result/*
+*.png 
+*.jld
+*.jld2
 *.gif
 ## Build tool auxiliary files:
 *.synctex
