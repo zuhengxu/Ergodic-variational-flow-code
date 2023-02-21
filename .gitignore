@@ -42,8 +42,8 @@ __pycache__/
 .workspace
 
 # results and figures
-/figure/*
-/result/*
+*/figure/*
+*/result/*
 *.png 
 *.jld
 *.jld2
