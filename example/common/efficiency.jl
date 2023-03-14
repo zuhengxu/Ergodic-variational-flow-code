@@ -15,7 +15,7 @@ function run_time_per_sample(o::HamFlow, a::HF_params, refresh::Function; n_run 
     u0 = rand()
 
     @info "timing sample generation NUTS"
-    time_sample_nuts = noob_timing(nuts, z0, 0.7, o.logp, o.∇logp, 1, 0; n_run =n_run)
+    time_sample_nuts = noob_timing(nuts, z0, 0.7, o.logp, o.∇logp, 2, 0; n_run =n_run) / 2
 
     @info "timing sample generation hmc"
     time_sample_hmc = noob_timing(hmc, z0, a.leapfrog_stepsize, 0.7, n_lfrg, o.logp, o.∇logp, 1, 0; n_run = n_run)
