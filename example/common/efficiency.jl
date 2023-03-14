@@ -14,8 +14,8 @@ function run_time_per_sample(o::HamFlow, a::HF_params, refresh::Function; n_run 
     ρ0 = o.ρ_sampler(o.d)
     u0 = rand()
 
-    # @info "timing sample generation NUTS"
-    # time_sample_nuts = noob_timing(adapt_nuts, z0, 0.7, o.logp, o.∇logp, 1, 0; n_run =n_run)
+    @info "timing sample generation NUTS"
+    time_sample_nuts = noob_timing(nuts, z0, 0.7, o.logp, o.∇logp, 1, 0; n_run =n_run)
 
     @info "timing sample generation hmc"
     time_sample_hmc = noob_timing(hmc, z0, a.leapfrog_stepsize, 0.7, n_lfrg, o.logp, o.∇logp, 1, 0; n_run = n_run)
@@ -34,7 +34,7 @@ function run_time_per_sample(o::HamFlow, a::HF_params, refresh::Function; n_run 
 
     @info "save time per sample"
     file_path = joinpath("result/", string("timing_per_sample",".jld"))
-    JLD.save(file_path, #"time_sample_nuts", time_sample_nuts, 
+    JLD.save(file_path, "time_sample_nuts", time_sample_nuts, 
                         "time_sample_hmc", time_sample_hmc, 
                         "time_sample_erg_iid", time_sample_erg_iid, "time_sample_erg_single", time_sample_erg_single)
 
@@ -61,12 +61,12 @@ function ess_time(o::HamFlow, a::HF_params, refresh::Function;
         u0 = rand()
         # n_mcmc = 2000
 
-        # @info "ESS/time NUTS"
-        # tick()
-        # T_nuts = adapt_nuts(z0, 0.7, o.logp, o.∇logp, nsamples, nadapt)
-        # t_nuts[i] = tok()
-        # ess_nuts[i] = ess(T_nuts)
-        # ess_time_nuts[i] = ess_nuts[i]/t_nuts[i]
+        @info "ESS/time NUTS"
+        tick()
+        T_nuts = adapt_nuts(z0, 0.7, o.logp, o.∇logp, nsamples, nadapt)
+        t_nuts[i] = tok()
+        ess_nuts[i] = ess(T_nuts)
+        ess_time_nuts[i] = ess_nuts[i]/t_nuts[i]
         
         @info "ESS/time HMC"
         tick()
@@ -93,7 +93,7 @@ function ess_time(o::HamFlow, a::HF_params, refresh::Function;
     end
     @info "save ESS per time unit plot"
     file_path = joinpath("result/", string("ESS",".jld"))
-    JLD.save(file_path,  #"t_nuts", t_nuts, "ess_nuts", ess_nuts, "ess_time_nuts", ess_time_nuts, 
+    JLD.save(file_path, "t_nuts", t_nuts, "ess_nuts", ess_nuts, "ess_time_nuts", ess_time_nuts, 
                         "t_hmc", t_hmc, "ess_hmc", ess_hmc, "ess_time_hmc", ess_time_hmc, 
                         "t_erg_iid", t_erg_iid, "ess_erg_iid", ess_erg_iid, "ess_time_erg_iid", ess_time_erg_iid,
                         "t_erg_single", t_erg_single, "ess_erg_single", ess_erg_single, "ess_time_erg_single", ess_time_erg_single)
