@@ -17,7 +17,7 @@ ps1, el1,_ = SVI.vi(o1, a1, 100000; elbo_size = 1, logging_ps = false)
 # Plots.plot(el1, ylims = (-50, 10))
 μ,D = ps1[1][1], ps1[1][2]
 el_svi = SVI.ELBO(o1, μ, D; elbo_size = 10000)
-JLD.save("result/mf_params.jld", "μ", μ, "D", D, "elbo", el_svi)
+JLD.save("result/mfvi.jld", "μ", μ, "D", D, "elbo", el_svi)
 
 
 MF = JLD.load("result/mfvi.jld")

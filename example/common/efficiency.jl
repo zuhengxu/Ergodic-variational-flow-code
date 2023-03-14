@@ -45,7 +45,7 @@ end
 function ess_time(o::HamFlow, a::HF_params, refresh::Function; 
                     num_trials::Int = 10, nsamples::Int = 2000, n_mcmc::Int = 2000, nadapt::Int = 0)
     
-    # t_nuts, ess_nuts, ess_time_nuts= zeros(num_trials), zeros(num_trials), zeros(num_trials)
+    t_nuts, ess_nuts, ess_time_nuts= zeros(num_trials), zeros(num_trials), zeros(num_trials)
     t_hmc, ess_hmc, ess_time_hmc= zeros(num_trials), zeros(num_trials), zeros(num_trials)
     t_erg_iid, ess_erg_iid, ess_time_erg_iid= zeros(num_trials), zeros(num_trials), zeros(num_trials)
     t_erg_single, ess_erg_single, ess_time_erg_single = zeros(num_trials), zeros(num_trials), zeros(num_trials)
@@ -63,7 +63,7 @@ function ess_time(o::HamFlow, a::HF_params, refresh::Function;
 
         @info "ESS/time NUTS"
         tick()
-        T_nuts = adapt_nuts(z0, 0.7, o.logp, o.∇logp, nsamples, nadapt)
+        T_nuts = nuts(z0, 0.7, o.logp, o.∇logp, nsamples, nadapt)
         t_nuts[i] = tok()
         ess_nuts[i] = ess(T_nuts)
         ess_time_nuts[i] = ess_nuts[i]/t_nuts[i]
