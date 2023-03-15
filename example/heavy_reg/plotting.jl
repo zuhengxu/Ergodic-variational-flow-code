@@ -238,3 +238,42 @@ for i in 1:Int(ceil(d/10))
     p_vis = pairplots(D_nuts[:, idx], D_ef[1:2000, idx], D_nf[1:2000, idx])
     savefig(p_vis, "figure/post_vis"*"$(i).png")
 end
+
+###################3
+# running average plot
+#######################
+conv = JLD.load("result/running.jld")
+m_nuts = conv["m_nuts"]
+m_nuts_ad = conv["m_nuts_ad"]
+m_hmc = conv["m_hmc"]
+m_erg = conv["m_erg"]
+v_nuts = sqrt.(abs.(conv["v_nuts"]))
+v_nuts_ad = sqrt.(abs.(conv["v_nuts_ad"]))
+v_hmc = sqrt.(conv["v_hmc"])
+v_erg = sqrt.(conv["v_erg"])
+
+iters = [1:size(m_nuts, 1) ;]
+p1 = plot(iters, vec(median(m_nuts[:, 1, :]'; dims =1)), ribbon = get_percentiles(m_nuts[:, 1, :]),lw = 3, label = "NUTS")
+    plot!(iters, vec(median(m_nuts_ad[:, 1, :]'; dims =1)), ribbon = get_percentiles(m_nuts_ad[:, 1, :]),lw = 3, label = "NUTS adaptive")
+    plot!(iters, vec(median(m_hmc[:, 1, :]'; dims =1)), ribbon = get_percentiles(m_hmc[:, 1, :]), lw = 3,label = "HMC", legend = :bottomleft)
+    plot!(iters, vec(median(m_erg[:, 1, :]'; dims =1)), ribbon = get_percentiles(m_erg[:, 1, :]), lw = 3,label = "MixFlow", xrotation = 20)
+
+p2 = plot(iters, vec(median(m_nuts[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_nuts[:, 2, :]), lw = 3,label = "NUTS")
+    plot!(iters, vec(median(m_nuts_ad[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_nuts_ad[:, 2, :]), lw = 3,label = "NUTS adaptive")
+    plot!(iters, vec(median(m_hmc[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_hmc[:, 2, :]), lw = 3,label = "HMC", legend = :none)
+    plot!(iters, vec(median(m_erg[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_erg[:, 2, :]), lw = 3,label = "MixFlow", xrotation = 20)
+p = plot(p1, p2, layout = (1, 2), title = "t Regression")
+savefig(p, "figure/treg_mean_est.png")
+
+
+p1 = plot(iters, vec(median(v_nuts[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_nuts[:, 1, :]), lw = 3,label = "NUTS")
+    plot!(iters, vec(median(v_nuts_ad[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_nuts_ad[:, 1, :]), lw = 3,label = "NUTS adaptive")
+    plot!(iters, vec(median(v_hmc[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_hmc[:, 1, :]), lw = 3,label = "HMC", legend = :bottomright)
+    plot!(iters, vec(median(v_erg[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_erg[:, 1, :]), lw = 3,label = "MixFlow", xrotation = 20)
+
+p2 = plot(iters, vec(median(v_nuts[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_nuts[:, 2, :]), lw = 3,label = "NUTS")
+    plot(iters, vec(median(v_nuts_ad[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_nuts_ad[:, 2, :]), lw = 3,label = "NUTS adaptive")
+    plot!(iters, vec(median(v_hmc[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_hmc[:, 2, :]), lw = 3,label = "HMC", legend = :none)
+    plot!(iters, vec(median(v_erg[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_erg[:, 2, :]), lw = 3,label = "MixFlow", xrotation = 20)
+p = plot(p1, p2, layout = (1, 2), title = "t Regression")
+savefig(p, "figure/treg_var_est.png")

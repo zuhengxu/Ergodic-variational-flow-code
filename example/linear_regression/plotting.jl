@@ -222,8 +222,6 @@ p2 = plot(iters, vec(median(m_nuts[:, 2, :]'; dims =1)), ribbon = get_percentile
     plot!(iters, vec(median(m_nuts_ad[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_nuts_ad[:, 2, :]), lw = 3,label = "NUTS adaptive")
     plot!(iters, vec(median(m_hmc[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_hmc[:, 2, :]), lw = 3,label = "HMC", legend = :none)
     plot!(iters, vec(median(m_erg[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_erg[:, 2, :]), lw = 3,label = "MixFlow", xrotation = 20)
-    plot!(iters, vec(median(m_nf[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_nf[:, 2, :]), lw = 3,label = "NF", xrotation = 20)
-    hline!([0.0],  linestyle=:dash, lw = 2,color = :black, label = "Mean")
 p = plot(p1, p2, layout = (1, 2), title = "Linear Regression")
 savefig(p, "figure/linreg_mean_est.png")
 
@@ -232,14 +230,10 @@ p1 = plot(iters, vec(median(v_nuts[:, 1, :]'; dims =1)), ribbon = get_percentile
     plot!(iters, vec(median(v_nuts_ad[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_nuts_ad[:, 1, :]), lw = 3,label = "NUTS adaptive")
     plot!(iters, vec(median(v_hmc[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_hmc[:, 1, :]), lw = 3,label = "HMC", legend = :bottomright)
     plot!(iters, vec(median(v_erg[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_erg[:, 1, :]), lw = 3,label = "MixFlow", xrotation = 20)
-    plot!(iters, vec(median(v_nf[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_nf[:, 1, :]), lw = 3,label = "NF", xrotation = 20, legendfontsize = 16)
-    hline!([10],  linestyle=:dash, lw = 2,color = :black, label = "SD")
 
 p2 = plot(iters, vec(median(v_nuts[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_nuts[:, 2, :]), lw = 3,label = "NUTS")
     plot(iters, vec(median(v_nuts_ad[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_nuts_ad[:, 2, :]), lw = 3,label = "NUTS adaptive")
     plot!(iters, vec(median(v_hmc[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_hmc[:, 2, :]), lw = 3,label = "HMC", legend = :none)
     plot!(iters, vec(median(v_erg[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_erg[:, 2, :]), lw = 3,label = "MixFlow", xrotation = 20)
-    plot!(iters, vec(median(v_nf[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_nf[:, 2, :]),lw = 3, label = "NF", xrotation = 20)
-    hline!([sqrt(186)],  linestyle=:dash, lw = 2,color = :black, label = "SD")
 p = plot(p1, p2, layout = (1, 2), title = "Linear Regression")
 savefig(p, "figure/linreg_var_est.png")

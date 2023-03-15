@@ -235,3 +235,42 @@ plot3 = plot(xs, lpdf_joint, title="Post", ylim = (ysmall, 10), lw = 2, label=fa
 p = plot(plot1, plot2, plot3, layout = (1, 3), titlefontsize=20, xtickfontsize=20, ytickfontsize=18, xrotation=80)
 
 savefig(p, "figure/univariate_lpdf.png")
+
+###################3
+# running average plot
+#######################
+conv = JLD.load("result/running.jld")
+m_nuts = conv["m_nuts"]
+m_nuts_ad = conv["m_nuts_ad"]
+m_hmc = conv["m_hmc"]
+m_erg = conv["m_erg"]
+v_nuts = sqrt.(abs.(conv["v_nuts"]))
+v_nuts_ad = sqrt.(abs.(conv["v_nuts_ad"]))
+v_hmc = sqrt.(conv["v_hmc"])
+v_erg = sqrt.(conv["v_erg"])
+
+iters = [1:size(m_nuts, 1) ;]
+p1 = plot(iters, vec(median(m_nuts[:, 1, :]'; dims =1)), ribbon = get_percentiles(m_nuts[:, 1, :]),lw = 3, label = "NUTS")
+    plot!(iters, vec(median(m_nuts_ad[:, 1, :]'; dims =1)), ribbon = get_percentiles(m_nuts_ad[:, 1, :]),lw = 3, label = "NUTS adaptive")
+    plot!(iters, vec(median(m_hmc[:, 1, :]'; dims =1)), ribbon = get_percentiles(m_hmc[:, 1, :]), lw = 3,label = "HMC", legend = :bottomleft)
+    plot!(iters, vec(median(m_erg[:, 1, :]'; dims =1)), ribbon = get_percentiles(m_erg[:, 1, :]), lw = 3,label = "MixFlow", xrotation = 20)
+
+p2 = plot(iters, vec(median(m_nuts[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_nuts[:, 2, :]), lw = 3,label = "NUTS")
+    plot!(iters, vec(median(m_nuts_ad[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_nuts_ad[:, 2, :]), lw = 3,label = "NUTS adaptive")
+    plot!(iters, vec(median(m_hmc[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_hmc[:, 2, :]), lw = 3,label = "HMC", legend = :none)
+    plot!(iters, vec(median(m_erg[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_erg[:, 2, :]), lw = 3,label = "MixFlow", xrotation = 20)
+p = plot(p1, p2, layout = (1, 2), title = "Sparse Regression (high dim)")
+savefig(p, "figure/sp_reg_big_mean_est.png")
+
+
+p1 = plot(iters, vec(median(v_nuts[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_nuts[:, 1, :]), lw = 3,label = "NUTS")
+    plot!(iters, vec(median(v_nuts_ad[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_nuts_ad[:, 1, :]), lw = 3,label = "NUTS adaptive")
+    plot!(iters, vec(median(v_hmc[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_hmc[:, 1, :]), lw = 3,label = "HMC", legend = :bottomright)
+    plot!(iters, vec(median(v_erg[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_erg[:, 1, :]), lw = 3,label = "MixFlow", xrotation = 20)
+
+p2 = plot(iters, vec(median(v_nuts[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_nuts[:, 2, :]), lw = 3,label = "NUTS")
+    plot(iters, vec(median(v_nuts_ad[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_nuts_ad[:, 2, :]), lw = 3,label = "NUTS adaptive")
+    plot!(iters, vec(median(v_hmc[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_hmc[:, 2, :]), lw = 3,label = "HMC", legend = :none)
+    plot!(iters, vec(median(v_erg[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_erg[:, 2, :]), lw = 3,label = "MixFlow", xrotation = 20)
+p = plot(p1, p2, layout = (1, 2), title = "Sparse Regression (high dim)")
+savefig(p, "figure/sp_reg_big_var_est.png")
