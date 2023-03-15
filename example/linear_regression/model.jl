@@ -10,10 +10,10 @@ include("../../inference/SVI/svi.jl")
 
 using DataFrames, CSV
 # 506 instances, 13 features, 1 response
-X_raw= Matrix(BostonHousing().features)
-Y_raw= Matrix(BostonHousing().targets)
-# X_raw= Matrix(BostonHousing.features()')
-# Y_raw= Matrix(BostonHousing.targets()')
+# X_raw= Matrix(BostonHousing().features)
+# Y_raw= Matrix(BostonHousing().targets)
+X_raw= Matrix(BostonHousing.features()')
+Y_raw= Matrix(BostonHousing.targets()')
 # standarize dataset 
 X = (X_raw .- mean(X_raw, dims =1)) ./ std(X_raw, dims = 1)
 Y = (Y_raw .- mean(Y_raw))./std(Y_raw)

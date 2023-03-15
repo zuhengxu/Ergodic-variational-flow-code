@@ -49,10 +49,17 @@ function running_mean(T; dims=1)
     return cumsum(T, dims = dims)./[1:n ;]
 end
 
-function running_var(T; dims=1) 
-    X2 = T.^2
-    M = running_mean(T; dims = dims)
-    Ex2 = running_mean(X2; dims = dims)
-    return Ex2 .- M.^2
-end
+# function running_var(T; dims=1) 
+#     X2 = T.^2
+#     M = running_mean(T; dims = dims)
+#     Ex2 = running_mean(X2; dims = dims)
+#     return Ex2 .- M.^2
+# end
 
+function running_second_moment(T; dims=1) 
+    X2 = T.^2
+    # M = running_mean(T; dims = dims)
+    # Ex2 = running_mean(X2; dims = dims)
+    return running_mean(X2; dims = dims)
+    # return Ex2 .- M.^2
+end

@@ -38,9 +38,9 @@ function running_convergence(o::HamFlow, a::HF_params;
         m_nuts[:,:,i] .= running_mean(T_nuts)
         m_hmc[:,:,i] .=  running_mean(T_hmc)
         m_erg[:,:, i] .=  running_mean(T_erg)
-        v_nuts[:,:,i] .= running_var(T_nuts)
-        v_hmc[:,:,i] .=  running_var(T_hmc)
-        v_erg[:,:,i] .=  running_var(T_erg)
+        v_nuts[:,:,i] .= running_second_moment(T_nuts)
+        v_hmc[:,:,i] .=  running_second_moment(T_hmc)
+        v_erg[:,:,i] .=  running_second_moment(T_erg)
     end
     file_path = joinpath("result/", string("running",".jld"))
     JLD.save(file_path, "m_nuts", m_nuts, "v_nuts", v_nuts,
