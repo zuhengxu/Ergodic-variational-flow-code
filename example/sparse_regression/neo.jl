@@ -31,11 +31,11 @@ o_neo = NEO.NEOobj(d = d,
 # Zn, ISws, Ws_traj,logps,logqs,T, M= NEO.run_single_traj(o_neo, q0, p0)
 # Za, _,Ta,Ma = NEO.run_all_traj(o_neo, 10)
 
-for i in 1:3
-    Random.seed!(i)
-    T, M, o_new = NEO.neomcmc(o_neo, 10, 20000; n_adapts = 20000, Adapt = true)
-    T, M, o_new = NEO.neomcmc(o_neo, 10, 20000; n_adapts = 20000, Adapt = false)
-end
+# for i in 1:3
+#     Random.seed!(i)
+#     T, M, o_new = NEO.neomcmc(o_neo, 10, 20000; n_adapts = 20000, Adapt = true)
+#     T, M, o_new = NEO.neomcmc(o_neo, 10, 20000; n_adapts = 20000, Adapt = false)
+# end
 
 
 
