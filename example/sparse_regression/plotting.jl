@@ -169,6 +169,8 @@ ESS = JLD.load("result/ESS.jld")
 ess_time_erg_iid = ESS["ess_time_erg_iid"]
 ess_time_erg_single = ESS["ess_time_erg_single"]
 ess_time_hmc = ESS["ess_time_hmc"]
+ess_time_nuts = ESS["ess_time_nuts"]
+ess_time_nuts_ad = ESS["ess_time_nuts_ad"]
 
 # colours = [palette(:Paired_8)[5], palette(:Paired_8)[6], palette(:Paired_8)[2], palette(:Paired_8)[1], palette(:Paired_10)[10], palette(:Paired_10)[9], palette(:Paired_8)[4]]
 
@@ -176,6 +178,8 @@ boxplot(["MixFlow iid"], ess_time_erg_iid,  label = "MixFlow iid",color = colour
 boxplot!(["MixFlow single"], ess_time_erg_single, label = "MixFlow single ", color = :lightblue)
 boxplot!(["HMC"], ess_time_hmc,label = "HMC", color = colours[1], legend = false, guidefontsize=20, tickfontsize=15, xrotation = -15, formatter=:plain, margin=5Plots.mm)
 # boxplot!(["NEO"], NEOess, label = "NEO", color = colours[end])
+boxplot!(["NUTS"], ess_time_nuts[BitVector(abs.(isnan.(ess_time_nuts) .- 1))], label = "NUTS", color = colours[2])
+boxplot!(["NUTS_ad"], ess_time_nuts_ad[BitVector(abs.(isnan.(ess_time_nuts_ad) .- 1))], label = "NUTS_ad", color = colours[5])
 ylabel!("ESS unit time")
 
 filepath = string("figure/ess.png")

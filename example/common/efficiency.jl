@@ -1,3 +1,4 @@
+include("../../inference/MCMC/adapt_NUTS.jl")
 include("../../inference/MCMC/NUTS.jl")
 include("../../inference/MCMC/hmc.jl")
 include("../../inference/MCMC/ess.jl")
@@ -43,9 +44,10 @@ end
 
 # ESS per time unit
 function ess_time(o::HamFlow, a::HF_params, refresh::Function; 
-                    num_trials::Int = 10, nsamples::Int = 2000, n_mcmc::Int = 2000, nadapt::Int = 0)
+                    num_trials::Int = 10, nsamples::Int = 2000, n_mcmc::Int = 2000, nadapt::Int = 2000)
     
     t_nuts, ess_nuts, ess_time_nuts= zeros(num_trials), zeros(num_trials), zeros(num_trials)
+    t_nuts_ad, ess_nuts_ad, ess_time_nuts_ad= zeros(num_trials), zeros(num_trials), zeros(num_trials)
     t_hmc, ess_hmc, ess_time_hmc= zeros(num_trials), zeros(num_trials), zeros(num_trials)
     t_erg_iid, ess_erg_iid, ess_time_erg_iid= zeros(num_trials), zeros(num_trials), zeros(num_trials)
     t_erg_single, ess_erg_single, ess_time_erg_single = zeros(num_trials), zeros(num_trials), zeros(num_trials)
@@ -63,7 +65,23 @@ function ess_time(o::HamFlow, a::HF_params, refresh::Function;
 
         @info "ESS/time NUTS"
         tick()
-        T_nuts = nuts(z0, 0.7, o.logp, o.∇logp, nsamples, nadapt)
+        T_nuts = nuts(z0, 0.7, o.logp, o.∇logp, nsamples, 0)
+        t_nuts[i] = tok()
+        ess_nuts[i] = ess(T_nuts)
+        ess_time_nuts[i] = ess_nuts[i]/t_nuts[i]
+        println(ess_time_nuts[i])
+        
+        @info "ESS/time NUTS adapt"
+        tick()
+        T_nuts_ad = nuts(z0, 0.7, o.logp, o.∇logp, nsamples, nadapt)
+        t_nuts_ad[i] = tok()
+        ess_nuts_ad[i] = ess(T_nuts_ad)
+        ess_time_nuts_ad[i] = ess_nuts_ad[i]/t_nuts_ad[i]
+        println(ess_time_nuts_ad[i])
+
+        @info "ESS/time NUTS"
+        tick()
+        T_nuts = adapt_nuts(z0, 0.7, o.logp, o.∇logp, nsamples, nadapt)
         t_nuts[i] = tok()
         ess_nuts[i] = ess(T_nuts)
         ess_time_nuts[i] = ess_nuts[i]/t_nuts[i]
@@ -94,6 +112,7 @@ function ess_time(o::HamFlow, a::HF_params, refresh::Function;
     @info "save ESS per time unit plot"
     file_path = joinpath("result/", string("ESS",".jld"))
     JLD.save(file_path, "t_nuts", t_nuts, "ess_nuts", ess_nuts, "ess_time_nuts", ess_time_nuts, 
+                        "t_nuts_ad", t_nuts_ad, "ess_nuts_ad", ess_nuts_ad, "ess_time_nuts_ad", ess_time_nuts_ad,
                         "t_hmc", t_hmc, "ess_hmc", ess_hmc, "ess_time_hmc", ess_time_hmc, 
                         "t_erg_iid", t_erg_iid, "ess_erg_iid", ess_erg_iid, "ess_time_erg_iid", ess_time_erg_iid,
                         "t_erg_single", t_erg_single, "ess_erg_single", ess_erg_single, "ess_time_erg_single", ess_time_erg_single)
