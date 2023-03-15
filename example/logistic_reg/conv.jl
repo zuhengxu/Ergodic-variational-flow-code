@@ -12,12 +12,12 @@ include("../common/result.jl")
 function running_convergence(o::HamFlow, a::HF_params; 
                             nsamples::Int64 = 50000, n_mcmc::Int64 = 5000, n_trials::Int64 = 10)
     
-    m_nuts = zeros(nsamples, 2, n_trials)
-    m_hmc= zeros(nsamples, 2, n_trials)
-    m_erg= zeros(nsamples, 2, n_trials)
-    v_nuts= zeros(nsamples, 2, n_trials)
-    v_hmc= zeros(nsamples, 2, n_trials)
-    v_erg= zeros(nsamples, 2, n_trials)
+    m_nuts = zeros(nsamples, d, n_trials)
+    m_hmc= zeros(nsamples, d, n_trials)
+    m_erg= zeros(nsamples, d, n_trials)
+    v_nuts= zeros(nsamples, d, n_trials)
+    v_hmc= zeros(nsamples, d, n_trials)
+    v_erg= zeros(nsamples, d, n_trials)
                
     @threads for i in 1: n_trials
         Random.seed!(i)
