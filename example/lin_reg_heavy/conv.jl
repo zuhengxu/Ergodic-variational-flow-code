@@ -33,7 +33,7 @@ function running_convergence(o::HamFlow, a::HF_params;
         T_nuts = nuts(z0, 0.65, o.logp, o.∇logp, nsamples, 0)
 
         @info "sampling nuts adaptive"
-        T_nuts_ad = nuts(z0, 0.65, o.logp, o.∇logp, nsamples/2, nsamples/2)
+        T_nuts_ad = nuts(z0, 0.65, o.logp, o.∇logp, Int(nsamples/2), Int(nsamples/2))
 
         @info "sampling hmc"
         T_hmc = hmc(z0, a.leapfrog_stepsize, 0.65, o.n_lfrg, o.logp, o.∇logp, nsamples, 0)
