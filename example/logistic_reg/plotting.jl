@@ -198,33 +198,44 @@ m_nuts = conv["m_nuts"]
 m_nuts_ad = conv["m_nuts_ad"]
 m_hmc = conv["m_hmc"]
 m_erg = conv["m_erg"]
+m_erg_single = conv["m_erg_single"]
 v_nuts = sqrt.(abs.(conv["v_nuts"]))
 v_nuts_ad = sqrt.(abs.(conv["v_nuts_ad"]))
 v_hmc = sqrt.(conv["v_hmc"])
 v_erg = sqrt.(conv["v_erg"])
+v_erg_single = sqrt.(conv["v_erg_single"])
 
-iters = [1:size(m_nuts, 1) ;]
-p1 = plot(iters, vec(median(m_nuts[:, 1, :]'; dims =1)), ribbon = get_percentiles(m_nuts[:, 1, :]),lw = 3, label = "NUTS")
-    plot!(iters, vec(median(m_nuts_ad[:, 1, :]'; dims =1)), ribbon = get_percentiles(m_nuts_ad[:, 1, :]),lw = 3, label = "NUTS adaptive")
-    plot!(iters, vec(median(m_hmc[:, 1, :]'; dims =1)), ribbon = get_percentiles(m_hmc[:, 1, :]), lw = 3,label = "HMC", legend = :bottomleft)
-    plot!(iters, vec(median(m_erg[:, 1, :]'; dims =1)), ribbon = get_percentiles(m_erg[:, 1, :]), lw = 3,label = "MixFlow", xrotation = 20)
+n_stop = size(m_nuts, 1)
+iters = [1:n_stop ;]
 
-p2 = plot(iters, vec(median(m_nuts[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_nuts[:, 2, :]), lw = 3,label = "NUTS")
-    plot!(iters, vec(median(m_nuts_ad[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_nuts_ad[:, 2, :]), lw = 3,label = "NUTS adaptive")
-    plot!(iters, vec(median(m_hmc[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_hmc[:, 2, :]), lw = 3,label = "HMC", legend = :none)
-    plot!(iters, vec(median(m_erg[:, 2, :]'; dims =1)), ribbon = get_percentiles(m_erg[:, 2, :]), lw = 3,label = "MixFlow", xrotation = 20)
+d1 = 1
+d2 = 2
+
+p1 = plot(iters, vec(median(m_hmc[1:n_stop, d1, :]'; dims =1)), ribbon = get_percentiles(m_hmc[1:n_stop, d1, :]), lw = 3,label = "HMC", legend = :bottomleft)
+    plot!(iters, vec(median(m_erg[1:n_stop, d1, :]'; dims =1)), ribbon = get_percentiles(m_erg[1:n_stop, d1, :]), lw = 3,label = "MixFlow", xrotation = 20)
+    plot!(iters, vec(median(m_erg_single[1:n_stop, d1, :]'; dims =1)), ribbon = get_percentiles(m_erg_single[1:n_stop, d1, :]), lw = 3,label = "MixFlow-S")
+    plot!(iters, vec(median(m_nuts[1:n_stop, d1, :]'; dims =1)), ribbon = get_percentiles(m_nuts[1:n_stop, d1, :]),lw = 3, label = "NUTS")
+    plot!(iters, vec(median(m_nuts_ad[1:n_stop, d1, :]'; dims =1)), ribbon = get_percentiles(m_nuts_ad[1:n_stop, d1, :]),lw = 3, label = "NUTS adaptive")
+
+p2 = plot(iters, vec(median(m_hmc[1:n_stop, d2, :]'; dims =1)), ribbon = get_percentiles(m_hmc[1:n_stop, d2, :]), lw = 3,label = "HMC", legend = :none)
+    plot!(iters, vec(median(m_erg[1:n_stop, d2, :]'; dims =1)), ribbon = get_percentiles(m_erg[1:n_stop, d2, :]), lw = 3,label = "MixFlow", xrotation = 20)
+    plot!(iters, vec(median(m_erg_single[1:n_stop, d2, :]'; dims =1)), ribbon = get_percentiles(m_erg_single[1:n_stop, d2, :]), lw = 3,label = "MixFlow-S")
+    plot!(iters, vec(median(m_nuts[1:n_stop, d2, :]'; dims =1)), ribbon = get_percentiles(m_nuts[1:n_stop, d2, :]), lw = 3,label = "NUTS")
+    plot!(iters, vec(median(m_nuts_ad[1:n_stop, d2, :]'; dims =1)), ribbon = get_percentiles(m_nuts_ad[1:n_stop, d2, :]), lw = 3,label = "NUTS adaptive")
 p = plot(p1, p2, layout = (1, 2), title = "Logistic Regression")
 savefig(p, "figure/logreg_mean_est.png")
 
 
-p1 = plot(iters, vec(median(v_nuts[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_nuts[:, 1, :]), lw = 3,label = "NUTS")
-    plot!(iters, vec(median(v_nuts_ad[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_nuts_ad[:, 1, :]), lw = 3,label = "NUTS adaptive")
-    plot!(iters, vec(median(v_hmc[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_hmc[:, 1, :]), lw = 3,label = "HMC", legend = :bottomright)
-    plot!(iters, vec(median(v_erg[:, 1, :]'; dims =1)), ribbon = get_percentiles(v_erg[:, 1, :]), lw = 3,label = "MixFlow", xrotation = 20)
+p1 = plot(iters, vec(median(v_hmc[1:n_stop, d1, :]'; dims =1)), ribbon = get_percentiles(v_hmc[1:n_stop, d1, :]), lw = 3,label = "HMC", legend = :bottomright)
+    plot!(iters, vec(median(v_erg[1:n_stop, d1, :]'; dims =1)), ribbon = get_percentiles(v_erg[1:n_stop, d1, :]), lw = 3,label = "MixFlow", xrotation = 20)
+    plot!(iters, vec(median(v_erg_single[1:n_stop, d1, :]'; dims =1)), ribbon = get_percentiles(v_erg_single[1:n_stop, d1, :]), lw = 3,label = "MixFlow-S")
+    plot!(iters, vec(median(v_nuts[1:n_stop, d1, :]'; dims =1)), ribbon = get_percentiles(v_nuts[1:n_stop, d1, :]), lw = 3,label = "NUTS")
+    plot!(iters, vec(median(v_nuts_ad[1:n_stop, d1, :]'; dims =1)), ribbon = get_percentiles(v_nuts_ad[1:n_stop, d1, :]), lw = 3,label = "NUTS adaptive")
 
-p2 = plot(iters, vec(median(v_nuts[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_nuts[:, 2, :]), lw = 3,label = "NUTS")
-    plot(iters, vec(median(v_nuts_ad[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_nuts_ad[:, 2, :]), lw = 3,label = "NUTS adaptive")
-    plot!(iters, vec(median(v_hmc[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_hmc[:, 2, :]), lw = 3,label = "HMC", legend = :none)
-    plot!(iters, vec(median(v_erg[:, 2, :]'; dims =1)), ribbon = get_percentiles(v_erg[:, 2, :]), lw = 3,label = "MixFlow", xrotation = 20)
+p2 = plot(iters, vec(median(v_hmc[1:n_stop, d2, :]'; dims =1)), ribbon = get_percentiles(v_hmc[1:n_stop, d2, :]), lw = 3,label = "HMC", legend = :none)
+    plot!(iters, vec(median(v_erg[1:n_stop, d2, :]'; dims =1)), ribbon = get_percentiles(v_erg[1:n_stop, d2, :]), lw = 3,label = "MixFlow", xrotation = 20)
+    plot!(iters, vec(median(v_erg_single[1:n_stop, d2, :]'; dims =1)), ribbon = get_percentiles(v_erg_single[1:n_stop, d2, :]), lw = 3,label = "MixFlow-S")
+    plot!(iters, vec(median(v_nuts[1:n_stop, d2, :]'; dims =1)), ribbon = get_percentiles(v_nuts[1:n_stop, d2, :]), lw = 3,label = "NUTS")
+    plot!(iters, vec(median(v_nuts_ad[1:n_stop, d2, :]'; dims =1)), ribbon = get_percentiles(v_nuts_ad[1:n_stop, d2, :]), lw = 3,label = "NUTS adaptive")
 p = plot(p1, p2, layout = (1, 2), title = "Logistic Regression")
 savefig(p, "figure/logreg_var_est.png")

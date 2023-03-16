@@ -16,10 +16,12 @@ function running_convergence(o::HamFlow, a::HF_params;
     m_nuts_ad = zeros(nsamples, d, n_trials)
     m_hmc= zeros(nsamples, d, n_trials)
     m_erg= zeros(nsamples, d, n_trials)
+    m_erg_single = zeros(nsamples, d, n_trials)
     v_nuts= zeros(nsamples, d, n_trials)
     v_nuts_ad= zeros(nsamples, d, n_trials)
     v_hmc= zeros(nsamples, d, n_trials)
     v_erg= zeros(nsamples, d, n_trials)
+    v_erg_single = zeros(nsamples, d, n_trials)
                
     @threads for i in 1: n_trials
         Random.seed!(i)
@@ -31,7 +33,7 @@ function running_convergence(o::HamFlow, a::HF_params;
         T_nuts = nuts(z0, 0.65, o.logp, o.∇logp, nsamples, 0)
 
         @info "sampling nuts adaptive"
-        T_nuts_ad = nuts(z0, 0.65, o.logp, o.∇logp, nsamples, nsamples)
+        T_nuts_ad = nuts(z0, 0.65, o.logp, o.∇logp, nsamples/2, nsamples/2)
 
         @info "sampling hmc"
         T_hmc = hmc(z0, a.leapfrog_stepsize, 0.65, o.n_lfrg, o.logp, o.∇logp, nsamples, 0)
@@ -40,20 +42,27 @@ function running_convergence(o::HamFlow, a::HF_params;
         # T_erg, _, _ = flow_sampler(o, a, pseudo_refresh_coord, z0, ρ0, u0, nsamples)
         T_erg = flow_sampler(o, a, pseudo_refresh_coord, z0, ρ0, u0, n_mcmc, nsamples)
 
+        @info "sampling ErgFlow single"
+        # T_erg, _, _ = flow_sampler(o, a, pseudo_refresh_coord, z0, ρ0, u0, nsamples)
+        T_erg_single = flow_sampler(o, a, pseudo_refresh_coord, z0, ρ0, u0, nsamples, nsamples)
+
         m_nuts[:,:,i] .= running_mean(T_nuts)
         m_nuts_ad[:,:,i] .= running_mean(T_nuts_ad)
         m_hmc[:,:,i] .=  running_mean(T_hmc)
         m_erg[:,:, i] .=  running_mean(T_erg)
+        m_erg_single[:,:, i] .=  running_mean(T_erg_single)
         v_nuts[:,:,i] .= running_second_moment(T_nuts)
         v_nuts_ad[:,:,i] .= running_second_moment(T_nuts_ad)
         v_hmc[:,:,i] .=  running_second_moment(T_hmc)
         v_erg[:,:,i] .=  running_second_moment(T_erg)
+        v_erg_single[:,:,i] .=  running_second_moment(T_erg_single)
     end
     file_path = joinpath("result/", string("running",".jld"))
     JLD.save(file_path, "m_nuts", m_nuts, "v_nuts", v_nuts,
                         "m_nuts_ad", m_nuts_ad, "v_nuts_ad", v_nuts_ad,
                         "m_hmc", m_hmc, "v_hmc", v_hmc, 
-                        "m_erg", m_erg, "v_erg", v_erg)
+                        "m_erg", m_erg, "v_erg", v_erg,
+                        "m_erg_single", m_erg_single, "v_erg_single", v_erg_single)
 end
 
 ###########################
