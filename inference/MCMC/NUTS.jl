@@ -28,7 +28,7 @@ function nuts(θ0, δ, L, ∇L, M, Madapt; verbose = true)
     @info "[AdavancedHMC] sampling complete"
     
     # return samples
-    M = reduce(hcat, samples[Madapt+1:end])
+    M = reduce(hcat, samples)
     # if size(M) is a row matrix, reshape to make it a N×1 matrix
     return size(M, 1) > 1 ? Matrix(M') : reshape(M, size(M, 2), 1)
 end
