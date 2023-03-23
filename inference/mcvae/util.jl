@@ -1,6 +1,6 @@
-using Random, Statistics, Printf, LinearAlgebra, InvertedIndices
-using Zygote.LogExpFunctions: logistic
-import Zygote.LogExpFunctions: logistic, logit
+using Random, Statistics, Printf, LinearAlgebra, InvertedIndices, LogExpFunctions
+using LogExpFunctions: logistic
+import LogExpFunctions: logistic, logit
 using Zygote: @ignore, Buffer
 using Base.Threads
 # include("train.jl")
@@ -120,3 +120,4 @@ function accept_reject_step(logt::Float64, z_current::Vector{Float64}, z_new::Ve
 
     return z_update, current_log_alpha
 end
+

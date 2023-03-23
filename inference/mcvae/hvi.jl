@@ -2,6 +2,7 @@ using Zygote: gradient
 using ForwardDiff
 using Flux
 include("elbo.jl")
+include("sampler.jl")
 
 
 ################3
@@ -66,7 +67,7 @@ function uha_vi(sample_q0::Function, logp::Function, logq::Function,  ∇logq::F
         # transform params back
         Temp_sched = T_all(T_logit) 
         ϵ = @. expm1(logϵ) + 1.0
-        η = Zygote.LogExpFunctions.logistic.(logit_η) # damping coef 
+        η = LogExpFunctions.logistic.(logit_η) # damping coef 
         
         # unbiased elbo estimates
         elbo = 0.0

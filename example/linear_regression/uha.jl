@@ -22,7 +22,6 @@ function sample_q0(n)
 end
 sample_q0() = sample_q0(1)
 
-
 ###############
 # train UHA
 ###############
@@ -47,3 +46,4 @@ t = tok()
 Random.seed!(1)
 El_uha, Ksd_uha = uha_eval(PS[1], (sample_q0, logq0, ∇logq0, ∇logp, n_mcmc, d, n_lfrg), ∇logp, 5000)
 JLD.save("result/uha.jld", "PS", PS[1], "elbo", El_uha, "ksd", Ksd_uha, "time", t)
+
