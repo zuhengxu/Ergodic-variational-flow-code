@@ -39,7 +39,6 @@ x = -20:0.1:20
 y = -15:0.1:30
 scatter_plot(o, x, y; contour_plot = true, μ=μ, D=D, ϵ = 0.02*ones(d), n_sample = 1000, n_mcmc = 1000, nB = 0, bins = 300, name= "sample_lap.png", show_legend=true)
 
-
 ################
 # lpdf estimation 
 ###############
