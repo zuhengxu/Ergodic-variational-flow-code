@@ -1,3 +1,5 @@
+ENV["JULIA_SCRATCH_TRACK_ACCESS"] = 0
+
 using GPUCompiler
 using CUDA
 using Flux, Zygote, JLD, JLD2
