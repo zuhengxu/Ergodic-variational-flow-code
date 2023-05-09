@@ -23,11 +23,11 @@ using DataFrames, CSV
 # xs = hcat(X, Y)
 
 cd("/arc/project/st-tdjc-1/mixflow/Ergodic-variational-flow-code/example/linear_regression")
-xs = Matrix(CSV.read("data/Dat.csv", DataFrame))
+xs = Float64.(Matrix(CSV.read("data/Dat.csv", DataFrame)))
 N = size(xs, 1)
 d = size(xs, 2) + 1 # 13 features plus intercept and error variance
-fs = hcat(ones(N), xs[:,1:d-2])
-rs = xs[:, d-1]
+fs = Float64.(hcat(ones(N), xs[:,1:d-2]))
+rs = Float64.(xs[:, d-1])
 ϵ0= 0.02 .* ones(d)
 
 # standard normal (prior)
