@@ -22,6 +22,7 @@ using DataFrames, CSV
 # # CSV.write("result/Dat.csv", df)
 # xs = hcat(X, Y)
 
+cd("/arc/project/st-tdjc-1/mixflow/Ergodic-variational-flow-code/example/linear_regression")
 xs = Matrix(CSV.read("data/Dat.csv", DataFrame))
 N = size(xs, 1)
 d = size(xs, 2) + 1 # 13 features plus intercept and error variance
@@ -62,9 +63,9 @@ logq(x, μ, D) =  -0.5*d*log(2π) - sum(log, abs.(D)) - 0.5*sum(abs2, (x.-μ)./(
 
 
 
-if ! isdir("figure")
-    mkdir("figure")
-end 
-if ! isdir("result")
-    mkdir("result")
-end 
+# if ! isdir("figure")
+#     mkdir("figure")
+# end 
+# if ! isdir("result")
+#     mkdir("result")
+# end 
