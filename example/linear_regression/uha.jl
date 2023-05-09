@@ -1,3 +1,4 @@
+using CUDA
 using Flux, Zygote, JLD, JLD2
 using ErgFlow
 include("model.jl")

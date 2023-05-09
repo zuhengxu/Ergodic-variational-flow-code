@@ -1,5 +1,5 @@
 using Distributions, ForwardDiff, LinearAlgebra, Random
-using MLDatasets
+# using MLDatasets
 using Base.Threads:@threads
 using Base.Threads
 using JLD, JLD2, Tullio
