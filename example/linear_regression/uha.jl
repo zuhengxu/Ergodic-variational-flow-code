@@ -1,9 +1,8 @@
-using Flux, Zygote, JLD, JLD2, Plots
+using Flux, Zygote, JLD, JLD2
 using ErgFlow
 include("model.jl")
 include("../../inference/util/ksd.jl")
 include("../../inference/mcvae/hvi.jl")
-
 
 #######
 # setting
@@ -29,7 +28,7 @@ Random.seed!(1)
 n_mcmc = 10
 n_lfrg = 20
 elbo_size = 5
-niters = 20000
+niters = 2000
 ϵ0 = 0.001*ones(d)
 logit_T0_uha = ones(n_mcmc-1)
 logit_η0 = [0.5]
@@ -45,5 +44,7 @@ t = tok()
 #####################
 Random.seed!(1)
 El_uha, Ksd_uha = uha_eval(PS[1], (sample_q0, logq0, ∇logq0, ∇logp, n_mcmc, d, n_lfrg), ∇logp, 5000)
-JLD.save("result/uha.jld", "PS", PS[1], "elbo", El_uha, "ksd", Ksd_uha, "time", t)
+
+cd("/scratch/st-tdjc-1/mixflow")
+JLD.save("uha_lin_reg.jld", "PS", PS[1], "elbo", El_uha, "ksd", Ksd_uha, "time", t)
 
