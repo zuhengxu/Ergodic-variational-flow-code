@@ -1,5 +1,5 @@
 using Distributions, ForwardDiff, LinearAlgebra, Random, Plots
-using MLDatasets
+# using MLDatasets
 using Base.Threads:@threads
 using Base.Threads
 using JLD, JLD2, Tullio
@@ -9,18 +9,20 @@ using Zygote:Buffer, ignore, gradient, @ignore
 include("../../inference/SVI/svi.jl")
 
 using DataFrames, CSV
-# 506 instances, 13 features, 1 response
-# X_raw= Matrix(BostonHousing().features)
-# Y_raw= Matrix(BostonHousing().targets)
-X_raw= Matrix(BostonHousing.features()')
-Y_raw= Matrix(BostonHousing.targets()')
-# standarize dataset 
-X = (X_raw .- mean(X_raw, dims =1)) ./ std(X_raw, dims = 1)
-Y = (Y_raw .- mean(Y_raw))./std(Y_raw)
+# # 506 instances, 13 features, 1 response
+# # X_raw= Matrix(BostonHousing().features)
+# # Y_raw= Matrix(BostonHousing().targets)
+# X_raw= Matrix(BostonHousing.features()')
+# Y_raw= Matrix(BostonHousing.targets()')
+# # standarize dataset 
+# X = (X_raw .- mean(X_raw, dims =1)) ./ std(X_raw, dims = 1)
+# Y = (Y_raw .- mean(Y_raw))./std(Y_raw)
 
 # df = DataFrame(xs, :auto)
 # CSV.write("result/Dat.csv", df)
-xs = hcat(X, Y)
+# xs = hcat(X, Y)
+
+xs = Matrix(CSV.read("data/Dat.csv", DataFrame))
 N = size(xs, 1)
 d = size(xs, 2) + 1 # 13 features plus intercept and error variance
 fs = hcat(ones(N), xs[:,1:d-2])
