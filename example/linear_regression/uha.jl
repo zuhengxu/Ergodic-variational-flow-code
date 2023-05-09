@@ -33,6 +33,7 @@ Random.seed!(1)
 
 n_mcmc = nothing
 n_lfrg = nothing
+pair = nothing
 
 mcmcs = [5, 10]
 lfrgs = [10, 20]
@@ -70,5 +71,9 @@ Random.seed!(1)
 El_uha, Ksd_uha = uha_eval(PS[1], (sample_q0, logq0, ∇logq0, ∇logp, n_mcmc, d, n_lfrg), ∇logp, 500)
 
 cd("/scratch/st-tdjc-1/mixflow")
-JLD.save("uha_lin_reg.jld", "PS", PS[1], "elbo", El_uha, "ksd", Ksd_uha, "time", t)
+if size(ARGS,1) > 0
+    JLD.save("uha_lin_reg_"*string(pair)*".jld", "PS", PS[1], "elbo", El_uha, "ksd", Ksd_uha, "time", t)
+else
+    JLD.save("uha_lin_reg.jld", "PS", PS[1], "elbo", El_uha, "ksd", Ksd_uha, "time", t)
+end
 
