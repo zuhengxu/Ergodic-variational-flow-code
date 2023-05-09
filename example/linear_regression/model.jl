@@ -8,7 +8,7 @@ using Zygote:Buffer, ignore, gradient, @ignore
 # using ChainRules
 include("../../inference/SVI/svi.jl")
 
-using DataFrames, CSV
+using DataFrames, DelimitedFiles
 # # 506 instances, 13 features, 1 response
 # # X_raw= Matrix(BostonHousing().features)
 # # Y_raw= Matrix(BostonHousing().targets)
@@ -23,7 +23,8 @@ using DataFrames, CSV
 # xs = hcat(X, Y)
 
 cd("/arc/project/st-tdjc-1/mixflow/Ergodic-variational-flow-code/example/linear_regression")
-xs = Matrix{Float64}(CSV.read("data/Dat.csv", DataFrame, stringtype=String))
+# xs = CSV.read("data/Dat.csv", DataFrame, stringtype=String)
+xs = 
 N = size(xs, 1)
 d = size(xs, 2) + 1 # 13 features plus intercept and error variance
 fs = Float64.(hcat(ones(N), xs[:,1:d-2]))
