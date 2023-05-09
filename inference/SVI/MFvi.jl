@@ -1,4 +1,4 @@
-using LinearAlgebra, Distributions, Random, Plots, StatsBase, SpecialFunctions, Parameters
+using LinearAlgebra, Distributions, Random, StatsBase, SpecialFunctions, Parameters
 using ProgressMeter, Flux
 include("../util/train.jl")
 
