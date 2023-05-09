@@ -1,4 +1,5 @@
 ENV["JULIA_SCRATCH_TRACK_ACCESS"] = 0
+println(Threads.nthreads())
 
 using GPUCompiler
 using CUDA
