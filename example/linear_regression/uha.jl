@@ -36,7 +36,7 @@ n_lfrg = nothing
 pair = nothing
 
 mcmcs = [5, 10]
-lfrgs = [10, 20]
+lfrgs = [10, 20, 50]
 
 grid = zeros(Int, size(mcmcs,1) * size(lfrgs,1), 2)
 
@@ -49,11 +49,11 @@ if size(ARGS,1) > 0
     n_lfrg = grid[pair, 2]
 else
     n_mcmc = 10
-    n_lfrg = 20
+    n_lfrg = 50
 end
 
 elbo_size = 5
-niters = 200
+niters = 20000
 ϵ0 = 0.001*ones(d)
 logit_T0_uha = ones(n_mcmc-1)
 logit_η0 = [0.5]
@@ -68,7 +68,7 @@ t = tok()
 # eval uha
 #####################
 Random.seed!(1)
-El_uha, Ksd_uha = uha_eval(PS[1], (sample_q0, logq0, ∇logq0, ∇logp, n_mcmc, d, n_lfrg), ∇logp, 500)
+El_uha, Ksd_uha = uha_eval(PS[1], (sample_q0, logq0, ∇logq0, ∇logp, n_mcmc, d, n_lfrg), ∇logp, 10000)
 
 cd("/scratch/st-tdjc-1/mixflow")
 if size(ARGS,1) > 0
