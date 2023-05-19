@@ -70,6 +70,7 @@ end
 ####################3
 # load dataset
 #####################
+cd("/arc/project/st-tdjc-1/mixflow/Ergodic-variational-flow-code/example/poiss")
 Z, Y, N, d = data_load("data/airportdelays.npz")
 logp(x::AbstractVector{Float64}) = logp_joint(x, Z, Y, d)
 ∇logp(x::AbstractVector{Float64}) = ∇logp_joint(x, Z, Y)
@@ -85,9 +86,9 @@ logq(x, μ, D) =  -0.5*d*log(2π) - sum(log, abs.(D)) - 0.5*sum(abs2, (x.-μ)./(
 ∇logq(x, μ, D) = (μ .- x)./(D .+ 1e-8)
 
 
-if ! isdir("figure")
-    mkdir("figure")
-end 
-if ! isdir("result")
-    mkdir("result")
-end 
+# if ! isdir("figure")
+#     mkdir("figure")
+# end 
+# if ! isdir("result")
+#     mkdir("result")
+# end 
