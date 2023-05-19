@@ -1,4 +1,4 @@
-using Distributions, ForwardDiff, LinearAlgebra, Random, Plots, CSV, DataFrames
+using Distributions, ForwardDiff, LinearAlgebra, Random, CSV, DataFrames
 using Base.Threads, ErgFlow
 using Base.Threads:@threads
 using JLD, Tullio, ProgressMeter
@@ -21,6 +21,7 @@ include("../../inference/SVI/svi.jl")
 # dat = load("data/dataset.jld")
 # X, Y = dat["X"], dat["Y"]
 
+cd("/arc/project/st-tdjc-1/mixflow/Ergodic-variational-flow-code/example/logistic_reg")
 df = DataFrame(CSV.File("data/final_dat.csv"))
 xs = Matrix(df)[:, 2:end]
 N = size(xs, 1)
@@ -60,14 +61,16 @@ end
 
 function ∇logp(z)
     τ = z[1]
-    W = @view(z[2:end])
-    grad = similar(z)
-    grad[1] = a - b*exp(τ) + 0.5*p - 0.5*exp(τ)* sum(abs2, W)
+    ss = size(z,1)
+    W = @view(z[2:ss])
+    # grad = similar(z)
+    bufgrad = Buffer(z, length(z))
+    bufgrad[1] = a - b*exp(τ) + 0.5*p - 0.5*exp(τ)* sum(abs2, W)
     S = neg_sigmoid.(X*W) 
     # @tullio S[n] := X[n,j]*W[j] |> neg_sigmoid  
     @tullio M[j] := X[n,j]*(S[n] + Y[n])
-    grad[2:end] .= -exp(τ).*W .+ M
-    return grad
+    bufgrad[2:ss] = -exp(τ).*W .+ M
+    return copy(bufgrad)
 end
 
 
@@ -81,9 +84,9 @@ logq(x, μ, D) =  -0.5*d*log(2π) - sum(log, abs.(D)) - 0.5*sum(abs2, (x.-μ)./(
 
 
 
-if ! isdir("figure")
-    mkdir("figure")
-end 
-if ! isdir("result")
-    mkdir("result")
-end 
+# if ! isdir("figure")
+#     mkdir("figure")
+# end 
+# if ! isdir("result")
+#     mkdir("result")
+# end 
