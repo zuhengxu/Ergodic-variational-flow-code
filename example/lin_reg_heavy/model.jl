@@ -1,4 +1,4 @@
-using Distributions, LinearAlgebra, Random, Plots
+using Distributions, LinearAlgebra, Random
 using ErgFlow
 using Tullio, ForwardDiff
 using Base.Threads:@threads
@@ -27,9 +27,9 @@ end
 ############
 # read processed Communities and Crime dataset : http://archive.ics.uci.edu/ml/datasets/Communities+and+Crime
 ############
+cd("/arc/project/st-tdjc-1/mixflow/Ergodic-variational-flow-code/example/lin_reg_heavy")
 fs, rs, N, p = data_load("data/communities_pca.csv")
 d = p+2
-
 
 #######################
 # models ( lin reg with heavy tailed prior, β ∼ Cauchy(0, 1))
@@ -88,9 +88,9 @@ end
 logq(x, μ, D) =  -0.5*d*log(2π) - sum(log, abs.(D)) - 0.5*sum(abs2, (x.-μ)./(D .+ 1e-8))
 ∇logq(x, μ, D) = (μ .- x)./(D .+ 1e-8)
 
-if ! isdir("figure")
-    mkdir("figure")
-end 
-if ! isdir("result")
-    mkdir("result")
-end 
+# if ! isdir("figure")
+#     mkdir("figure")
+# end 
+# if ! isdir("result")
+#     mkdir("result")
+# end 
