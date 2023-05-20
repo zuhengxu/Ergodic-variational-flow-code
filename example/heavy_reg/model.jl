@@ -1,4 +1,4 @@
-using Distributions, LinearAlgebra, Random, Plots, StatsBase
+using Distributions, LinearAlgebra, Random, StatsBase
 using Tullio, ForwardDiff
 using ErgFlow
 using Base.Threads:@threads
@@ -37,6 +37,7 @@ end
 ##################
 # load and process dataset
 #################3
+cd("/arc/project/st-tdjc-1/mixflow/Ergodic-variational-flow-code/example/heavy_reg")
 X, Y, N, d = data_load("data/creatinine.csv")
 
 

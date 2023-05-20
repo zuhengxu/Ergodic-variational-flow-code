@@ -1,9 +1,13 @@
-using Flux, Zygote, JLD, JLD2, Plots
+ENV["JULIA_SCRATCH_TRACK_ACCESS"] = 0
+println(Threads.nthreads())
+
+using GPUCompiler
+using CUDA
+using Flux, Zygote, JLD, JLD2
 using ErgFlow
 include("model.jl")
 include("../../inference/util/ksd.jl")
 include("../../inference/mcvae/hvi.jl")
-
 
 #######
 # setting
@@ -22,13 +26,32 @@ function sample_q0(n)
 end
 sample_q0() = sample_q0(1)
 
-
 ###############
 # train UHA
 ###############
 Random.seed!(1)
-n_mcmc = 10
-n_lfrg = 20
+
+n_mcmc = nothing
+n_lfrg = nothing
+pair = nothing
+
+mcmcs = [5, 10]
+lfrgs = [10, 20, 50]
+
+grid = zeros(Int, size(mcmcs,1) * size(lfrgs,1), 2)
+
+grid[:,1] = vec(repeat(mcmcs, 1, size(lfrgs,1))')
+grid[:,2] = repeat(lfrgs, size(mcmcs,1))
+
+if size(ARGS,1) > 0
+    pair = parse(Int, ARGS[1])
+    n_mcmc = grid[pair, 1]
+    n_lfrg = grid[pair, 2]
+else
+    n_mcmc = 10
+    n_lfrg = 50
+end
+
 elbo_size = 5
 niters = 20000
 ϵ0 = 0.001*ones(d)
@@ -45,5 +68,12 @@ t = tok()
 # eval uha
 #####################
 Random.seed!(1)
-El_uha, Ksd_uha = uha_eval(PS[1], (sample_q0, logq0, ∇logq0, ∇logp, n_mcmc, d, n_lfrg), ∇logp, 5000)
-JLD.save("result/uha.jld", "PS", PS[1], "elbo", El_uha, "ksd", Ksd_uha, "time", t)
+El_uha, Ksd_uha = uha_eval(PS[1], (sample_q0, logq0, ∇logq0, ∇logp, n_mcmc, d, n_lfrg), ∇logp, 10000)
+
+cd("/scratch/st-tdjc-1/mixflow")
+if size(ARGS,1) > 0
+    JLD.save("uha_heavy_reg_"*string(pair)*".jld", "PS", PS[1], "elbo", El_uha, "ksd", Ksd_uha, "time", t)
+else
+    JLD.save("uha_heavy_reg.jld", "PS", PS[1], "elbo", El_uha, "ksd", Ksd_uha, "time", t)
+end
+
