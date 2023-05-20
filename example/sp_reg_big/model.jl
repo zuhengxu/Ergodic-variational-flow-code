@@ -1,4 +1,4 @@
-using Distributions, LinearAlgebra, Random, Plots
+using Distributions, LinearAlgebra, Random
 using Tullio, ForwardDiff, ErgFlow
 using Base.Threads:@threads
 using JLD, DataFrames, CSV, JLD2 
@@ -30,6 +30,7 @@ end
 # read processed Communities and Crime dataset : http://archive.ics.uci.edu/ml/datasets/Communities+and+Crime
 ############
 # fs, rs, N, p = data_load("data/communities_st.csv")
+cd("/arc/project/st-tdjc-1/mixflow/Ergodic-variational-flow-code/example/sp_reg_big")
 fs, rs, N, p = data_load("data/super_st.csv")
 d =  p+2
 
@@ -98,9 +99,9 @@ logq(x, μ, D) =  -0.5*d*log(2π) - sum(log, abs.(D)) - 0.5*sum(abs2, (x.-μ)./(
 ∇logq(x, μ, D) = (μ .- x)./(D .+ 1e-8)
 
 
-if ! isdir("figure")
-    mkdir("figure")
-end 
-if ! isdir("result")
-    mkdir("result")
-end 
+# if ! isdir("figure")
+#     mkdir("figure")
+# end 
+# if ! isdir("result")
+#     mkdir("result")
+# end 
