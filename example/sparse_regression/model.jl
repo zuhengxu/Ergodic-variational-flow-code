@@ -1,5 +1,5 @@
-using Distributions, LinearAlgebra, Random, Plots
-using MLDatasets, Tullio, ErgFlow
+using Distributions, LinearAlgebra, Random, LogExpFunctions
+using Tullio, ErgFlow
 using Base.Threads:@threads
 using JLD, DelimitedFiles
 using Zygote:Buffer, ignore, gradient, @ignore, @adjoint
@@ -16,6 +16,7 @@ end
 ############
 # read and standarize prostate_cancer data
 ############
+cd("/arc/project/st-tdjc-1/mixflow/Ergodic-variational-flow-code/example/sparse_regression")
 prostate_dat = readdlm("data/pros_dat.txt")[2:end, 2:end]
 X_raw = prostate_dat[:, 1:end-1]
 Y_raw = prostate_dat[:, end]
@@ -39,7 +40,7 @@ d = p+2
 end
 function log_pr_β(β)
     T = β.^2.0.*[-50.0 -0.005] .- [log(0.1) log(10)]
-    return sum(logsumexp(T; dims =2)) - (p+1)*(0.5*log(2π) +log(2.0))  
+    return sum(LogExpFunctions.logsumexp(T; dims =2)) - (p+1)*(0.5*log(2π) +log(2.0))  
 end
 #  β:= β₁,...,βₚ,β_{p+1}
 function log_lik(s, β)
@@ -93,9 +94,9 @@ end
 logq(x, μ, D) =  -0.5*d*log(2π) - sum(log, abs.(D)) - 0.5*sum(abs2, (x.-μ)./(D .+ 1e-8))
 ∇logq(x, μ, D) = (μ .- x)./(D .+ 1e-8)
 
-if ! isdir("figure")
-    mkdir("figure")
-end 
-if ! isdir("result")
-    mkdir("result")
-end 
+# if ! isdir("figure")
+#     mkdir("figure")
+# end 
+# if ! isdir("result")
+#     mkdir("result")
+# end 
