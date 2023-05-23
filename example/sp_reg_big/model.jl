@@ -1,5 +1,5 @@
 using Distributions, LinearAlgebra, Random
-using Tullio, ForwardDiff, ErgFlow
+using ForwardDiff, ErgFlow
 using Base.Threads:@threads
 using JLD, DataFrames, CSV, JLD2 
 using Zygote:Buffer, ignore, gradient, @ignore, @adjoint
