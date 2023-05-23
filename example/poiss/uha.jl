@@ -4,7 +4,8 @@ println(Threads.nthreads())
 
 using GPUCompiler
 using CUDA
-using Flux, Zygote, JLD, JLD2
+using Flux 
+using Zygote, JLD, JLD2
 using ErgFlow
 include("model.jl")
 include("../../inference/util/ksd.jl")

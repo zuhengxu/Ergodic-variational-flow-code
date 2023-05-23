@@ -1,11 +1,10 @@
 ENV["JULIA_PKG_PRECOMPILE_AUTO"]=0
 
-using GPUCompiler
-using CUDA
+using Tullio
 
 using NPZ, LinearAlgebra, Distributions, Random
 using ErgFlow
-using Tullio, LogExpFunctions
+using LogExpFunctions
 using Zygote
 using Zygote:@adjoint, refresh
 
