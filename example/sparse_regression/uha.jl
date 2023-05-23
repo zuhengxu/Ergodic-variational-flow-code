@@ -29,12 +29,12 @@ sample_q0() = sample_q0(1)
 ###############
 # train UHA
 ###############
-Random.seed!(1)
 
 n_mcmc = nothing
 n_lfrg = nothing
 pair = nothing
 
+num_rep = 5
 mcmcs = [5, 10]
 lfrgs = [10, 20, 50]
 
@@ -42,6 +42,10 @@ grid = zeros(Int, size(mcmcs,1) * size(lfrgs,1), 2)
 
 grid[:,1] = vec(repeat(mcmcs, 1, size(lfrgs,1))')
 grid[:,2] = repeat(lfrgs, size(mcmcs,1))
+
+A = [grid[i,:] for i in [1:size(grid,1);]]
+grid = vec(repeat(A, 1, num_rep)')
+grid = reduce(vcat, grid)
 
 if size(ARGS,1) > 0
     pair = parse(Int, ARGS[1])
@@ -58,6 +62,8 @@ niters = 20000
 logit_T0_uha = ones(n_mcmc-1)
 logit_η0 = [0.5]
 
+Random.seed!(parse(Int, ARGS[1]))
+
 tick();
 PS, el,_ = uha_vi(sample_q0::Function, logp::Function, logq0::Function, ∇logq0::Function, ∇logp::Function,
                 n_mcmc::Int, n_lfrg::Int, niters::Int, d::Int, elbo_size::Int, 
@@ -67,8 +73,7 @@ t = tok()
 #####################
 # eval uha
 #####################
-Random.seed!(1)
-El_uha, Ksd_uha = uha_eval(PS[1], (sample_q0, logq0, ∇logq0, ∇logp, n_mcmc, d, n_lfrg), ∇logp, 10000)
+El_uha, Ksd_uha = uha_eval(PS[1], (sample_q0, logq0, ∇logq0, ∇logp, n_mcmc, d, n_lfrg), ∇logp, 5000)
 
 cd("/scratch/st-tdjc-1/mixflow")
 if size(ARGS,1) > 0
