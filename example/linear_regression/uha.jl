@@ -3,8 +3,8 @@ ENV["JULIA_PKG_PRECOMPILE_AUTO"]=0
 println(Threads.nthreads())
 
 using Tullio
-using GPUCompiler
-using CUDA
+# using GPUCompiler
+# using CUDA
 using Flux
 using Zygote, JLD, JLD2
 using ErgFlow
