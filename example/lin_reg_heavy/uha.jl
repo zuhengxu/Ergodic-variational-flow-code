@@ -6,7 +6,7 @@ println(Threads.nthreads())
 # using CUDA
 using ErgFlow
 using Flux
-using TUllio
+using Tullio
 using Zygote, JLD, JLD2
 include("model.jl")
 include("../../inference/util/ksd.jl")
