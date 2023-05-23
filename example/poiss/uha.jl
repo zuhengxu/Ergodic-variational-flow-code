@@ -2,11 +2,12 @@ ENV["JULIA_SCRATCH_TRACK_ACCESS"] = 0
 ENV["JULIA_PKG_PRECOMPILE_AUTO"]=0
 println(Threads.nthreads())
 
-using GPUCompiler
-using CUDA
-using Flux 
-using Zygote, JLD, JLD2
+# using GPUCompiler
+# using CUDA
 using ErgFlow
+using Flux 
+using Tullio
+using Zygote, JLD, JLD2
 include("model.jl")
 include("../../inference/util/ksd.jl")
 include("../../inference/mcvae/hvi.jl")

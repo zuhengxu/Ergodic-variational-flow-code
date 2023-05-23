@@ -1,6 +1,6 @@
 ENV["JULIA_PKG_PRECOMPILE_AUTO"]=0
 
-using Tullio
+# using Tullio
 
 using NPZ, LinearAlgebra, Distributions, Random
 using ErgFlow
