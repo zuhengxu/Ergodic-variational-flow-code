@@ -5,10 +5,10 @@ println(Threads.nthreads())
 # using Tullio
 # using GPUCompiler
 # using CUDA
+using ErgFlow
 using Flux
 using Tullio
 using Zygote, JLD, JLD2
-using ErgFlow
 include("model.jl")
 include("../../inference/util/ksd.jl")
 include("../../inference/mcvae/hvi.jl")
