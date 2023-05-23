@@ -4,6 +4,9 @@ println(Threads.nthreads())
 
 using GPUCompiler
 using CUDA
+
+using Tullio
+
 using Flux, Zygote, JLD, JLD2
 using ErgFlow
 include("model.jl")

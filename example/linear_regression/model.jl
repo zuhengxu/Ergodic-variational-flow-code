@@ -3,11 +3,13 @@ ENV["JULIA_PKG_PRECOMPILE_AUTO"]=0
 using GPUCompiler
 using CUDA
 
+# using Tullio
+
 using Distributions, ForwardDiff, LinearAlgebra, Random
 # using MLDatasets
 using Base.Threads:@threads
 using Base.Threads
-using JLD, JLD2, Tullio
+using JLD, JLD2
 using Zygote, ErgFlow
 using Zygote:Buffer, ignore, gradient, @ignore
 # using ChainRules
