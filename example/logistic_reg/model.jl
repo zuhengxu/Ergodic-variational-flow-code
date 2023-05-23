@@ -1,3 +1,8 @@
+ENV["JULIA_PKG_PRECOMPILE_AUTO"]=0
+
+using GPUCompiler
+using CUDA
+
 using Distributions, ForwardDiff, LinearAlgebra, Random, CSV, DataFrames
 using Base.Threads, ErgFlow
 using Base.Threads:@threads
