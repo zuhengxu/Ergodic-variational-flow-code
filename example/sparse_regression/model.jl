@@ -1,5 +1,5 @@
 using Distributions, LinearAlgebra, Random, LogExpFunctions
-using Tullio, ErgFlow
+using ErgFlow
 using Base.Threads:@threads
 using JLD, DelimitedFiles
 using Zygote:Buffer, ignore, gradient, @ignore, @adjoint

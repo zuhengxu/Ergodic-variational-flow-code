@@ -1,5 +1,5 @@
 using Distributions, LinearAlgebra, Random, StatsBase
-using Tullio, ForwardDiff
+using ForwardDiff
 using ErgFlow
 using Base.Threads:@threads
 using JLD, JLD2, DataFrames, CSV 
