@@ -41,6 +41,27 @@ x = -5:0.1:5
 y = -5:0.1:5
 scatter_plot(o, x, y; contour_plot = true, μ=μ, D=D, ϵ = 0.0035*ones(d), n_sample = 1000, n_mcmc = 500, nB = 0, bins = 500, name= "scatter_lap.png", show_legend=false)
 
+####################
+#### trajectory plot 
+####################
+Random.seed!(1)
+ϵ = 0.0035*ones(2)
+z0 = o.q_sampler(d).*D .+ μ
+ρ0 = randn(d)
+u0 = rand()
+
+n_ref = 500
+zz, ρρ, uu = ErgFlow.flow_fwd_trace(o, ϵ, ErgFlow.pseudo_refresh_coord, z0,ρ0,u0, n_ref)
+
+# plot trajectories
+f = (x,y) -> exp(logp([x, y])) 
+p1 = contour(x, y, f, colorbar = false, title = "Banana",  color=:viridis, levels = 10)
+scatter!(zz[1:2:end,1], zz[1:2:end, 2], label = "Traj.", ms = 4, msw = 0.6, alpha = 0.6)
+plot!(size = (800,500), xtickfontsize = 30, ytickfontsize = 30,margin=10Plots.mm, guidefontsize= 30,
+    titlefontsize = 30, legend=:topright, legendfontsize = 20, title = "MixFlow Fwd Orbit")
+savefig("figure/fwd_traj.png")
+
+
 # # ################
 # # # lpdf estimation 
 # # ###############
