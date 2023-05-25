@@ -189,7 +189,7 @@ hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, 
 dat = Matrix(Radial["elbo"][!,"10layers"]')
 hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "Radial", ribbon = get_percentiles(dat), color = colours[6])
 dat = Matrix(uha_elbo[1,:]')
-hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "Radial", ribbon = get_percentiles(dat), color = colours[8])
+hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "UHA", ribbon = get_percentiles(dat), color = colours[8])
 savefig(p_elbo, "figure/linreg_elbo_full.png")
 
 colours = [palette(:Paired_12)[6], palette(:Paired_12)[4], palette(:Paired_12)[2], palette(:Paired_12)[10], palette(:Paired_12)[8], palette(:Paired_12)[12], palette(:Greys_3)[2], palette(:Set1_8)[8]]
