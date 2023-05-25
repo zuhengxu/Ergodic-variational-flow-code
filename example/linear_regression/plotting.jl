@@ -121,39 +121,33 @@ end
 
 # 5, 10
 println(grid_uha[1,:])
-println(median(uha_elbo[1,:]))
-println(median(uha_elbo[1,:]) - get_percentiles(Matrix(uha_elbo[1,:]'))[1][1])
-println(median(uha_elbo[1,:]) + get_percentiles(Matrix(uha_elbo[1,:]'))[2][1])
+println(round(median(uha_elbo[1,:]), digits=3))
+println("(" * string(round(median(uha_elbo[1,:]) - get_percentiles(Matrix(uha_elbo[1,:]'))[1][1], digits=3)) * ", " * string(round(median(uha_elbo[1,:]) + get_percentiles(Matrix(uha_elbo[1,:]'))[2][1], digits=3)) * ")" )
 
 # 5, 20
 println(grid_uha[2,:])
-println(median(uha_elbo[2,:]))
-println(median(uha_elbo[2,:]) - get_percentiles(Matrix(uha_elbo[2,:]'))[1][1])
-println(median(uha_elbo[2,:]) + get_percentiles(Matrix(uha_elbo[2,:]'))[2][1])
+println(round(median(uha_elbo[2,:]), digits=3))
+println("(" * string(round(median(uha_elbo[2,:]) - get_percentiles(Matrix(uha_elbo[2,:]'))[1][1], digits=3)) * ", " * string(round(median(uha_elbo[2,:]) + get_percentiles(Matrix(uha_elbo[2,:]'))[2][1], digits=3)) * ")" )
 
 # 5, 50
 println(grid_uha[3,:])
-println(median(uha_elbo[3,:]))
-println(median(uha_elbo[3,:]) - get_percentiles(Matrix(uha_elbo[3,:]'))[1][1])
-println(median(uha_elbo[3,:]) + get_percentiles(Matrix(uha_elbo[3,:]'))[2][1])
+println(round(median(uha_elbo[3,:]), digits=3))
+println("(" * string(round(median(uha_elbo[3,:]) - get_percentiles(Matrix(uha_elbo[3,:]'))[1][1], digits=3)) * ", " * string(round(median(uha_elbo[3,:]) + get_percentiles(Matrix(uha_elbo[3,:]'))[2][1], digits=3)) * ")" )
 
 # 10, 10
 println(grid_uha[4,:])
-println(median(uha_elbo[4,:]))
-println(median(uha_elbo[4,:]) - get_percentiles(Matrix(uha_elbo[4,:]'))[1][1])
-println(median(uha_elbo[4,:]) + get_percentiles(Matrix(uha_elbo[4,:]'))[2][1])
+println(round(median(uha_elbo[4,:]), digits=3))
+println("(" * string(round(median(uha_elbo[4,:]) - get_percentiles(Matrix(uha_elbo[4,:]'))[1][1], digits=3)) * ", " * string(round(median(uha_elbo[4,:]) + get_percentiles(Matrix(uha_elbo[4,:]'))[2][1], digits=3)) * ")" )
 
 # 10, 20
 println(grid_uha[5,:])
-println(median(uha_elbo[5,:]))
-println(median(uha_elbo[5,:]) - get_percentiles(Matrix(uha_elbo[5,:]'))[1][1])
-println(median(uha_elbo[5,:]) + get_percentiles(Matrix(uha_elbo[5,:]'))[2][1])
+println(round(median(uha_elbo[5,:]), digits=3))
+println("(" * string(round(median(uha_elbo[5,:]) - get_percentiles(Matrix(uha_elbo[5,:]'))[1][1], digits=3)) * ", " * string(round(median(uha_elbo[5,:]) + get_percentiles(Matrix(uha_elbo[5,:]'))[2][1], digits=3)) * ")" )
 
 # 10, 50
 println(grid_uha[6,:])
-println(median(uha_elbo[6,:]))
-println(median(uha_elbo[6,:]) - get_percentiles(Matrix(uha_elbo[6,:]'))[1][1])
-println(median(uha_elbo[6,:]) + get_percentiles(Matrix(uha_elbo[6,:]'))[2][1])
+println(round(median(uha_elbo[6,:]), digits=3))
+println("(" * string(round(median(uha_elbo[6,:]) - get_percentiles(Matrix(uha_elbo[6,:]'))[1][1], digits=3)) * ", " * string(round(median(uha_elbo[6,:]) + get_percentiles(Matrix(uha_elbo[6,:]'))[2][1], digits=3)) * ")" )
 
 # 5, 10 best
 
