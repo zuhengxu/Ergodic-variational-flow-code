@@ -91,10 +91,10 @@ num_rep = 5
 mcmcs = [5, 10]
 lfrgs = [10, 20, 50]
 
-grid = zeros(Int, size(mcmcs,1) * size(lfrgs,1), 2)
+grid_uha = zeros(Int, size(mcmcs,1) * size(lfrgs,1), 2)
 
-grid[:,1] = vec(repeat(mcmcs, 1, size(lfrgs,1))')
-grid[:,2] = repeat(lfrgs, size(mcmcs,1))
+grid_uha[:,1] = vec(repeat(mcmcs, 1, size(lfrgs,1))')
+grid_uha[:,2] = repeat(lfrgs, size(mcmcs,1))
 
 uha_ksd = zeros(6, 5)
 uha_elbo = zeros(6, 5)
@@ -123,37 +123,37 @@ for i in 1:30
 end
 
 # 5, 10
-println(grid[1,:])
+println(grid_uha[1,:])
 println(median(uha_elbo[1,:]))
 println(median(uha_elbo[1,:]) - get_percentiles(Matrix(uha_elbo[1,:]'))[1][1])
 println(median(uha_elbo[1,:]) + get_percentiles(Matrix(uha_elbo[1,:]'))[2][1])
 
 # 5, 20
-println(grid[2,:])
+println(grid_uha[2,:])
 println(median(uha_elbo[2,:]))
 println(median(uha_elbo[2,:]) - get_percentiles(Matrix(uha_elbo[2,:]'))[1][1])
 println(median(uha_elbo[2,:]) + get_percentiles(Matrix(uha_elbo[2,:]'))[2][1])
 
 # 5, 50
-println(grid[3,:])
+println(grid_uha[3,:])
 println(median(uha_elbo[3,:]))
 println(median(uha_elbo[3,:]) - get_percentiles(Matrix(uha_elbo[3,:]'))[1][1])
 println(median(uha_elbo[3,:]) + get_percentiles(Matrix(uha_elbo[3,:]'))[2][1])
 
 # 10, 10
-println(grid[4,:])
+println(grid_uha[4,:])
 println(median(uha_elbo[4,:]))
 println(median(uha_elbo[4,:]) - get_percentiles(Matrix(uha_elbo[4,:]'))[1][1])
 println(median(uha_elbo[4,:]) + get_percentiles(Matrix(uha_elbo[4,:]'))[2][1])
 
 # 10, 20
-println(grid[5,:])
+println(grid_uha[5,:])
 println(median(uha_elbo[5,:]))
 println(median(uha_elbo[5,:]) - get_percentiles(Matrix(uha_elbo[5,:]'))[1][1])
 println(median(uha_elbo[5,:]) + get_percentiles(Matrix(uha_elbo[5,:]'))[2][1])
 
 # 10, 50
-println(grid[6,:])
+println(grid_uha[6,:])
 println(median(uha_elbo[6,:]))
 println(median(uha_elbo[6,:]) - get_percentiles(Matrix(uha_elbo[6,:]'))[1][1])
 println(median(uha_elbo[6,:]) + get_percentiles(Matrix(uha_elbo[6,:]'))[2][1])

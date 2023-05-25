@@ -9,7 +9,7 @@ if ! isdir(folder)
     mkdir(folder)
 end 
 
-colours = [palette(:Paired_12)[6], palette(:Paired_12)[4], palette(:Paired_12)[2], palette(:Paired_12)[10], palette(:Paired_12)[8], palette(:Paired_12)[12]]
+colours = [palette(:Paired_12)[6], palette(:Paired_12)[4], palette(:Paired_12)[2], palette(:Paired_12)[10], palette(:Paired_12)[8], palette(:Paired_12)[12], palette(:Greys_3)[2], palette(:Set1_8)[8]]
 
 # ELBO
 ELBO = JLD.load("result/el.jld")
@@ -77,6 +77,82 @@ println("-----")
 
 # radial 20 is best
 
+#########################
+# UHA
+#########################
+num_rep = 5
+mcmcs = [5, 10]
+lfrgs = [10, 20, 50]
+
+grid_uha = zeros(Int, size(mcmcs,1) * size(lfrgs,1), 2)
+
+grid_uha[:,1] = vec(repeat(mcmcs, 1, size(lfrgs,1))')
+grid_uha[:,2] = repeat(lfrgs, size(mcmcs,1))
+
+uha_ksd = zeros(6, 5)
+uha_elbo = zeros(6, 5)
+
+for i in 1:30
+    uha_dat = JLD.load("result/uha_sp_reg_big_" * string(i) *".jld")
+    if i in [1:5;]
+        uha_ksd[1, (i % 5) == 0 ? 5 : (i % 5)] = uha_dat["ksd"]
+        uha_elbo[1, (i % 5) == 0 ? 5 : (i % 5)] = uha_dat["elbo"]
+    elseif i in [6:10;]
+        uha_ksd[2, (i % 5) == 0 ? 5 : (i % 5)] = uha_dat["ksd"]
+        uha_elbo[2, (i % 5) == 0 ? 5 : (i % 5)] = uha_dat["elbo"]
+    elseif i in [11:15;]
+        uha_ksd[3, (i % 5) == 0 ? 5 : (i % 5)] = uha_dat["ksd"]
+        uha_elbo[3, (i % 5) == 0 ? 5 : (i % 5)] = uha_dat["elbo"]
+    elseif i in [16:20;]
+        uha_ksd[4, (i % 5) == 0 ? 5 : (i % 5)] = uha_dat["ksd"]
+        uha_elbo[4, (i % 5) == 0 ? 5 : (i % 5)] = uha_dat["elbo"]
+    elseif i in [21:25;]
+        uha_ksd[5, (i % 5) == 0 ? 5 : (i % 5)] = uha_dat["ksd"]
+        uha_elbo[5, (i % 5) == 0 ? 5 : (i % 5)] = uha_dat["elbo"]
+    elseif i in [26:30;]
+        uha_ksd[6, (i % 5) == 0 ? 5 : (i % 5)] = uha_dat["ksd"]
+        uha_elbo[6, (i % 5) == 0 ? 5 : (i % 5)] = uha_dat["elbo"]
+    end
+end
+
+# 5, 10
+println(grid_uha[1,:])
+println(median(uha_elbo[1,:]))
+println(median(uha_elbo[1,:]) - get_percentiles(Matrix(uha_elbo[1,:]'))[1][1])
+println(median(uha_elbo[1,:]) + get_percentiles(Matrix(uha_elbo[1,:]'))[2][1])
+
+# 5, 20
+println(grid_uha[2,:])
+println(median(uha_elbo[2,:]))
+println(median(uha_elbo[2,:]) - get_percentiles(Matrix(uha_elbo[2,:]'))[1][1])
+println(median(uha_elbo[2,:]) + get_percentiles(Matrix(uha_elbo[2,:]'))[2][1])
+
+# 5, 50
+println(grid_uha[3,:])
+println(median(uha_elbo[3,:]))
+println(median(uha_elbo[3,:]) - get_percentiles(Matrix(uha_elbo[3,:]'))[1][1])
+println(median(uha_elbo[3,:]) + get_percentiles(Matrix(uha_elbo[3,:]'))[2][1])
+
+# 10, 10
+println(grid_uha[4,:])
+println(median(uha_elbo[4,:]))
+println(median(uha_elbo[4,:]) - get_percentiles(Matrix(uha_elbo[4,:]'))[1][1])
+println(median(uha_elbo[4,:]) + get_percentiles(Matrix(uha_elbo[4,:]'))[2][1])
+
+# 10, 20
+println(grid_uha[5,:])
+println(median(uha_elbo[5,:]))
+println(median(uha_elbo[5,:]) - get_percentiles(Matrix(uha_elbo[5,:]'))[1][1])
+println(median(uha_elbo[5,:]) + get_percentiles(Matrix(uha_elbo[5,:]'))[2][1])
+
+# 10, 50
+println(grid_uha[6,:])
+println(median(uha_elbo[6,:]))
+println(median(uha_elbo[6,:]) - get_percentiles(Matrix(uha_elbo[6,:]'))[1][1])
+println(median(uha_elbo[6,:]) + get_percentiles(Matrix(uha_elbo[6,:]'))[2][1])
+
+# 10, 50 best
+
 ########################3
 # ELBO plot
 #########################
@@ -96,6 +172,8 @@ dat = Matrix(Planar["elbo"][!,"5layers"]')
 hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "Planar", ribbon = get_percentiles(dat), color = colours[5])
 dat = Matrix(Radial["elbo"][!,"20layers"]')
 hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "Radial", ribbon = get_percentiles(dat), color = colours[6])
+dat = Matrix(uha_elbo[6,:]')
+hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "UHA", ribbon = get_percentiles(dat), color = colours[8])
 savefig(p_elbo, "figure/sp_reg_big_elbo.png")
 
 # full ELBO
@@ -104,10 +182,12 @@ p_elbo = plot(reduce(vcat, [[0], Ns]), Els',lw = 5, labels = Labels, legend = :o
                         xtickfontsize = 15, ytickfontsize = 15, guidefontsize = 15, legendfontsize = 15, titlefontsize = 15, xrotation = 20, bottom_margin=10Plots.mm, left_margin=5Plots.mm, lincolor = [colours[1] colours[2] colours[3]])
 dat = Matrix(NF_RealNVP5["elbo"])'
 hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "RealNVP", ribbon = get_percentiles(dat), color = colours[4])
-dat = Matrix(Planar["elbo"][!,"20layers"]')
+dat = Matrix(Planar["elbo"][!,"5layers"]')
 hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "Planar", ribbon = get_percentiles(dat), color = colours[5])
-dat = Matrix(Radial["elbo"][!,"5layers"]')
+dat = Matrix(Radial["elbo"][!,"20layers"]')
 hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "Radial", ribbon = get_percentiles(dat), color = colours[6])
+dat = Matrix(uha_elbo[6,:]')
+hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "UHA", ribbon = get_percentiles(dat), color = colours[8])
 savefig(p_elbo, "figure/sp_reg_big_elbo_full.png")
 
 
@@ -123,7 +203,7 @@ nBs = KSD["nBurns"]
 
 NF_KSD = JLD2.load("result/NF_ksd.jld2")
 ksd_nf = NF_KSD["ksd"]
-labels_nf = ["RealNVP" "Planar" "Radial"]
+labels_nf = ["RealNVP" "Planar" "Radial" "UHA"]
 
 Labels = Matrix{String}(undef, 1, size(nBs, 1))
 Labels[1, :].= ["ErgFlow"] 
@@ -133,6 +213,7 @@ hline!([ksd_nuts], linestyle=:dash, lw = 5, label = "NUTS", color = colours[2])
 hline!([ksd_nf[1]], linestyle=:dash, lw = 5, label = labels_nf[1],color = colours[4]) 
 hline!([ksd_nf[2]], linestyle=:dash, lw = 5, label = labels_nf[2],color = colours[5])
 hline!([ksd_nf[3]], linestyle=:dash, lw = 5, label = labels_nf[3],color = colours[6])
+hline!([median(uha_ksd[6,:])], linestyle=:dash, lw = 5, label = labels_nf[4],color = colours[8])
 savefig(p_ksd, "figure/sp_reg_big_ksd.png")
 
 # p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 3, ylim = (0.1, 1000.),labels = Labels, ylabel = "Marginal KSD", xlabel = "#Refreshment", title  = "Bayesian Logistic Regression", xtickfontsize=18, ytickfontsize=18, guidefontsize=18, legendfontsize=18, titlefontsize = 18, xrotation = 20, margin=5Plots.mm, yaxis=:log)
