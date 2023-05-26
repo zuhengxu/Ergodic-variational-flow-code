@@ -50,7 +50,7 @@ z0 = o.q_sampler(d).*D .+ μ
 ρ0 = randn(d)
 u0 = rand()
 
-n_ref = 500
+n_ref = 2000
 zz, ρρ, uu = ErgFlow.flow_fwd_trace(o, ϵ, ErgFlow.pseudo_refresh_coord, z0,ρ0,u0, n_ref)
 
 # plot trajectories
@@ -58,7 +58,7 @@ f = (x,y) -> exp(logp([x, y]))
 p1 = contour(x, y, f, colorbar = false, title = "Banana",  color=:viridis, levels = 10)
 scatter!(zz[1:2:end,1], zz[1:2:end, 2], label = "Traj.", ms = 4, msw = 0.6, alpha = 0.6)
 plot!(size = (800,500), xtickfontsize = 30, ytickfontsize = 30,margin=10Plots.mm, guidefontsize= 30,
-    titlefontsize = 30, legend=:topright, legendfontsize = 20, title = "MixFlow Fwd Orbit")
+    titlefontsize = 30, legend=:topright, legendfontsize = 20, title = "MixFlow single traj. (N = $n_ref)")
 savefig("figure/fwd_traj.png")
 
 

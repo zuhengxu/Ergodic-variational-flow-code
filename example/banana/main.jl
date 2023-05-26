@@ -59,7 +59,7 @@ f = (x,y) -> exp(logp([x, y]))
 p1 = contour(x, y, f, colorbar = false, title = "Banana",  color=:viridis, levels = 10)
 scatter!(zz[1:2:end,1], zz[1:2:end, 2], label = "Traj.", ms = 6, msw = 1, alpha = 0.6)
 plot!(size = (800,500), xtickfontsize = 30, ytickfontsize = 30,margin=10Plots.mm, guidefontsize= 30,
-    titlefontsize = 30, legend=:top, legendfontsize = 20, title = "MixFlow Fwd Orbit")
+    titlefontsize = 30, legend=:top, legendfontsize = 20, title = "MixFlow single traj. (N = $n_ref)")
 savefig("figure/fwd_traj.png")
 
 
