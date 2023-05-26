@@ -175,8 +175,8 @@ dat = Matrix(Planar["elbo"][!,"5layers"]')
 hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "Planar", ribbon = get_percentiles(dat), color = colours[5])
 dat = Matrix(Radial["elbo"][!,"20layers"]')
 hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "Radial", ribbon = get_percentiles(dat), color = colours[6])
-dat = Matrix(uha_elbo[2,:]')
-hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "Radial", ribbon = get_percentiles(dat), color = colours[8])
+# dat = Matrix(uha_elbo[2,:]')
+# hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "UHA", ribbon = get_percentiles(dat), color = colours[8])
 savefig(p_elbo, "figure/poiss_elbo.png")
 
 # full ELBO
@@ -212,7 +212,7 @@ Labels[1, :].= ["ErgFlow"]
 p_ksd = plot(reduce(vcat, [[0], Ns]), Ks',lw = 5, ylim = (1., 1000.),labels = Labels, ylabel = "Marginal KSD", xlabel = "#Refreshment", legend=false, color = colours[3],
             xtickfontsize=25, ytickfontsize=25, guidefontsize=25, legendfontsize=25, titlefontsize = 25, xrotation = 20, bottom_margin=10Plots.mm, left_margin=5Plots.mm, top_margin=5Plots.mm, yaxis=:log)
 hline!([ksd_nuts], linestyle=:dash, lw = 5, label = "NUTS",color = colours[2])
-# hline!([744.9], linestyle=:dash, lw = 5, label = "NEO", color = colours[end])
+hline!([744.9], linestyle=:dash, lw = 5, label = "NEO", color = colours[end-1])
 hline!([ksd_nf[3]], linestyle=:dash, lw = 5, label = labels_nf[3],color = colours[6])
 hline!([ksd_nf[2]], linestyle=:dash, lw = 5, label = labels_nf[2],color = colours[5])
 hline!([ksd_nf[1]], linestyle=:dash, lw = 5, label = labels_nf[1],color = colours[4])

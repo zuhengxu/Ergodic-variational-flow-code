@@ -166,8 +166,8 @@ dat = Matrix(Planar["elbo"][!,"5layers"]')
 hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "Planar", ribbon = get_percentiles(dat), color = colours[5])
 dat = Matrix(Radial["elbo"][!,"20layers"]')
 hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "Radial", ribbon = get_percentiles(dat), color = colours[6])
-dat = Matrix(uha_elbo[6,:]')
-hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "UHA", ribbon = get_percentiles(dat), color = colours[8])
+# dat = Matrix(uha_elbo[6,:]')
+# hline!( [median(vec(dat)[iszero.(isnan.(vec(dat)))])], linestyle=:dash, lw = 2, label = "UHA", ribbon = get_percentiles(dat), color = colours[8])
 savefig(p_elbo, "figure/sp_reg_big_elbo.png")
 
 # full ELBO
