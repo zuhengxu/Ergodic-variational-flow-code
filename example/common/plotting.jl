@@ -1,8 +1,9 @@
-using Plots, Suppressor, JLD, LinearAlgebra, StatsBase, KernelDensity, StatsPlots
+using Plots, Suppressor, JLD, LinearAlgebra, StatsBase, KernelDensity, StatsPlots, Interpolations
 using Base:Threads
 using ProgressMeter
 # include("../../inference/util/metric.jl")
 include("../../inference/util/ksd.jl")
+include("../../inference/SVI/svi.jl")
 
 # aux function for generating ribbon plot
 function get_percentiles(dat; p1=25, p2=75)
@@ -17,6 +18,61 @@ function get_percentiles(dat; p1=25, p2=75)
         median_remove_nan = median(dat_remove_nan)
         plow[i] = median_remove_nan - percentile(vec(dat_remove_nan), p1)
         phigh[i] = percentile(vec(dat_remove_nan), p2) - median_remove_nan
+    end
+
+    return plow, phigh
+end
+
+function time_range(time)
+    if size(time,2) == 1
+        ts = time
+    else
+        begin_time = maximum(time[:,1])
+        end_time = minimum(time[:,end])
+        ts = [begin_time:1:end_time ;]
+    end
+
+    return ts
+end
+
+function get_interpolated_data(dat, time)
+    m, n = size(dat)
+    ts = time_range(time)
+    interpolated_data = zeros(m, length(ts))
+
+    for i in 1:m
+        interp = LinearInterpolation(time[i,:], dat[i,:])
+        interpolated_data[i,:] = interp(ts)
+    end
+
+    return interpolated_data
+end
+
+function time_median(dat, time)
+    if size(dat,2) == 1
+       return dat
+    else
+        dat = get_interpolated_data(dat, time)
+        return vec(median(dat, dims=1))
+    end
+end
+
+function time_percentiles(dat, time; p1=25, p2=75)
+    if size(dat,2) == 1
+        plow = zeros(n)
+        phigh = zeros(n)
+    else
+        dat = get_interpolated_data(dat, time)
+        n = size(dat,2)
+        median_dat = vec(median(dat, dims=1))
+
+        plow = zeros(n)
+        phigh = zeros(n)
+
+        for i in 1:n
+            plow[i] = median_dat[i] - percentile(vec(dat[:,i]), p1)
+            phigh[i] = percentile(vec(dat[:,i]), p2) - median_dat[i]
+        end
     end
 
     return plow, phigh

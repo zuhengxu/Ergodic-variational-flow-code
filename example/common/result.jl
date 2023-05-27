@@ -1,4 +1,5 @@
 using JLD
+include("../../inference/NEO/NEO.jl")
 
 function lpdf_neo_save(o::NEO.NEOobj, X, Y; res_dir = "result/", res_name = "lpdf_neo.jld")
     n1, n2 = size(X, 1), size(Y, 1)
@@ -62,4 +63,10 @@ function running_second_moment(T; dims=1)
     # Ex2 = running_mean(X2; dims = dims)
     return running_mean(X2; dims = dims)
     # return Ex2 .- M.^2
+end
+
+function running_average(f, T, M, U)
+    A = reduce(hcat, (T, M, U))
+    F = mapslices(f, A, dims = 2)
+    return cumsum(F, dims = 1)./[1:size(F, 1) ;]
 end

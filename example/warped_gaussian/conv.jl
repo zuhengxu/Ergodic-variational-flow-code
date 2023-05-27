@@ -91,3 +91,63 @@ F = PlanarLayer(4)∘PlanarLayer(4)∘PlanarLayer(4)∘PlanarLayer(4)∘PlanarLa
 flow = transformed(q0, F)
 
 running_nf(flow, logp_joint, logq_joint)
+
+
+
+###########################
+# comparing iid and trajectory average
+########################3
+include("../common/plotting.jl")
+function var_compare(o::HamFlow, a::HF_params, f::Function; nsamples::Int64 = 50000, n_mcmc::Int64 = 1000, n_trials::Int64 = 10)
+    
+    nsample_iid = 2*Int(nsamples/n_mcmc)
+    m_iid= zeros(nsample_iid, n_trials)
+    m_erg= zeros(nsamples, n_trials)
+    Ns = zeros(nsample_iid, n_trials)
+               
+    @threads for i in 1: n_trials
+        Random.seed!(i)
+
+        @info "sampling iid"
+        T, M, U, steps = ErgFlow.Sampler_with_ind(o, a, pseudo_refresh_coord, n_mcmc, nsample_iid)
+
+        @info "sampling traj"
+        T_erg, M_erg, U_erg = ErgFlow.flow_sampler_all(o, a, pseudo_refresh_coord, n_mcmc, nsamples)
+
+        Ns[:, i] .= steps
+        m_iid[:,i] .= running_average(f, T, M, U)
+        m_erg[:,i] .= running_average(f, T_erg, M_erg, U_erg)
+    end
+    return m_iid, m_erg, Ns
+end
+
+n_lfrg = 80
+o = HamFlow(d, n_lfrg, logp, ∇logp, randn, logq, 
+        ErgFlow.randl, ErgFlow.lpdf_laplace_std, ErgFlow.∇lpdf_laplace_std, ErgFlow.cdf_laplace_std, ErgFlow.invcdf_laplace_std, ErgFlow.pdf_laplace_std,  
+        ErgFlow.constant, ErgFlow.mixer, ErgFlow.inv_mixer)
+
+MF = JLD.load("result/mfvi.jld")
+μ, D = MF["μ"], MF["D"]
+a = ErgFlow.HF_params(0.003*ones(d), μ, D)
+
+f(x) = sum(abs, x)
+nsamples = 50000
+n_mcmc = 2000
+m_iid, m_erg, steps = var_compare(o, a, f; nsamples = nsamples, n_mcmc = n_mcmc, n_trials = 10)
+JLD.save("result/var_compare.jld", "m_iid", m_iid, "m_erg", m_erg, "steps", steps)
+
+
+iters = cumsum(steps, dims = 1)
+ts = time_range(iters')
+
+p1 = plot(ts, time_median(m_iid', iters'), ribbon = time_percentiles(m_iid', iters'),lw = 4, label = "iid", xticks = [0:10000:nsamples ;])
+    plot!(1:nsamples, median(m_erg, dims = 2), ribbon = get_percentiles(m_erg), lw = 4,label = "Traj. ave.", xticks = [0:10000:nsamples ;])
+    # hline!([0.0],  linestyle=:dash, lw = 2,color =:black,label = "E[f]")
+    plot!(title = "Warped Gauss", xlabel = "#Refreshments", ylabel = "")
+    plot!(size = (1800,1500), xtickfontsize = 40, ytickfontsize =50,margin=10Plots.mm, guidefontsize= 50, xrotation = 15,
+    titlefontsize = 60, legend=:top, legendfontsize = 50 )
+
+savefig(p1, "figure/warp_var_compare.png")
+
+
+
