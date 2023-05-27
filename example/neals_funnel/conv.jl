@@ -123,7 +123,7 @@ o = HamFlow(d, n_lfrg, logp, ∇logp, randn, logq,
 
 MF = JLD.load("result/mfvi.jld")
 μ, D = MF["μ"], MF["D"]
-a = ErgFlow.HF_params(0.01*ones(d), μ, D)
+a = ErgFlow.HF_params(0.011*ones(d), μ, D)
 
 f(x) = sum(abs, x)
 nsamples = 50000
