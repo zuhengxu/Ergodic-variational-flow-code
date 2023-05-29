@@ -57,6 +57,14 @@ function time_median(dat, time)
     end
 end
 
+function time_mean(dat, time)
+    if size(dat,2) == 1
+       return dat
+    else
+        dat = get_interpolated_data(dat, time)
+        return vec(mean(dat, dims=1))
+    end
+end
 function time_percentiles(dat, time; p1=25, p2=75)
     if size(dat,2) == 1
         plow = zeros(n)
@@ -76,6 +84,13 @@ function time_percentiles(dat, time; p1=25, p2=75)
     end
 
     return plow, phigh
+end
+
+function time_std(dat, time)
+    dat = get_interpolated_data(dat, time)
+    n = size(dat,2)
+    std_dat = vec(std(dat, dims=1))
+    return std_dat
 end
 
 ################3

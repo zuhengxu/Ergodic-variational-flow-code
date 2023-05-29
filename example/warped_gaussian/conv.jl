@@ -71,26 +71,26 @@ end
 ###########################
 # running average
 ########################3
-n_lfrg = 80
-o = ErgFlow.HamFlow(d, n_lfrg, logp, ∇logp, randn, logq, 
-        ErgFlow.randl, ErgFlow.lpdf_laplace_std, ErgFlow.∇lpdf_laplace_std, ErgFlow.cdf_laplace_std, ErgFlow.invcdf_laplace_std,ErgFlow.pdf_laplace_std, 
-        ErgFlow.stream, ErgFlow.mixer, ErgFlow.inv_mixer) 
-a = ErgFlow.HF_params(0.003*ones(d), μ, D)
+# n_lfrg = 80
+# o = ErgFlow.HamFlow(d, n_lfrg, logp, ∇logp, randn, logq, 
+#         ErgFlow.randl, ErgFlow.lpdf_laplace_std, ErgFlow.∇lpdf_laplace_std, ErgFlow.cdf_laplace_std, ErgFlow.invcdf_laplace_std,ErgFlow.pdf_laplace_std, 
+#         ErgFlow.stream, ErgFlow.mixer, ErgFlow.inv_mixer) 
+# a = ErgFlow.HF_params(0.003*ones(d), μ, D)
 
-running_convergence(o,a)
+# running_convergence(o,a)
 
-# # joint target and joint init
-logp_joint(x) = o.logp(x[1:2]) + o.lpdf_mom(x[3:4])
-μ_joint = vcat(μ, [0.0,0.0])
-D_joint =vcat(D , [1.0, 1.0])
-logq_joint(x) =  -0.5*4*log(2π) - sum(log, abs.(D_joint)) - 0.5*sum(abs2, (x.-μ_joint)./(D_joint .+ 1e-8))
+# # # joint target and joint init
+# logp_joint(x) = o.logp(x[1:2]) + o.lpdf_mom(x[3:4])
+# μ_joint = vcat(μ, [0.0,0.0])
+# D_joint =vcat(D , [1.0, 1.0])
+# logq_joint(x) =  -0.5*4*log(2π) - sum(log, abs.(D_joint)) - 0.5*sum(abs2, (x.-μ_joint)./(D_joint .+ 1e-8))
 
-# q0 = MvNormal(zeros(4), ones(4))
-q0 = MvNormal(vcat(μ, [0.0,0.0]), diagm(vcat(D.^2.0, [1.0, 1.0])))
-F = PlanarLayer(4)∘PlanarLayer(4)∘PlanarLayer(4)∘PlanarLayer(4)∘PlanarLayer(4)
-flow = transformed(q0, F)
+# # q0 = MvNormal(zeros(4), ones(4))
+# q0 = MvNormal(vcat(μ, [0.0,0.0]), diagm(vcat(D.^2.0, [1.0, 1.0])))
+# F = PlanarLayer(4)∘PlanarLayer(4)∘PlanarLayer(4)∘PlanarLayer(4)∘PlanarLayer(4)
+# flow = transformed(q0, F)
 
-running_nf(flow, logp_joint, logq_joint)
+# running_nf(flow, logp_joint, logq_joint)
 
 
 
@@ -131,17 +131,18 @@ MF = JLD.load("result/mfvi.jld")
 a = ErgFlow.HF_params(0.003*ones(d), μ, D)
 
 f(x) = sum(abs, x)
-nsamples = 50000
+nsample = 50000
 n_mcmc = 2000
-m_iid, m_erg, steps = var_compare(o, a, f; nsamples = nsamples, n_mcmc = n_mcmc, n_trials = 10)
+m_iid, m_erg, steps = var_compare(o, a, f; nsamples = nsample, n_mcmc = n_mcmc, n_trials = 100)
 JLD.save("result/var_compare.jld", "m_iid", m_iid, "m_erg", m_erg, "steps", steps)
 
 
+m_iid, m_erg, steps = JLD.load("result/var_compare.jld", "m_iid", "m_erg", "steps")
 iters = cumsum(steps, dims = 1)
 ts = time_range(iters')
 
-p1 = plot(ts, time_median(m_iid', iters'), ribbon = time_percentiles(m_iid', iters'),lw = 4, label = "iid", xticks = [0:10000:nsamples ;])
-    plot!(1:nsamples, median(m_erg, dims = 2), ribbon = get_percentiles(m_erg), lw = 4,label = "Traj. ave.", xticks = [0:10000:nsamples ;])
+p1 = plot(ts, time_mean(m_iid', iters'), ribbon = time_std(m_iid', iters'),lw = 4, label = "iid", xticks = [0:10000:nsample ;])
+    plot!(1:nsample, mean(m_erg, dims = 2), ribbon = std(m_erg, dims=2), lw = 4,label = "Traj. ave.", xticks = [0:10000:nsample ;])
     # hline!([0.0],  linestyle=:dash, lw = 2,color =:black,label = "E[f]")
     plot!(title = "Warped Gauss", xlabel = "#Refreshments", ylabel = "")
     plot!(size = (1800,1500), xtickfontsize = 40, ytickfontsize =50,margin=10Plots.mm, guidefontsize= 50, xrotation = 15,

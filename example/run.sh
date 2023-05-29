@@ -1,23 +1,28 @@
 #!/bin/bash
 
-echo -e "start sparse_regression"
-cd sparse_regression
+echo -e "start banana"
+cd banana
 julia --threads 18 conv.jl
 cd ..
 wait
 
-echo -e "start linear_regression"
-cd linear_regression
+echo -e "cross"
+cd cross
 julia --threads 18 conv.jl
 cd ..
 wait
 
-echo -e "start heavy_reg"
-cd heavy_reg
+echo -e "neals funnel"
+cd neals_funnel
 julia --threads 18 conv.jl
 cd ..
 wait
 
+echo -e "warped Gaussian"
+cd warped_gaussian
+julia --threads 18 conv.jl
+cd ..
+wait
 # echo -e "start logistic_reg"
 # cd logistic_reg
 # julia --threads 18 conv.jl
