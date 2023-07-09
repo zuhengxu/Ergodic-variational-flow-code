@@ -127,7 +127,7 @@ a = ErgFlow.HF_params(0.008*ones(d), μ, D)
 
 f(x) = sum(abs, x)
 nsample = 50000
-n_mcmc = 5000
+n_mcmc = 2500
 m_iid, m_erg, steps = var_compare(o, a, f; nsamples = nsample, n_mcmc = n_mcmc, n_trials = 100)
 JLD.save("result/var_compare.jld", "m_iid", m_iid, "m_erg", m_erg, "steps", steps)
 
@@ -137,7 +137,7 @@ iters = cumsum(steps, dims = 1)
 ts = time_range(iters')
 
 p1 = plot(ts, time_mean(m_iid', iters'), ribbon = time_std(m_iid', iters'),lw = 4, label = "iid", xticks = [0:10000:nsample ;])
-    plot!(1:nsample, mean(m_erg, dims = 2), ribbon = std(m_erg, dims=2), lw = 4,label = "Traj. ave.", xticks = [0:10000:nsample ;])
+    plot!(n_mcmc:n_mcmc:nsample, mean(m_erg, dims = 2)[n_mcmc:n_mcmc:end], ribbon = std(m_erg, dims=2)[n_mcmc:n_mcmc:end], lw = 4,label = "Traj. ave.", xticks = [0:10000:nsample ;])
     # hline!([0.0],  linestyle=:dash, lw = 2,color =:black,label = "E[f]")
     plot!(title = "Neal's Funnel", xlabel = "#Refreshments", ylabel = "")
     plot!(size = (1800,1500), xtickfontsize = 40, ytickfontsize =50,margin=10Plots.mm, guidefontsize= 50, xrotation = 15,
